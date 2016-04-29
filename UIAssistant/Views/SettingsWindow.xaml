@@ -1,0 +1,240 @@
+﻿<Window x:Class="UIAssistant.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+        xmlns:v="clr-namespace:UIAssistant.Views"
+        xmlns:vm="clr-namespace:UIAssistant.ViewModels"
+        xmlns:ui="clr-namespace:UIAssistant.UI.Controls;assembly=UIAssistant.UI"
+        xmlns:key="clr-namespace:KeybindHelper.LowLevel;assembly=KeybindHelper"
+        MinWidth="800" MinHeight="600"
+        MaxWidth="900" MaxHeight="{x:Static SystemParameters.VirtualScreenHeight}"
+        Top="0"
+        FocusManager.FocusedElement="{Binding ElementName=generalTab}"
+        Title="UIAssistant Settings" SizeToContent="WidthAndHeight">
+
+    <Window.DataContext>
+        <vm:SettingsWindowViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <ContentPresenter>
+                            <ContentPresenter.Content>
+                                <Label FontSize="16" Content="{TemplateBinding Content}"/>
+                            </ContentPresenter.Content>
+                        </ContentPresenter>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="LineHeight" Value="14"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="{x:Type CheckBox}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+
+    <i:Interaction.Triggers>
+
+        <!--Viewに特別な要件が存在しない限りは、トリガーやアクションの自作にこだわらず積極的にコードビハインドを使いましょう -->
+        <!--Viewのコードビハインドは、基本的にView内で完結するロジックとViewModelからのイベントの受信(専用リスナを使用する)に限るとトラブルが少なくなります -->
+        <!--Livet1.1からはコードビハインドでViewModelのイベントを受信するためのWeakEventLisnterサポートが追加されています -->
+
+        <!--WindowのContentRenderedイベントのタイミングでViewModelのInitializeメソッドが呼ばれます-->
+        <i:EventTrigger EventName="ContentRendered">
+            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="Initialize" MethodParameter="{Binding ElementName=pluginPanel}"/>
+        </i:EventTrigger>
+
+        <!--Windowが閉じたタイミングでViewModelのDisposeメソッドが呼ばれます-->
+        <i:EventTrigger EventName="Closed">
+            <l:DataContextDisposeAction/>
+        </i:EventTrigger>
+
+        <!--WindowのCloseキャンセル処理に対応する場合は、WindowCloseCancelBehaviorの使用を検討してください-->
+
+    </i:Interaction.Triggers>
+
+    <TabControl x:Name="tabControl" TabStripPlacement="Left" Height="Auto" Width="Auto">
+        <TabItem Header="{DynamicResource generalHeader}" x:Name="generalTab">
+            <StackPanel Margin="10">
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <Label Content="{DynamicResource language}" Target="{Binding ElementName=languages}"/>
+                    <ComboBox x:Name="languages" MinWidth="120" ItemsSource="{Binding Languages}" SelectedItem="{Binding Language}" AutomationProperties.Name="{DynamicResource language}"/>
+                </StackPanel>
+                <StackPanel Margin="10">
+                    <CheckBox IsChecked="{Binding RunAtLogin}" Content="{DynamicResource runUIAssistantAtLogin}"/>
+                    <CheckBox IsChecked="{Binding UseMigemo}" Content="{DynamicResource useMigemo}"/>
+                </StackPanel>
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Target="{Binding ElementName=migemoDllPath}" Content="{DynamicResource migemoDllPath}"
+                           Grid.Row="0" Grid.Column="0"/>
+                    <TextBox x:Name="migemoDllPath" Text="{Binding Settings.MigemoDllPath}" AutomationProperties.Name="{DynamicResource migemoDllPath}"
+                             Grid.Row="0" Grid.Column="1"/>
+                    <Label Target="{Binding ElementName=migemoDictionaryPath}" Content="{DynamicResource migemoDictionaryPath}"
+                           Grid.Row="1" Grid.Column="0"/>
+                    <TextBox x:Name="migemoDictionaryPath" Text="{Binding Settings.MigemoDictionaryPath}" AutomationProperties.Name="{DynamicResource migemoDictionaryPath}"
+                             Grid.Row="1" Grid.Column="1"/>
+                    <Label Target="{Binding ElementName=itemCountPerPage}" Content="{DynamicResource itemsCountPerPage}"
+                           Grid.Row="2" Grid.Column="0"/>
+                    <TextBox x:Name="itemCountPerPage" Text="{Binding Settings.ItemsCountPerPage}" AutomationProperties.Name="{DynamicResource itemsCountPerPage}"
+                             Grid.Row="2" Grid.Column="1"/>
+                </Grid>
+            </StackPanel>
+        </TabItem>
+
+        <TabItem Header="{DynamicResource pluginHeader}">
+            <StackPanel Background="#FFE5E5E5" Orientation="Horizontal">
+                <ListView x:Name="plugins" Margin="0" ItemsSource="{Binding Plugins}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="LoadPluginView" MethodParameter="{Binding ElementName=plugins, Path=SelectedIndex}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Metadata.Name}" Margin="4" FontSize="16"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Image Source="{Binding PluginIcon}" Width="64" Height="64" Grid.RowSpan="4" Margin="0,0,10,10"/>
+
+                        <TextBlock Text="Command: " Grid.Column="1"/>
+                        <TextBlock Text="{Binding CurrentPluginMetadata.CommandName}" Grid.Column="2"/>
+
+                        <TextBlock Text="Author: " Grid.Row="1" Grid.Column="1"/>
+                        <TextBlock Text="{Binding CurrentPluginMetadata.Author}" Grid.Row="1" Grid.Column="2"/>
+
+                        <TextBlock Text="SupportURL: " Grid.Row="2" Grid.Column="1"/>
+                        <TextBlock Text="{Binding CurrentPluginMetadata.SupportUri}" Grid.Row="2" Grid.Column="2"/>
+
+                        <TextBlock Text="Version: " Grid.Row="3" Grid.Column="1"/>
+                        <TextBlock Text="{Binding CurrentPluginMetadata.Version}" Grid.Row="3" Grid.Column="2"/>
+
+                        <UserControl x:Name="pluginPanel" HorizontalAlignment="Stretch" Grid.Row="4" Grid.ColumnSpan="3"/>
+                    </Grid>
+                </ScrollViewer>
+            </StackPanel>
+        </TabItem>
+
+        <TabItem Header="{DynamicResource hotkeyHeader}">
+            <Grid Background="#FFE5E5E5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{DynamicResource howToEditKeybinds}"/>
+                <ui:HotkeyWithCommandListBox ItemsSource="{Binding Hotkeys}" x:Name="hotkeys" Grid.RowSpan="3" Grid.Row="1" CandidatesGenerator="{Binding Generator}"/>
+                <Button Content="{DynamicResource add}" Grid.Column="1" Grid.Row="1">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="AddHotkey" MethodParameter="{Binding ElementName=hotkeys}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Content="{DynamicResource remove}" Grid.Column="1" Grid.Row="2">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="RemoveHotkey" MethodParameter="{Binding ElementName=hotkeys}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="{DynamicResource keybindsHeader}">
+            <Grid Background="#FFE5E5E5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="{DynamicResource howToEditKeybinds}" Grid.Row="0"/>
+                <key:LowLevelShortcutkeyListBox Grid.Row="1">
+                    <ListViewItem Content="{Binding Settings.Quit}"/>
+                    <ListViewItem Content="{Binding Settings.Back}"/>
+                    <ListViewItem Content="{Binding Settings.Delete}"/>
+                    <ListViewItem Content="{Binding Settings.Clear}"/>
+                    <ListViewItem Content="{Binding Settings.Execute}"/>
+                    <ListViewItem Content="{Binding Settings.Left}"/>
+                    <ListViewItem Content="{Binding Settings.Right}"/>
+                    <ListViewItem Content="{Binding Settings.Up}"/>
+                    <ListViewItem Content="{Binding Settings.Down}"/>
+                    <ListViewItem Content="{Binding Settings.PageUp}"/>
+                    <ListViewItem Content="{Binding Settings.PageDown}"/>
+                    <ListViewItem Content="{Binding Settings.Home}"/>
+                    <ListViewItem Content="{Binding Settings.End}"/>
+                    <ListViewItem Content="{Binding Settings.TemporarilyHide}"/>
+                    <ListViewItem Content="{Binding Settings.SwitchKeyboardLayout}"/>
+                    <ListViewItem Content="{Binding Settings.SwitchTheme}"/>
+                    <ListViewItem Content="{Binding Settings.Usage}"/>
+                    <ListViewItem Content="{Binding Settings.EmergencySwitch}"/>
+                </key:LowLevelShortcutkeyListBox>
+            </Grid>
+        </TabItem>
+        
+        <TabItem Header="{DynamicResource aboutHeader}">
+            <Border Margin="10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Image Source="pack://application:,,,/../Resources/UIAssistant.png" Width="384" Height="384" Grid.Row="1" Grid.Column="1" Margin="0,0,0,16"/>
+                    <TextBlock FontWeight="Bold" LineHeight="48" FontSize="24" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Text="{Binding Version}"/>
+                    <TextBlock FontWeight="Bold" LineHeight="48" FontSize="24" HorizontalAlignment="Center" Grid.Row="3" Grid.Column="1">Copyright © 2016 u338.steven</TextBlock>
+                    <TextBlock FontWeight="Bold" LineHeight="48" FontSize="24" HorizontalAlignment="Center" Grid.Row="4" Grid.Column="1">This project is licensed under the MIT license</TextBlock>
+                </Grid>
+            </Border>
+        </TabItem>
+    </TabControl>
+</Window>

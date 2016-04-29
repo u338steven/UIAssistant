@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="UIAssistant.Plugin.HitaHint.Usage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UIAssistant.Plugin.HitaHint"
+             xmlns:key="clr-namespace:KeybindHelper.LowLevel;assembly=KeybindHelper"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.DataContext>
+        <local:HitaHintSettings/>
+    </UserControl.DataContext>
+    <Grid>
+        <key:LowLevelShortcutkeyListBox IsEnabled="False">
+            <ListViewItem Content="{Binding Quit}"/>
+            <ListViewItem Content="{Binding Back}"/>
+            <ListViewItem Content="{Binding TemporarilyHide}"/>
+            <ListViewItem Content="{Binding SwitchKeyboardLayout}"/>
+            <ListViewItem Content="{Binding SwitchTheme}"/>
+            <ListViewItem Content="{Binding Up}"/>
+            <ListViewItem Content="{Binding Down}"/>
+            <ListViewItem Content="{Binding Execute}"/>
+            <ListViewItem Content="{Binding Reload}"/>
+            <ListViewItem Content="{Binding Reverse}"/>
+            <ListViewItem Content="{Binding Click}"/>
+            <ListViewItem Content="{Binding RightClick}"/>
+            <ListViewItem Content="{Binding MiddleClick}"/>
+            <ListViewItem Content="{Binding DoubleClick}"/>
+            <ListViewItem Content="{Binding Hover}"/>
+            <ListViewItem Content="{Binding DragAndDrop}"/>
+            <ListViewItem Content="{Binding MouseEmulation}"/>
+        </key:LowLevelShortcutkeyListBox>
+    </Grid>
+</UserControl>

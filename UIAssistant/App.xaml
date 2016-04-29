@@ -1,0 +1,19 @@
+﻿<Application x:Class="UIAssistant.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="Views\MainWindow.xaml"
+             Startup="Application_Startup"
+             Exit="Application_Exit">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UIAssistant;component/Themes/General.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/UIAssistant;component/Languages/en-US.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/UIAssistant.UI;component/ResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="KongariToastBackgroundBrush" Color="#990C141F"/>
+            <SolidColorBrush x:Key="KongariToastFillBrush" Color="#DF740C"/>
+            <SolidColorBrush x:Key="KongariToastStrokeBrush" Color="#44FFE64D"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

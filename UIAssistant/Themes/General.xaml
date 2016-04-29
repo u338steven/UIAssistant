@@ -1,0 +1,63 @@
+﻿<!--
+    Colorscheme: Solarized
+    Author: Ethan Schoonover
+    http://ethanschoonover.com/solarized
+    -->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:ui="clr-namespace:UIAssistant.UI.Controls;assembly=UIAssistant.UI"
+                    xmlns:behaviors="clr-namespace:UIAssistant.UI.Behaviors;assembly=UIAssistant.UI"
+                    xmlns:key="clr-namespace:KeybindHelper.LowLevel;assembly=KeybindHelper">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Base/Base.xaml"/>
+        <ResourceDictionary Source="Base/AppleStyleScrollbar.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <SolidColorBrush x:Key="HUDScrollbarForeground" Color="#657B83"/>
+    <SolidColorBrush x:Key="HUDScrollbarBackground" Color="Transparent"/>
+    <SolidColorBrush x:Key="HUDDisableItemForeground" Color="#93A1A1"/>
+    <SolidColorBrush x:Key="HUDDisableItemBackground" Color="#FDF6E3"/>
+    <SolidColorBrush x:Key="HUDSelectedItemForeground" Color="#657B83"/>
+    <SolidColorBrush x:Key="HUDSelectedItemBackground" Color="#EEE8D5"/>
+
+    <Style x:Key="HUDPanelStyle" BasedOn="{StaticResource BaseHUDPanelStyle}" TargetType="{x:Type UserControl}">
+        <Style.Setters>
+            <Setter Property="Canvas.Left" Value="{Binding CoordinateOrigin.CurrentWindow.X}"/>
+            <Setter Property="Canvas.Top" Value="{Binding CoordinateOrigin.CurrentWindow.Y}"/>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="HUDPartialColoredText" TargetType="{x:Type ui:PartialColoredTextBlock}">
+        <Style.Setters>
+            <Setter Property="PartialColoredForeground" Value="#268BD2"/>
+            <Setter Property="Padding" Value="4,2"/>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="HUDItemsStyle" TargetType="{x:Type ItemsControl}">
+        <Style.Setters>
+            <Setter Property="Foreground" Value="#657B83"/>
+            <Setter Property="Background" Value="#FDF6E3"/>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="HUDTextBoxStyle" TargetType="{x:Type key:TextBoxWithCustomCaret}">
+        <Style.Setters>
+            <Setter Property="Foreground" Value="#657B83"/>
+            <Setter Property="Background" Value="#FDF6E3"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="CaretBrush" Value="#268BD2"/>
+            <Setter Property="CaretThickness" Value="2"/>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="HUDIndicatorStyle" TargetType="{x:Type Rectangle}">
+        <Setter Property="Stroke" Value="#268BD2"/>
+        <Setter Property="StrokeThickness" Value="4"/>
+        <Setter Property="RadiusX" Value="8"/>
+        <Setter Property="RadiusY" Value="8"/>
+    </Style>
+
+</ResourceDictionary>

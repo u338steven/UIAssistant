@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A1D8D3E3-6075-4C68-8D27-7F113A2C7755}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UIAssistant.Core</RootNamespace>
+    <AssemblyName>UIAssistant.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.UIAutomationClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\assemblies\UIAComWrapperLite\Interop.UIAutomationClient.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="KeybindHelper">
+      <HintPath>..\assemblies\KeybindHelper\KeybindHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIAComWrapper">
+      <HintPath>..\assemblies\UIAComWrapperLite\UIAComWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="YamlDotNet, Version=3.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.3.8.0\lib\net35\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Commands\ArgumentNode.cs" />
+    <Compile Include="Commands\CommandBaseNode.cs" />
+    <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="Commands\CommandNode.cs" />
+    <Compile Include="Commands\CommandStorage.cs" />
+    <Compile Include="Commands\OptionNode.cs" />
+    <Compile Include="HitaHint\AlternateHintGenerator.cs" />
+    <Compile Include="HitaHint\HintGenerator.cs" />
+    <Compile Include="Enumerators\HUDItem.cs" />
+    <Compile Include="Enumerators\HUDItemCollection.cs" />
+    <Compile Include="Enumerators\UIAutomationEnumerator.cs" />
+    <Compile Include="Input\KeyboardOperation.cs" />
+    <Compile Include="I18n\DefaultLocalizer.cs" />
+    <Compile Include="I18n\Language.cs" />
+    <Compile Include="I18n\TextID.cs" />
+    <Compile Include="I18n\Localizer.cs" />
+    <Compile Include="I18n\Translator.cs" />
+    <Compile Include="Input\KeybindManager.cs" />
+    <Compile Include="Input\KeyboardHook.cs" />
+    <Compile Include="Input\MouseOperation.cs" />
+    <Compile Include="Logger\Log.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resource\Resource.cs" />
+    <Compile Include="Settings\YamlSettings.cs" />
+    <Compile Include="Themes\Theme.cs" />
+    <Compile Include="Themes\ThemeDefaultSwitcher.cs" />
+    <Compile Include="Themes\Themes.cs" />
+    <Compile Include="Enumerators\HUDItemEnumerator.cs" />
+    <Compile Include="Settings\UserSettings.cs" />
+    <Compile Include="Themes\ThemeSwitcher.cs" />
+    <Compile Include="Tools\Migemo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UIAssistant.UI\UIAssistant.UI.csproj">
+      <Project>{7a300bc2-c0b0-4bbf-b689-e86e493bf3a0}</Project>
+      <Name>UIAssistant.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UIAssistant.Utility\UIAssistant.Utility.csproj">
+      <Project>{9c9ebd40-2656-4217-9bd3-3cba29f95dbb}</Project>
+      <Name>UIAssistant.Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
