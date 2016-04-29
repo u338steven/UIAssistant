@@ -1,0 +1,80 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:ui="clr-namespace:UIAssistant.UI.Controls;assembly=UIAssistant.UI"
+                    xmlns:behaviors="clr-namespace:UIAssistant.UI.Behaviors;assembly=UIAssistant.UI"
+                    xmlns:key="clr-namespace:KeybindHelper.LowLevel;assembly=KeybindHelper">
+
+    <SolidColorBrush x:Key="TargetingReticleColor" Color="#E77B00"/>
+    <Control x:Key="TargetingReticle" Template="{DynamicResource TargetingReticleBase}"/>
+    <ControlTemplate x:Key="TargetingReticleBase" TargetType="{x:Type Control}">
+        <Canvas Margin="-32,-32,0,0">
+            <Line X1="0" Y1="32" X2="64" Y2="32" Stroke="{DynamicResource TargetingReticleColor}"/>
+            <Line X1="32" Y1="0" X2="32" Y2="64" Stroke="{DynamicResource TargetingReticleColor}"/>
+            <Ellipse Stroke="{DynamicResource TargetingReticleColor}" Height="32" Width="32" Canvas.Left="16" Canvas.Top="16"/>
+        </Canvas>
+    </ControlTemplate>
+
+    <Control x:Key="Indicator" Template="{DynamicResource IndicatorBase}"/>
+    <ControlTemplate x:Key="IndicatorBase" TargetType="{x:Type Control}">
+        <Rectangle Style="{DynamicResource HUDIndicatorStyle}"/>
+    </ControlTemplate>
+
+    <Style x:Key="BaseHUDPanelStyle" TargetType="{x:Type UserControl}">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="MinWidth" Value="300"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel>
+                        <key:TextBoxWithCustomCaret Text="{Binding TextBox.Text}"
+                                                    Style="{DynamicResource HUDTextBoxStyle}"
+                                                    CaretIndex="{Binding TextBox.CaretIndex}"/>
+                        <!--Required Standard VirtualizationMode-->
+                        <ListBox ItemsSource="{Binding Items}"
+                                 Style="{DynamicResource HUDItemsStyle}"
+                                 SelectedIndex="{Binding SelectedIndex}"
+                                 ScrollViewer.CanContentScroll="True"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ScrollViewer.IsDeferredScrollingEnabled="True"
+                                 ScrollViewer.PanningMode="VerticalOnly"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 VirtualizingPanel.IsVirtualizing="True"
+                                 VirtualizingPanel.VirtualizationMode="Standard"
+                                 ui:AutoResizeListBox.ItemsCountPerPage="{Binding ItemsCountPerPage}">
+                            <i:Interaction.Behaviors>
+                                <behaviors:ScrollIntoViewBehavior/>
+                            </i:Interaction.Behaviors>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding Image}" HorizontalAlignment="Left"/>
+                                        <ui:PartialColoredTextBlock x:Name="text"
+                                                                    Text="{Binding DisplayText}"
+                                                                    PartialColoredStart="{Binding ColoredStart}"
+                                                                    PartialColoredLength="{Binding ColoredLength}"
+                                                                    Style="{DynamicResource HUDPartialColoredText}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsEnabled}" Value="False">
+                                            <Setter Property="Foreground" Value="{DynamicResource HUDDisableItemForeground}"/>
+                                            <Setter Property="Background" Value="{DynamicResource HUDDisableItemBackground}"/>
+                                        </DataTrigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Foreground" Value="{DynamicResource HUDSelectedItemForeground}"/>
+                                            <Setter Property="Background" Value="{DynamicResource HUDSelectedItemBackground}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="meClick">Click</system:String>
+    <system:String x:Key="meMiddleClick">Middle click</system:String>
+    <system:String x:Key="meRightClick">Right click</system:String>
+
+    <system:String x:Key="meLeft">Move left</system:String>
+    <system:String x:Key="meRight">Move right</system:String>
+    <system:String x:Key="meUp">Move up</system:String>
+    <system:String x:Key="meDown">Move down</system:String>
+
+    <system:String x:Key="meWheelUp">WheelUp</system:String>
+    <system:String x:Key="meWheelDown">WheelDown</system:String>
+    <system:String x:Key="meHWheelUp">Horizontal WheelUp</system:String>
+    <system:String x:Key="meHWheelDown">Horizontal WheelDown</system:String>
+    <system:String x:Key="meSpeedUp">Speed up cursor's movement</system:String>
+    <system:String x:Key="meSlowDown">Slow down cursor's movement</system:String>
+
+</ResourceDictionary>
