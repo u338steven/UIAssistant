@@ -67,9 +67,9 @@ namespace UIAssistant.Core.Enumerators
             return allControlType.Except(types).ToArray();
         }
 
-        public void Enumerate(HUDItemCollection container, bool findInvisibleUI = false, params ControlType[] types)
+        public void Enumerate(HUDItemCollection container, Condition condition = null, params ControlType[] types)
         {
-            SetCondition(findInvisibleUI);
+            SetCondition(condition);
             SetTypes(types);
             enumerator.Enumerate(container);
         }
@@ -79,18 +79,11 @@ namespace UIAssistant.Core.Enumerators
             enumerator.Enumerate(container);
         }
 
-        private void SetCondition(bool findInvisibleUI)
+        private void SetCondition(Condition condition)
         {
-            if (!findInvisibleUI)
+            if (condition != null)
             {
-                var enable = new PropertyCondition(AutomationElement.IsEnabledProperty, true);
-                var orConditions = new Condition[]{
-                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Tree),
-                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.TreeItem),
-                    new PropertyCondition(AutomationElement.IsOffscreenProperty, false),
-                };
-
-                enumerator.ChangeCondition(new AndCondition(enable, new OrCondition(orConditions)));
+                enumerator.ChangeCondition(condition);
             }
         }
 
@@ -100,9 +93,9 @@ namespace UIAssistant.Core.Enumerators
             enumerator.AddIgnore(t);
         }
 
-        public void Enumerate(HUDItemCollection container, Win32Window root, bool findInvisibleUI = false, params ControlType[] types)
+        public void Enumerate(HUDItemCollection container, Win32Window root, Condition condition, params ControlType[] types)
         {
-            SetCondition(findInvisibleUI);
+            SetCondition(condition);
             SetTypes(types);
             enumerator.Enumerate(container, root.Element);
         }

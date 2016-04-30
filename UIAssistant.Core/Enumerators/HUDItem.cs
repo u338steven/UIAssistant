@@ -14,8 +14,8 @@ namespace UIAssistant.Core.Enumerators
 {
     public interface IHUDItemEnumerator
     {
-        void Enumerate(HUDItemCollection container, bool findInvisibleUI, params ControlType[] types);
-        void Enumerate(HUDItemCollection container, Win32Window root, bool findInvisibleUI, params ControlType[] types);
+        void Enumerate(HUDItemCollection container, System.Windows.Automation.Condition condition, params ControlType[] types);
+        void Enumerate(HUDItemCollection container, Win32Window root, System.Windows.Automation.Condition condition, params ControlType[] types);
         void Retry(HUDItemCollection container);
     }
 

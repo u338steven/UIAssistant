@@ -23,7 +23,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
             var targetWindow = Win32Window.Find(TaskbarClass, "");
             targetWindow.Activate();
             var enumerator = UIAssistantAPI.GetWidgetEnumerator();
-            enumerator.Enumerate(container, false, _enumerateTargets);
+            enumerator.Enumerate(container, null, _enumerateTargets);
 
             double x = 0, y = 0;
             if (Win32Taskbar.IsAutoHide())
