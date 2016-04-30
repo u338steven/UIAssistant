@@ -9,6 +9,10 @@ Features ex.
 - Hit-a-Hint: You can click quickly a button in most window with keyboard.
 - Search by Text: You can search a window for a string by input text.
 
+New Feature(ver.0.2)
+
+- [Spatial Navigation](https://github.com/u338steven/UIAssistant/wiki/Spatial-Navigation)
+
 UIAssistant is under the MIT license.
 
 <!--See https://github.com/u338steven/UIAssistant/wiki for details.-->
@@ -33,7 +37,7 @@ UIAssistant is under the MIT license.
 
 ### Installation
 
-You can download from [here](https://github.com/u338steven/UIAssistant/releases/) (include Migemo Japanese Dictionaries)  
+You can download from [here(Releases)](https://github.com/u338steven/UIAssistant/releases/) (include Migemo ja-JP, zh-CN and zh-TW Dictionaries)  
 Uncompress it and run UIAssistant.exe
 
 **Administrator permission are recommended for running UIAssistant.**  
@@ -129,7 +133,7 @@ if you have:
 ## Planned features
 
 - Auto-Updater
-- Spatial Navigation
+~~- Spatial Navigation~~ Added in ver.0.2
 - Vim-like keybinds on Windows
 - Command direct input
 

@@ -89,7 +89,12 @@ namespace UIAssistant.Core.Enumerators
             while (_taskList.Count > 0)
             {
                 element = _taskList.Dequeue();
-                children = element.FindAll(TreeScope.Children, Condition).Cast<AutomationElement>();
+                children = element.FindAll(TreeScope.Children, Condition)?.Cast<AutomationElement>();
+
+                if (children == null)
+                {
+                    continue;
+                }
 
                 foreach (AutomationElement elementNode in children)
                 {
@@ -137,7 +142,7 @@ namespace UIAssistant.Core.Enumerators
                 var aeInfo = item.Current;
                 var rect = aeInfo.BoundingRectangle;
 
-                if (bounds.Contains(rect))
+                if (!IgnoreElements.Contains(aeInfo.ControlType) && bounds.Contains(rect))
                 {
                     if (!beginOnScreen && ItemElements.Contains(aeInfo.ControlType))
                     {

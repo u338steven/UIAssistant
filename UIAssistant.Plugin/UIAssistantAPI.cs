@@ -232,17 +232,16 @@ namespace UIAssistant.Plugin
             });
         }
 
-        public static Control Indicator { get; private set; }
-        public static void AddIndicator()
+        public static Control AddIndicator()
         {
-            Indicator = window.FindResource("Indicator") as Control;
+            var Indicator = window.FindResource("Indicator") as Control;
             AddPanel(Indicator);
+            return Indicator;
         }
 
-        public static void RemoveIndicator()
+        public static void RemoveIndicator(Control indicator)
         {
-            RemovePanel(Indicator);
-            Indicator = null;
+            RemovePanel(indicator);
         }
 
         private static AnimationTimeline GenerateAnimation(FrameworkElement element, string propertyName, double from, double to, double duration)
@@ -275,34 +274,36 @@ namespace UIAssistant.Plugin
             }
         }
 
-        public static void ScaleIndicatorAnimation(Rect from, Rect to, bool waitable = true, double duration = 300)
+        public static void ScaleIndicatorAnimation(Rect from, Rect to, bool waitable = true, double duration = 300, Action completed = null)
         {
+            Control indicator = null;
             AnimateWaitably(storyboard =>
             {
-                AddIndicator();
-                storyboard.Children.Add(GenerateAnimation(Indicator, "Opacity", 1d, 1d, duration));
-                storyboard.Children.Add(GenerateAnimation(Indicator, "(Canvas.Left)", from.Left, to.Left, duration));
-                storyboard.Children.Add(GenerateAnimation(Indicator, "(Canvas.Top)", from.Top, to.Top, duration));
-                storyboard.Children.Add(GenerateAnimation(Indicator, "Width", from.Width, to.Width, duration));
-                storyboard.Children.Add(GenerateAnimation(Indicator, "Height", from.Height, to.Height, duration));
-            }, () => RemoveIndicator(), waitable);
+                indicator = AddIndicator();
+                storyboard.Children.Add(GenerateAnimation(indicator, "Opacity", 1d, 1d, duration));
+                storyboard.Children.Add(GenerateAnimation(indicator, "(Canvas.Left)", from.Left, to.Left, duration));
+                storyboard.Children.Add(GenerateAnimation(indicator, "(Canvas.Top)", from.Top, to.Top, duration));
+                storyboard.Children.Add(GenerateAnimation(indicator, "Width", from.Width, to.Width, duration));
+                storyboard.Children.Add(GenerateAnimation(indicator, "Height", from.Height, to.Height, duration));
+            }, () => { RemoveIndicator(indicator); completed?.Invoke(); }, waitable);
         }
 
-        public static void FlashIndicatorAnimation(Rect size, bool waitable = true, double duration = 300)
+        public static void FlashIndicatorAnimation(Rect size, bool waitable = true, double duration = 300, Action completed = null)
         {
+            Control indicator = null;
             AnimateWaitably(storyboard =>
             {
-                AddIndicator();
-                Canvas.SetLeft(Indicator, size.X);
-                Canvas.SetTop(Indicator, size.Y);
-                Indicator.Width = size.Width;
-                Indicator.Height = size.Height;
+                indicator = AddIndicator();
+                Canvas.SetLeft(indicator, size.X);
+                Canvas.SetTop(indicator, size.Y);
+                indicator.Width = size.Width;
+                indicator.Height = size.Height;
 
-                var animation = GenerateAnimation(Indicator, "Opacity", 0d, 1d, duration);
+                var animation = GenerateAnimation(indicator, "Opacity", 0d, 1d, duration);
                 animation.RepeatBehavior = new RepeatBehavior(3);
                 animation.AutoReverse = true;
                 storyboard.Children.Add(animation);
-            }, () => RemoveIndicator(), waitable);
+            }, () => { RemoveIndicator(indicator); completed?.Invoke(); }, waitable);
         }
     }
 }
