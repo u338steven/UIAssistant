@@ -133,7 +133,7 @@ if you have:
 ## Planned features
 
 - Auto-Updater
-~~- Spatial Navigation~~ Added in ver.0.2
+- ~~Spatial Navigation~~ Added in ver.0.2
 - Vim-like keybinds on Windows
 - Command direct input
 
