@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using Livet;
 using Livet.Commands;
@@ -10,6 +11,7 @@ using Livet.Messaging.IO;
 using Livet.EventListeners;
 using Livet.Messaging.Windows;
 
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -196,7 +198,7 @@ namespace UIAssistant.ViewModels
         public void Initialize(UserControl pluginsPanel)
         {
             Language = DefaultLocalizer.FindLanguage(Settings.Culture);
-            RunAtLogin = AutoRunAtLoginScheduler.Exists();
+            RunAtLogin = Settings.RunAtLogin;
             UseMigemo = Settings.UseMigemo;
             Hotkeys = new ObservableSynchronizedCollection<Keybind>(Settings.Commands);
             Plugins = PluginManager.Instance.Plugins;
@@ -233,13 +235,25 @@ namespace UIAssistant.ViewModels
             Settings.EmergencySwitch.Text = TextID.KeybindsEmergencySwitch.GetLocalizedText();
         }
 
+        Dictionary<int, object> _cachedPluginPanels = new Dictionary<int, object>();
+        Dictionary<int, ImageSource> _cachedPluginIcons = new Dictionary<int, ImageSource>();
         public void LoadPluginView(int selectedIndex)
         {
             if (Plugins.Count() <= selectedIndex)
             {
                 return;
             }
+
             var plugin = Plugins.ElementAt(selectedIndex);
+            CurrentPluginMetadata = plugin.Metadata;
+
+            if (_cachedPluginPanels.ContainsKey(selectedIndex))
+            {
+                _pluginsPanel.Content = _cachedPluginPanels[selectedIndex];
+                PluginIcon = _cachedPluginIcons[selectedIndex];
+                return;
+            }
+
             if (plugin.Value is IConfigurablePlugin)
             {
                 var panel = (plugin.Value as IConfigurablePlugin).GetConfigrationInterface();
@@ -249,17 +263,22 @@ namespace UIAssistant.ViewModels
             {
                 _pluginsPanel.Content = null;
             }
-            CurrentPluginMetadata = plugin.Metadata;
+            _cachedPluginPanels.Add(selectedIndex, _pluginsPanel.Content);
 
             var uri = new Uri(plugin.Metadata.IconUri, UriKind.RelativeOrAbsolute);
             if (IsLocalFile(uri))
             {
                 PluginIcon = new BitmapImage(uri);
+                if (PluginIcon.CanFreeze)
+                {
+                    PluginIcon.Freeze();
+                }
             }
             else
             {
                 PluginIcon = null;
             }
+            _cachedPluginIcons.Add(selectedIndex, PluginIcon);
         }
 
         private bool IsLocalFile(Uri uri)
@@ -339,13 +358,16 @@ namespace UIAssistant.ViewModels
 
         protected override void Dispose(bool disposing)
         {
-            OnUseMigemo();
             Settings.Save();
             SettingsWindowModel.RegisterHotkeys();
             foreach (var plugin in Plugins)
             {
                 (plugin.Value as IConfigurablePlugin)?.Save();
             }
+            _pluginsPanel.Content = null;
+            _pluginsPanel = null;
+            PluginIcon = null;
+            Hotkeys = null;
             base.Dispose(disposing);
         }
     }

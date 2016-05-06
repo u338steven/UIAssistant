@@ -8,7 +8,7 @@ using System.Windows.Input;
 using UIAssistant.Core.I18n;
 
 using KeybindHelper;
-using KeybindHelper.LowLevel;
+using UIAssistant.Utility;
 
 namespace UIAssistant.Core.Settings
 {
@@ -49,9 +49,13 @@ namespace UIAssistant.Core.Settings
 
         protected override string FileName => "Settings.yml";
 
+        public UserSettings()
+        {
+            RunAtLogin = AutoRunAtLoginScheduler.Exists();
+        }
+
         protected override UserSettings LoadDefault()
         {
-            RunAtLogin = false;
             UseMigemo = false;
             Culture = DefaultLocalizer.SuggestedCulture;
             if (Culture == "ja-JP")
