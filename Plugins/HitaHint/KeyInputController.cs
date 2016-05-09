@@ -27,10 +27,7 @@ namespace UIAssistant.Plugin.HitaHint
         public override void Initialize()
         {
             base.Initialize();
-            UIAssistantAPI.UIDispatcher.Invoke(() =>
-            {
-                _stateController.SetKeyboardLayoutName(Hook.GetKeyboardLayoutLanguage());
-            });
+            _stateController.SetKeyboardLayoutName(Hook.GetKeyboardLayoutLanguage());
         }
 
         public override void Reset()
@@ -69,13 +66,10 @@ namespace UIAssistant.Plugin.HitaHint
             Keybinds.Add(_settings.MouseEmulation, () => _stateController.ChangeOperation(Consts.MouseEmulation));
             Keybinds.Add(UIAssistantAPI.UIAssistantSettings.SwitchKeyboardLayout, () =>
             {
-                UIAssistantAPI.UIDispatcher.Invoke(() =>
-                {
-                    Hook.LoadAnotherKeyboardLayout();
-                    var layoutLanguage = Hook.GetKeyboardLayoutLanguage();
-                    UIAssistantAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(TextID.SwitchKeyboardLayout.GetLocalizedText(), layoutLanguage));
-                    _stateController.SetKeyboardLayoutName(layoutLanguage);
-                });
+                Hook.LoadAnotherKeyboardLayout();
+                var layoutLanguage = Hook.GetKeyboardLayoutLanguage();
+                UIAssistantAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(TextID.SwitchKeyboardLayout.GetLocalizedText(), layoutLanguage));
+                _stateController.SetKeyboardLayoutName(layoutLanguage);
             });
 
             Keybinds.Add(UIAssistantAPI.UIAssistantSettings.Up, () => UIAssistantAPI.DefaultHUD.FocusPreviousItem());

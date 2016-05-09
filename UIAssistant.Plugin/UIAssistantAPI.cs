@@ -181,7 +181,7 @@ namespace UIAssistant.Plugin
 #if DEBUG
         public static void DisplayKeystroke(System.Windows.Input.Key key, KeySet keysState)
         {
-            UIDispatcher.BeginInvoke((Action)(() => KeyVisualizer.Notify(key, keysState)));
+            KeyVisualizer.Notify(key, keysState);
         }
 #endif
         public static void NotifyWarnMessage(string title, string message)

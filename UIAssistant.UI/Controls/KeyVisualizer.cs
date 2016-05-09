@@ -15,20 +15,31 @@ namespace UIAssistant.UI.Controls
     // corner-cutting...
     public class KeyVisualizer
     {
-        static KeystrokeVisualizer.KeystrokeVisualizer _visualizer = new KeystrokeVisualizer.KeystrokeVisualizer();
+        static KeystrokeVisualizer.KeystrokeVisualizer _visualizer;
         static System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
         static Keystroke current;
+        public static bool IsActive { get; private set; } = false;
+
+        public static void Initialize()
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(() => _visualizer = new KeystrokeVisualizer.KeystrokeVisualizer());
+            IsActive = true;
+        }
 
         public static void Notify(System.Windows.Input.Key key, KeySet keysState)
         {
+            if (!IsActive)
+            {
+                Initialize();
+            }
             var input = keysState.ConvertToCurrentLanguage();
             if (input.Trim().Length > 0 && char.IsLetterOrDigit(input[0]))
             {
-                Notify(input);
+                _visualizer?.Dispatcher.BeginInvoke((Action)(() => Notify(input)));
             }
             else if (!key.IsModifiersKey())
             {
-                Notify(keysState.ToString(), true);
+                _visualizer?.Dispatcher.BeginInvoke((Action)(() => Notify(keysState.ToString(), true)));
             }
         }
 

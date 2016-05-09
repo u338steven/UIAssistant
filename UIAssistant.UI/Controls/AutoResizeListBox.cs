@@ -30,7 +30,7 @@ namespace UIAssistant.UI.Controls
         {
             if (listBox.Items.Count == 0)
             {
-                listBox.Height = listBox.Padding.Top + listBox.Padding.Bottom + listBox.BorderThickness.Top + listBox.BorderThickness.Bottom + 2;
+                listBox.Height = listBox.Padding.Top + listBox.Padding.Bottom + listBox.BorderThickness.Top + listBox.BorderThickness.Bottom + 4;
                 return;
             }
 

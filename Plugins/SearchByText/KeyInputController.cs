@@ -54,11 +54,8 @@ namespace UIAssistant.Plugin.SearchByText
             Keybinds.Add(SearchByTextSettings.Instance.Expand, () => _stateController.Expand());
             Keybinds.Add(_settings.SwitchKeyboardLayout, () =>
             {
-                UIAssistantAPI.UIDispatcher.Invoke(() =>
-                {
-                    Hook.LoadAnotherKeyboardLayout();
-                    UIAssistantAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(TextID.SwitchKeyboardLayout.GetLocalizedText(), Hook.GetKeyboardLayoutLanguage()));
-                });
+                Hook.LoadAnotherKeyboardLayout();
+                UIAssistantAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(TextID.SwitchKeyboardLayout.GetLocalizedText(), Hook.GetKeyboardLayoutLanguage()));
             });
             base.InitializeKeybind();
         }
