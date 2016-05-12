@@ -183,7 +183,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
                     string name = childInfo.Name;
                     if (string.IsNullOrEmpty(name))
                     {
-                        name = childInfo.LabeledBy;
+                        name = childInfo.LabeledBy?.Current.Name;
                         if (string.IsNullOrEmpty(name))
                             continue;
                     }
