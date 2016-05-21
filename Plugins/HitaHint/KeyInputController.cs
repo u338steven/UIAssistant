@@ -90,7 +90,7 @@ namespace UIAssistant.Plugin.HitaHint
             base.InitializeKeybind();
         }
 
-        protected override void OnKeyDown(KeyEvent keyEvent, Key key, KeySet keysState)
+        protected override void OnKeyDown(KeyEvent keyEvent, Key key, KeySet keysState, ref bool handled)
         {
             var input = keysState.ConvertToCurrentLanguage();
             if (Keybinds.Contains(keysState))
@@ -109,7 +109,7 @@ namespace UIAssistant.Plugin.HitaHint
             }
         }
 
-        protected override void OnKeyUp(KeyEvent keyEvent, Key key, KeySet keysState)
+        protected override void OnKeyUp(KeyEvent keyEvent, Key key, KeySet keysState, ref bool handled)
         {
         }
     }

@@ -69,37 +69,43 @@ namespace UIAssistant.Plugin
 
         private bool hookedKeyboardCallback(KeyEvent keyEvent, Key key, KeySet keysState)
         {
+            bool handled = true;
             switch (keyEvent)
             {
                 case KeyEvent.WM_KEYDOWN:
                 case KeyEvent.WM_SYSKEYDOWN:
 #if DEBUG
-                    UIAssistantAPI.DisplayKeystroke(key, keysState);
+                    if (!keysState.IsInjected)
+                    {
+                        UIAssistantAPI.DisplayKeystroke(key, keysState);
+                    }
                     //System.Diagnostics.Debug.Print($"key:{keysState.ToString()}, {input}, {input.ToUpper()}");
 #endif
                     if (keysState.Equals(_temporarilyHide))
                     {
                         UIAssistantAPI.Transparent = true;
+                        return true;
                     }
 
-                    OnKeyDown(keyEvent, key, keysState);
-                    return true;
+                    OnKeyDown(keyEvent, key, keysState, ref handled);
+                    return handled;
                 case KeyEvent.WM_KEYUP:
                 case KeyEvent.WM_SYSKEYUP:
                     if (UIAssistantAPI.Transparent)
                     {
                         UIAssistantAPI.Transparent = false;
+                        return true;
                     }
-                    OnKeyUp(keyEvent, key, keysState);
-                    return true;
+                    OnKeyUp(keyEvent, key, keysState, ref handled);
+                    return handled;
                 default:
                     break;
             }
             return false;
         }
 
-        protected abstract void OnKeyDown(KeyEvent keyEvent, Key key, KeySet keysState);
-        protected abstract void OnKeyUp(KeyEvent keyEvent, Key key, KeySet keysState);
+        protected abstract void OnKeyDown(KeyEvent keyEvent, Key key, KeySet keysState, ref bool handled);
+        protected abstract void OnKeyUp(KeyEvent keyEvent, Key key, KeySet keysState, ref bool handled);
 
         private void RemoveUsagePanel()
         {
