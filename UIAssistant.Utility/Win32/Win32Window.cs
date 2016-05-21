@@ -324,6 +324,10 @@ namespace UIAssistant.Utility.Win32
             {
                 flag |= SetWindowPosFlags.HideWindow;
             }
+            else
+            {
+                flag |= SetWindowPosFlags.ShowWindow;
+            }
 
             ForciblyControlWindow(() => SetWindowPos(windowHandle, insertAfterWindow, 0, 0, 0, 0, flag));
         }
