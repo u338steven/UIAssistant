@@ -149,6 +149,12 @@ This project is influenced by a number of other projects. Notably:
 - [Keysnail](https://github.com/mooz/keysnail)
 - [Wox](https://github.com/Wox-launcher/Wox)
 
+## Donation
+
+If you wish to help me
+
+[![PayPal - The safer, easier way to pay online!](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=XGYXBCAUN9NFS&lc=US&item_name=Donation+to+UIAssistant&item_number=Donation01&currency_code=USD&no_shipping=1)
+
 ## License
 
 This project is licensed under the MIT license, Copyright (c) 2016 u338.steven.
