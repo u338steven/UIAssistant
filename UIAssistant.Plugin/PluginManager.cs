@@ -58,10 +58,11 @@ namespace UIAssistant.Plugin
                 {
                     plugin.Value.Initialize();
                 }
-                catch
+                catch(Exception ex)
                 {
                     var message = string.Format(TextID.PluginInitializeError.GetLocalizedText(), plugin.Metadata.Name);
                     UIAssistantAPI.NotifyWarnMessage("Warning", message);
+                    Log.Error(ex);
                     Log.Warn(message);
                 }
                 if (!plugins.ContainsKey(plugin.Metadata.CommandName))

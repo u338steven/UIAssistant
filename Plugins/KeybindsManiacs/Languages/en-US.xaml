@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="kmMode">_Mode</system:String>
+    <system:String x:Key="kmDefaultMode">_DefaultMode</system:String>
+    <system:String x:Key="kmRunAtStartup">Run at UIAssistant _startup</system:String>
+    <system:String x:Key="kmEnableDefaultKeybinds">Enable Windows default keybinds</system:String>
+    <system:String x:Key="kmPrefix">As prefix key</system:String>
+    <system:String x:Key="kmSwapKey">Swap key</system:String>
+    <system:String x:Key="kmRunEmbeddedCommand">Run embedded command</system:String>
+    <system:String x:Key="kmRunUIAssistantCommand">Run UIAssistant command</system:String>
+    <system:String x:Key="kmRunExtensionCommand">Run extension command</system:String>
+
+    <system:String x:Key="kmSwitchMode">Switch to {0} Mode</system:String>
+    <system:String x:Key="kmActivate">Keybinds Maniacs is activated</system:String>
+    <system:String x:Key="kmDeactivate">Keybinds Maniacs is Deactivated</system:String>
+
+</ResourceDictionary>

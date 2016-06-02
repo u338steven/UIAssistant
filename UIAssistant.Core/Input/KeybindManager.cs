@@ -15,15 +15,20 @@ namespace UIAssistant.Core.Input
     {
         private Dictionary<KeySet, Action> _keybinds = new Dictionary<KeySet, Action>();
 
-        public void Add(Keybind keybind, Action action)
+        public void Add(KeySet keys, Action action)
         {
-            var keys = new KeySet(keybind);
             if (_keybinds.ContainsKey(keys))
             {
-                Notification.NotifyMessage("UIAssistant", string.Format(TextID.KeybindDuplication.GetLocalizedText(), keybind.ToString()), NotificationIcon.Warning);
+                Notification.NotifyMessage("UIAssistant", string.Format(TextID.KeybindDuplication.GetLocalizedText(), keys.ToString()), NotificationIcon.Warning);
                 return;
             }
             _keybinds.Add(keys, action);
+        }
+
+        public void Add(Keybind keybind, Action action)
+        {
+            var keys = new KeySet(keybind);
+            Add(keys, action);
         }
 
         public bool Contains(KeySet keys)

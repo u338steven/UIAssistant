@@ -35,11 +35,11 @@ namespace UIAssistant.UI.Controls
             var input = keysState.ConvertToCurrentLanguage();
             if (input.Trim().Length > 0 && char.IsLetterOrDigit(input[0]))
             {
-                _visualizer?.Dispatcher.BeginInvoke((Action)(() => Notify(input)));
+                _visualizer?.Dispatcher.Invoke((Action)(() => Notify(input)));
             }
             else if (!key.IsModifiersKey())
             {
-                _visualizer?.Dispatcher.BeginInvoke((Action)(() => Notify(keysState.ToString(), true)));
+                _visualizer?.Dispatcher.Invoke((Action)(() => Notify(keysState.ToString(), true)));
             }
         }
 
@@ -47,7 +47,7 @@ namespace UIAssistant.UI.Controls
         private static void Notify(string message, bool isNew = false)
         {
             sw.Stop();
-            if (sw.ElapsedMilliseconds > 1000 || current == null || isNew || (!isNew && beforeIsNew))
+            if (sw.ElapsedMilliseconds > 1000 || current == null || isNew || (!isNew && beforeIsNew) || current.Keys.Length >= 10)
             {
                 current = new Keystroke { Keys = message };
                 _visualizer.AddNotification(current);

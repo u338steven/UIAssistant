@@ -9,8 +9,8 @@
         xmlns:ui="clr-namespace:UIAssistant.UI.Controls;assembly=UIAssistant.UI"
         xmlns:key="clr-namespace:KeybindHelper.LowLevel;assembly=KeybindHelper"
         MinWidth="800" MinHeight="600"
-        MaxWidth="900" MaxHeight="{x:Static SystemParameters.VirtualScreenHeight}"
-        Top="0"
+        MaxWidth="{x:Static SystemParameters.VirtualScreenWidth}" MaxHeight="{x:Static SystemParameters.VirtualScreenHeight}"
+        Top="0" Left="0"
         FocusManager.FocusedElement="{Binding ElementName=generalTab}"
         Title="UIAssistant Settings" SizeToContent="WidthAndHeight">
 

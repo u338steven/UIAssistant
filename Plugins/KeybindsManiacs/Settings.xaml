@@ -1,0 +1,154 @@
+﻿<UserControl x:Class="UIAssistant.Plugin.KeybindsManiacs.Settings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UIAssistant.Plugin.KeybindsManiacs"
+             xmlns:key="clr-namespace:KeybindHelper;assembly=KeybindHelper"
+             xmlns:low="clr-namespace:KeybindHelper.LowLevel;assembly=KeybindHelper"
+             xmlns:ui="clr-namespace:UIAssistant.UI.Controls;assembly=UIAssistant.UI"
+             HorizontalAlignment="Stretch"
+             mc:Ignorable="d">
+    <UserControl.DataContext>
+        <local:SettingsViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UIAssistant.UI;component/ResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="TextBox">
+                <Setter Property="MinWidth" Value="120"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="0,5,10,5"/>
+            </Style>
+            <DataTemplate x:Key="keybindsView" DataType="{x:Type local:ModeStorage}">
+                <StackPanel Orientation="Horizontal">
+                    <low:LowLevelExtendedKeyBox Keys="{Binding InputKeys}" MinWidth="200"/>
+                    <ComboBox ItemsSource="{Binding Source={local:CommandType}}"
+                              DisplayMemberPath="Description"
+                              SelectedValue="{Binding Type, Mode=TwoWay}"
+                              SelectedValuePath="Value"/>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.Style>
+                            <Style TargetType="{x:Type StackPanel}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Type}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="1">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="2">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <low:LowLevelExtendedKeyBox Keys="{Binding OutputKeys}" MinWidth="200"/>
+                        <CheckBox Content="One shot" IsChecked="{Binding CanDefineOneShot}" VerticalAlignment="Center"/>
+                        <low:LowLevelExtendedKeyBox Keys="{Binding OneShot}" MinWidth="200">
+                            <low:LowLevelExtendedKeyBox.Style>
+                                <Style TargetType="{x:Type low:LowLevelExtendedKeyBox}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding CanDefineOneShot}" Value="true">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding CanDefineOneShot}" Value="false">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </low:LowLevelExtendedKeyBox.Style>
+                        </low:LowLevelExtendedKeyBox>
+                    </StackPanel>
+                    <ui:AutoCompletableTextBox Text="{Binding CommandText}"
+                                               CandidatesGenerator="{Binding DataContext.Generator, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                               IsResident="True"
+                                               MinWidth="200">
+                        <ui:AutoCompletableTextBox.Style>
+                            <Style TargetType="{x:Type ui:AutoCompletableTextBox}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Type}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="1">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="2">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ui:AutoCompletableTextBox.Style>
+                    </ui:AutoCompletableTextBox>
+                    <ComboBox ItemsSource="{Binding Path=DataContext.EmbeddedCommands, RelativeSource={RelativeSource AncestorType=ListBox}}" SelectedValue="{Binding CommandText, Mode=TwoWay}"
+                              MinWidth="200">
+                        <ComboBox.Style>
+                            <Style TargetType="{x:Type ComboBox}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Type}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="1">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="2">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+                </StackPanel>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid HorizontalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="30"/>
+            <ColumnDefinition Width="Auto" MinWidth="140"/>
+            <ColumnDefinition Width="Auto" MinWidth="140"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label x:Name="labelDefaultMode" Content="{DynamicResource kmDefaultMode}" Target="{Binding ElementName=defaultMode}"/>
+        <ComboBox x:Name="defaultMode" Grid.Column="1" ItemsSource="{Binding ModeNames}" SelectedItem="{Binding Settings.Mode}" VerticalAlignment="Center" Height="22" SelectionChanged="defaultMode_SelectionChanged"/>
+        <CheckBox x:Name="runAtStartup" Content="{DynamicResource kmRunAtStartup}" IsChecked="{Binding Settings.RunAtStartup}" Grid.Column="2" VerticalContentAlignment="Center"/>
+
+        <Label x:Name="labelMode" Content="{DynamicResource kmMode}" Target="{Binding ElementName=mode}" Grid.Row="1"/>
+        <ComboBox x:Name="mode" Grid.Column="1" ItemsSource="{Binding ModeNames}" SelectedIndex="0" VerticalAlignment="Center" Height="22" SelectionChanged="mode_SelectionChanged" Grid.Row="1" />
+        <CheckBox x:Name="enableDefaultKeybinds" Content="{DynamicResource kmEnableDefaultKeybinds}" IsChecked="{Binding IsEnabledWindowsKeybinds}" Grid.Column="2" Grid.Row="1" />
+        <CheckBox x:Name="prefix" Content="{DynamicResource kmPrefix}" IsChecked="{Binding IsPrefix}" Grid.Column="3" Grid.Row="1" />
+        <!--<ComboBox x:Name="modeBasedOn" Grid.Column="2" ItemsSource="{Binding ModeNames}" SelectedIndex="0" VerticalAlignment="Center" Height="22"/>-->
+        <!--<TextBox x:Name="newMode" Grid.Column="2"/>
+        <StackPanel Orientation="Horizontal" Grid.Column="3">
+            <Button x:Name="addMode" Content="+" MinWidth="30" VerticalAlignment="Center" HorizontalAlignment="Left" Click="addMode_Click"/>
+            <Button x:Name="removeMode" Content="-" MinWidth="30" VerticalAlignment="Center" HorizontalAlignment="Left" Click="removeMode_Click"/>
+        </StackPanel>-->
+        <ListBox x:Name="listBox" Grid.ColumnSpan="6" Grid.Row="2" ItemsSource="{Binding Current.Keybinds}"
+                 ItemTemplate="{StaticResource keybindsView}"
+                 MinHeight="200" MinWidth="200" 
+                 MaxHeight="400"
+                 ScrollViewer.CanContentScroll="True"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 SelectionMode="Single"
+                 PreviewKeyDown="listBox_PreviewKeyDown"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="6" HorizontalAlignment="Right">
+            <Button x:Name="addKeybind" Content="{DynamicResource add}" Margin="0,10,10,0" Height="30" MinWidth="75" VerticalAlignment="Top" Click="addKeybind_Click"/>
+            <Button x:Name="removeKeybind" Content="{DynamicResource remove}" Margin="0,10,0,0" Height="30" MinWidth="75" VerticalAlignment="Top" Click="removeKeybind_Click"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
