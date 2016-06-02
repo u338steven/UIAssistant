@@ -13,6 +13,10 @@ New Feature(ver.0.2)
 
 - [Spatial Navigation](https://github.com/u338steven/UIAssistant/wiki/Spatial-Navigation)
 
+New Feature(ver.0.3)
+
+- [Keybinds Maniacs](https://github.com/u338steven/UIAssistant/wiki/Keybinds-Maniacs)
+
 UIAssistant is under the MIT license.
 
 <!--See https://github.com/u338steven/UIAssistant/wiki for details.-->
@@ -134,7 +138,7 @@ if you have:
 
 - Auto-Updater
 - ~~Spatial Navigation~~ Added in ver.0.2
-- Vim-like keybinds on Windows
+- ~~Vim-like keybinds on Windows~~ Added in ver.0.3
 - Command direct input
 
 ## TODO
