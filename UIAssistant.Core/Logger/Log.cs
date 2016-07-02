@@ -8,6 +8,7 @@ namespace UIAssistant.Core.Logger
     {
         private static string _logFile;
         private static string _logDirectory;
+        private static bool _canOutputLog = true;
 
         const int YEAR = 0;
         const int MONTH = 1;
@@ -19,7 +20,15 @@ namespace UIAssistant.Core.Logger
 
             if (!Directory.Exists(_logDirectory))
             {
-                Directory.CreateDirectory(_logDirectory);
+                try
+                {
+                    Directory.CreateDirectory(_logDirectory);
+                }
+                catch
+                {
+                    _canOutputLog = false;
+                    return;
+                }
             }
 
             RemoveOldLog();
@@ -76,8 +85,18 @@ namespace UIAssistant.Core.Logger
             }
         }
 
+        private static bool CanOutput()
+        {
+            return _canOutputLog;
+        }
+
         public static void Error(Exception e, string message = null)
         {
+            if (!CanOutput())
+            {
+                return;
+            }
+
             Initialize();
             while (e != null)
             {
@@ -89,6 +108,11 @@ namespace UIAssistant.Core.Logger
 
         public static void Fatal(Exception e, string message = null)
         {
+            if (!CanOutput())
+            {
+                return;
+            }
+
             Initialize();
             while (e != null)
             {
@@ -100,18 +124,33 @@ namespace UIAssistant.Core.Logger
 
         public static void Warn(string message)
         {
+            if (!CanOutput())
+            {
+                return;
+            }
+
             Initialize();
             Write("WARN " + message);
         }
 
         public static void Info(string message)
         {
+            if (!CanOutput())
+            {
+                return;
+            }
+
             Initialize();
             Write("INFO " + message);
         }
 
         public static void Debug(string message)
         {
+            if (!CanOutput())
+            {
+                return;
+            }
+
             Initialize();
             Write("DEBUG " + message);
         }
