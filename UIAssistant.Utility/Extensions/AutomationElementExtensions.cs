@@ -116,6 +116,13 @@ namespace UIAssistant.Utility.Extensions
             return false;
         }
 
+        public static T GetPattern<T>(this AutomationElement el, AutomationPattern pattern) where T : BasePattern
+        {
+            Object obj;
+            el.TryGetCurrentPattern(pattern, out obj);
+            return (T)obj;
+        }
+
         public static string GetShortcutKey(this AutomationElement el)
         {
             string ret = el.Current.AcceleratorKey;
@@ -204,6 +211,7 @@ namespace UIAssistant.Utility.Extensions
                 el.DoAction();
             }
         }
+
 
         public static void CollapseComboBox(this AutomationElement el)
         {

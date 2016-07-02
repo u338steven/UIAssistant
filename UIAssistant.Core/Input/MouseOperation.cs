@@ -29,6 +29,17 @@ namespace UIAssistant.Core.Input
             Move(bounds.Center());
         }
 
+        public static void MoveTo(Point from, Point to, int millisecondsInterval = 50, int count = 10)
+        {
+            var deltaX = Math.Max((to.X - from.X) / count, 1);
+            var deltaY = Math.Max((to.Y - from.Y) / count, 1);
+            for (int i = 0; i < count; ++i)
+            {
+                DoMouseEvent(from.X + deltaX * i, from.Y + deltaY * i);
+            }
+            DoMouseEvent(to);
+        }
+
         public static void LeftDown()
         {
             DoMouseEvent(Win32Interop.MouseEvent.MOUSEEVENTF_LEFTDOWN);

@@ -154,9 +154,21 @@ namespace UIAssistant.Utility.Win32
             var extendedStyle = GetWindowLongPtr(hwnd, GWL.GWL_EXSTYLE);
             SetWindowLongPtr(hwnd, GWL.GWL_EXSTYLE, new IntPtr(extendedStyle.ToInt32() | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW));
         }
+
+        public const int LWA_ALPHA = 0x2;
+        public const int LWA_COLORKEY = 0x1;
+
+        [DllImport("user32.dll")]
+        static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
+        public static void SetWindowTransparent(IntPtr hwnd, byte alpha)
+        {
+            SetWindowExTransparent(hwnd);
+            SetLayeredWindowAttributes(hwnd, 0, alpha, LWA_ALPHA);
+        }
         #endregion
 
         #region Send/PostMessage
+        public const int WM_CLOSE = 0x0010;
         public const int BM_CLICK = 0x00F5;
         public const int TCM_FIRST = 0x1300;
         public const int TCM_GETITEMCOUNT = (TCM_FIRST + 4);

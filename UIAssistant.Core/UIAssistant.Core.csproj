@@ -87,6 +87,8 @@
     <Compile Include="Commands\CommandNode.cs" />
     <Compile Include="Commands\CommandStorage.cs" />
     <Compile Include="Commands\OptionNode.cs" />
+    <Compile Include="Events\EventHook.cs" />
+    <Compile Include="Events\EventObserver.cs" />
     <Compile Include="HitaHint\AlternateHintGenerator.cs" />
     <Compile Include="HitaHint\HintGenerator.cs" />
     <Compile Include="Enumerators\HUDItem.cs" />

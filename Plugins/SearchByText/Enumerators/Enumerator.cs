@@ -22,6 +22,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
                     return new SearchContainer();
                 case EnumerateTarget.RunningApps:
                     return new SearchRunningApps();
+                case EnumerateTarget.ContextMenu:
+                    return new SearchContextMenu();
                 default:
                     return new SearchForText();
             }

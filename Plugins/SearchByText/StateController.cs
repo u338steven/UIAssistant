@@ -38,7 +38,7 @@ namespace UIAssistant.Plugin.SearchByText
                 _enumerator.Dispose();
                 if (_sourceForFiltering.Count == 0)
                 {
-                    UIAssistantAPI.NotifyInfoMessage("Search by Text", TextID.NoOneFound.GetLocalizedText());
+                    UIAssistantAPI.NotifyInfoMessage(Consts.PluginName, TextID.NoOneFound.GetLocalizedText());
                     Quit();
                 }
                 Filter();

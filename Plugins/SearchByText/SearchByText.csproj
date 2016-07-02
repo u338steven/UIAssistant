@@ -79,11 +79,13 @@
   <ItemGroup>
     <Compile Include="Consts.cs" />
     <Compile Include="Enumerators\Enumerator.cs" />
+    <Compile Include="Enumerators\ForCommand\ContextMenu.cs" />
     <Compile Include="Enumerators\ISearchByTextEnumerator.cs" />
+    <Compile Include="Enumerators\SearchContextMenu.cs" />
     <Compile Include="Items\SearchByTextItem.cs" />
     <Compile Include="Items\ItemInContainer.cs" />
     <Compile Include="Items\MenuItem.cs" />
-    <Compile Include="Items\MenuItemForWPF.cs" />
+    <Compile Include="Items\MenuItemUIA.cs" />
     <Compile Include="Items\RunningApp.cs" />
     <Compile Include="Items\TextItemWithTab.cs" />
     <Compile Include="Items\ToolbarItem.cs" />

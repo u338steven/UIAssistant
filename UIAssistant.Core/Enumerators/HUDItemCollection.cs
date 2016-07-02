@@ -13,14 +13,15 @@ namespace UIAssistant.Core.Enumerators
         private object _lock;
         public HUDItemCollection()
         {
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                _lock = new object();
-                System.Windows.Data.BindingOperations.EnableCollectionSynchronization(this, _lock);
-            });
+            Initialize();
         }
 
         public HUDItemCollection(IEnumerable<IHUDItem> collection) : base(collection)
+        {
+            Initialize();
+        }
+
+        private void Initialize()
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
