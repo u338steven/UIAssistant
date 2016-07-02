@@ -90,7 +90,7 @@ namespace UIAssistant.Plugin.HitaHint
 
         public void Save()
         {
-            _stateController?.Settings.Save();
+            HitaHintSettings.Instance.Save();
             _keyController?.Reset();
         }
 
