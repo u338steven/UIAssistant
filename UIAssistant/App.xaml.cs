@@ -42,18 +42,16 @@ namespace UIAssistant
             DispatcherHelper.UIDispatcher = Dispatcher;
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-            Dispatcher.UnhandledException += (_, ex) => { ex.Handled = true; };
+            Dispatcher.UnhandledException += Dispatcher_UnhandledException;
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
         }
 
-        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void HandleUnhandledException(Exception ex)
         {
-            Log.Fatal(e.ExceptionObject as Exception);
             string message = "An unhandled error occured\nYou can copy this message by Ctrl+C\n\n";
-            var ex = e.ExceptionObject as Exception;
             while (ex != null)
             {
                 message += ex.Message + "\n";
@@ -66,7 +64,25 @@ namespace UIAssistant
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
 
+            try
+            {
+                Log.Fatal(ex);
+            }
+            catch
+            {
+
+            }
             Environment.Exit(1);
+        }
+
+        private void Dispatcher_UnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            HandleUnhandledException(e.Exception);
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            HandleUnhandledException(e.ExceptionObject as Exception);
         }
 
         public bool SignalExternalCommandLineArgs(IList<string> args)
