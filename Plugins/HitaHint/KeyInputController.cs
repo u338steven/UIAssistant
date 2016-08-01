@@ -33,11 +33,11 @@ namespace UIAssistant.Plugin.HitaHint
         public override void Reset()
         {
             base.Reset();
-            UIAssistantAPI.UIDispatcher.Invoke(() => UsagePanel = new Usage());
         }
 
         protected override void InitializeKeybind()
         {
+            UIAssistantAPI.UIDispatcher.Invoke(() => UsagePanel = new Usage());
             Keybinds.Clear();
             Keybinds.Add(UIAssistantAPI.UIAssistantSettings.Quit, () =>
             {

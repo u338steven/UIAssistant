@@ -30,12 +30,12 @@ namespace UIAssistant.Plugin.SearchByText
 
         public override void Reset()
         {
-            UIAssistantAPI.UIDispatcher.Invoke(() => UsagePanel = new Usage());
             base.Reset();
         }
 
         protected override void InitializeKeybind()
         {
+            UIAssistantAPI.UIDispatcher.Invoke(() => UsagePanel = new Usage());
             Keybinds.Clear();
             Keybinds.Add(_settings.Quit, () => { _stateController.Cancel(); _stateController.Quit(); });
             Keybinds.Add(_settings.Back, () => { UIAssistantAPI.DefaultHUD.TextBox.Backspace(); _stateController.Filter(); });
