@@ -8,8 +8,23 @@ using System.Threading;
 
 namespace UIAssistant.Utility.Win32
 {
-    public class Win32Interop
+    public static class Win32Interop
     {
+        #region HRESULT
+        public enum HRESULT : long
+        {
+            S_FALSE = 0x0001,
+            S_OK = 0x0000,
+            E_INVALIDARG = 0x80070057,
+            E_OUTOFMEMORY = 0x8007000E
+        }
+
+        public static bool HResultHasError(int hResult)
+        {
+            return Convert.ToInt32(HRESULT.S_OK) != hResult;
+        }
+        #endregion
+
         #region Structs
         [StructLayout(LayoutKind.Sequential)]
         public struct Rect

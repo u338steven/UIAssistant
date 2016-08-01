@@ -87,6 +87,7 @@
     <Compile Include="Screen.cs" />
     <Compile Include="SingleInstance.cs" />
     <Compile Include="TaskScheduler.cs" />
+    <Compile Include="Win32\DwmApi.cs" />
     <Compile Include="Win32\UnmanagedDll.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Win32\Win32Icon.cs" />

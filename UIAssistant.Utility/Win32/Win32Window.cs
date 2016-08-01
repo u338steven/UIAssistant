@@ -168,7 +168,7 @@ namespace UIAssistant.Utility.Win32
 
         public const int WS_EX_TOOLWINDOW = 0x00000080;
         public const int WS_EX_TRANSPARENT = 0x00000020;
-        public const int WS_EX_LAYERD = 0x80000;
+        public const int WS_EX_LAYERED = 0x80000;
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
@@ -356,6 +356,19 @@ namespace UIAssistant.Utility.Win32
             return true;
         }
 
+        [DllImport("user32.dll")]
+        static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
+
+        public const int LWA_ALPHA = 0x2;
+        public const int LWA_COLORKEY = 0x1;
+
+        public void SetOpacity(byte value)
+        {
+            // SetWindowLong(Handle, GWL_EXSTYLE, GetWindowLong(Handle, GWL_EXSTYLE) ^ WS_EX_LAYERED);
+            Win32Interop.SetWindowLongPtr(WindowHandle, Win32Interop.GWL.GWL_EXSTYLE, new IntPtr(Win32Interop.GetWindowLongPtr(WindowHandle, Win32Interop.GWL.GWL_EXSTYLE).ToInt32() ^ WS_EX_LAYERED));
+            SetLayeredWindowAttributes(WindowHandle, 0, value, LWA_ALPHA);
+        }
+
         public Rect Bounds => GetBounds();
         private Rect GetBounds()
         {
@@ -376,7 +389,11 @@ namespace UIAssistant.Utility.Win32
             }
             else
             {
-                GetWindowRect(WindowHandle, ref rect);
+                var result = DwmApi.DwmGetWindowAttribute(WindowHandle, DWMWINDOWATTRIBUTE.ExtendedFrameBounds, out rect, Marshal.SizeOf(typeof(Win32Interop.Rect)));
+                if (Win32Interop.HResultHasError(result))
+                {
+                    GetWindowRect(WindowHandle, ref rect);
+                }
             }
             return rect.ToRectangle();
         }
