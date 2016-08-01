@@ -130,6 +130,8 @@ namespace UIAssistant.Plugin.SearchByText
             UIAssistantAPI.DefaultHUD.Initialize();
             _sourceForFiltering.Clear();
 
+            UIAssistantAPI.TopMost = true;
+
             // Win32
             if (popup.WindowHandle == activeWindow.WindowHandle)
             {
