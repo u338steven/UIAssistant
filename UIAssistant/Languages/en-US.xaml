@@ -28,8 +28,8 @@
     <system:String x:Key="generalHeader">_General</system:String>
     <system:String x:Key="runUIAssistantAtLogin">Automatically _run UIAssistant at login</system:String>
     <system:String x:Key="useMigemo">Use _Migemo</system:String>
-    <system:String x:Key="migemoDllPath">Migemo _dll path</system:String>
-    <system:String x:Key="migemoDictionaryPath">Migemo di_ctionary path</system:String>
+    <system:String x:Key="migemoDllPath">Migemo _dll path(blank: use the bundled)</system:String>
+    <system:String x:Key="migemoDictionaryPath">Migemo di_ctionary path(blank: use the bundled)</system:String>
     <system:String x:Key="language">_Languages</system:String>
     <system:String x:Key="itemsCountPerPage">_Search results count per page</system:String>
 

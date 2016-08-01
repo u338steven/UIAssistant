@@ -28,8 +28,8 @@
     <system:String x:Key="generalHeader">一般(_G)</system:String>
     <system:String x:Key="runUIAssistantAtLogin">ログイン時にUIAssistantを起動する(_R)</system:String>
     <system:String x:Key="useMigemo">Migemo を使用する(_M)</system:String>
-    <system:String x:Key="migemoDllPath">migemo.dll へのパス(_D)</system:String>
-    <system:String x:Key="migemoDictionaryPath">Migemo 辞書へのパス(_C)</system:String>
+    <system:String x:Key="migemoDllPath">migemo.dll へのパス(_D)(空白の場合、付属のものを使用)</system:String>
+    <system:String x:Key="migemoDictionaryPath">Migemo 辞書へのパス(_C)(空白の場合、付属のものを使用)</system:String>
     <system:String x:Key="language">言語(_L)</system:String>
     <system:String x:Key="itemsCountPerPage">1ページ当たりの検索結果表示件数(_S)</system:String>
 
