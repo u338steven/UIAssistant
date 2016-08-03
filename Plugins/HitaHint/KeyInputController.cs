@@ -47,12 +47,9 @@ namespace UIAssistant.Plugin.HitaHint
             Keybinds.Add(UIAssistantAPI.UIAssistantSettings.Back, () => _stateController.Back());
             Keybinds.Add(_settings.Reload, () =>
             {
-                System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)(() =>
-                {
-                    _stateController.Clear();
-                    _stateController.Enumerate();
-                    _stateController.PrintState();
-                }));
+                _stateController.Clear();
+                _stateController.Enumerate();
+                _stateController.PrintState();
             });
             Keybinds.Add(_settings.Reverse, () => UIAssistantAPI.DefaultHUD.Items = new HUDItemCollection(UIAssistantAPI.DefaultHUD.Items.Reverse()));
 
