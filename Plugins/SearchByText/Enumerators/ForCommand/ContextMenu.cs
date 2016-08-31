@@ -51,7 +51,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                 var contextMenuBounds = ContextRoot.Current.BoundingRectangle;
                 var menuTopCenter = contextMenuBounds.TopCenter();
                 MouseOperation.Move(menuTopCenter.X, menuTopCenter.Y + 2);
-                System.Threading.Thread.Sleep(200);
+                System.Threading.Thread.Sleep(400);
                 if (!contextMenuBounds.Contains(_mouseCurrentPosition))
                 {
                     MouseOperation.Move(_mouseCurrentPosition);

@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Extensions\AutomationElementExtensions.cs" />
     <Compile Include="Extensions\LinqExtensions.cs" />
+    <Compile Include="Extensions\NativeExtensions.cs" />
     <Compile Include="Extensions\PointExtensions.cs" />
     <Compile Include="Extensions\RectExtensions.cs" />
     <Compile Include="Extensions\RxExtensions.cs" />

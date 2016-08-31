@@ -13,6 +13,9 @@ namespace UIAssistant.Core.Input
 {
     public class KeyboardOperation
     {
+        [DllImport("user32.dll")]
+        private static extern short GetKeyState(int vkkey);
+
         public static void SendKeys(params Key[] keys)
         {
             if (keys == null)
@@ -111,6 +114,35 @@ namespace UIAssistant.Core.Input
             KeyDown(_cancelKey);
             KeyUp(_cancelKey);
             _cancelAlt = true;
+        }
+
+        public static void PressedKeyUp()
+        {
+            var pressedKeys = GetPressedKey().ToArray();
+            KeyUp(pressedKeys);
+        }
+
+        private static Key[] _modifiers = { Key.LeftAlt, Key.RightAlt, Key.LeftCtrl, Key.RightCtrl, Key.LeftShift, Key.RightShift };
+        private static List<Key> GetPressedKey()
+        {
+            var result = new List<Key>();
+            foreach (var x in _modifiers)
+            {
+                if (IsDown(KeyInterop.VirtualKeyFromKey(x)))
+                {
+                    result.Add(x);
+                }
+            }
+            return result;
+        }
+
+        private static bool IsDown(int vk)
+        {
+            if (GetKeyState(vk) != 0)
+            {
+                return true;
+            }
+            return false;
         }
 
         public static void KeyUp(params Key[] keys)

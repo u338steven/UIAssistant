@@ -41,13 +41,13 @@ namespace UIAssistant.Core.Events
             _autoEvents[0].Set();
         }
 
-        public void Wait(int millisecondsTimeout = 5000)
+        public bool Wait(int millisecondsTimeout = 3000)
         {
             _autoEvents = new AutoResetEvent[]
             {
                 new AutoResetEvent(false)
             };
-            WaitHandle.WaitAll(_autoEvents, millisecondsTimeout, true);
+            return WaitHandle.WaitAll(_autoEvents, millisecondsTimeout, true);
         }
 
         private void RemoveEventHandler()
@@ -72,12 +72,12 @@ namespace UIAssistant.Core.Events
                 if (disposing)
                 {
                     // TODO: マネージ状態を破棄します (マネージ オブジェクト)。
-                    RemoveEventHandler();
                     Callback = null;
                 }
 
                 // TODO: アンマネージ リソース (アンマネージ オブジェクト) を解放し、下のファイナライザーをオーバーライドします。
                 // TODO: 大きなフィールドを null に設定します。
+                RemoveEventHandler();
                 disposedValue = true;
             }
         }

@@ -15,7 +15,6 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
     class SearchContextMenu : ISearchByTextEnumerator
     {
         const int MN_GETHMENU = 0x01E1;
-
         public event Action Updated;
         public event Action Finished;
         AbstarctSearchForCommand _current;
@@ -31,8 +30,17 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
             };
 
             observer.Observe();
+
+            KeyboardOperation.PressedKeyUp();
             KeyboardOperation.SendKeys(Key.Apps);
-            observer.Wait();
+            if (!observer.Wait(2000))
+            {
+                // timeout
+                observer.Dispose();
+                Finished?.Invoke();
+                Finished = null;
+                return;
+            }
             observer.Dispose();
 
             EnumerateInternal(menuEnumerator, results);
