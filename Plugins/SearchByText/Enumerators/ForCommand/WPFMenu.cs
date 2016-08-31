@@ -30,34 +30,19 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
         {
             _results = results;
             var element = AutomationElement.FromHandle(MainWindowHandle);
-            GetMenuBar(element);
+            GetMenuBars(element).ForEach(x => GetMenuItems(x, null, new List<string>()));
             _isFinished = true;
             return;
         }
 
-        private bool GetMenuBar(AutomationElement element)
+        private List<AutomationElement> GetMenuBars(AutomationElement element)
         {
-            List<AutomationElement> menuBars = new List<AutomationElement>();
-            bool ret = GetMenuBars(element, menuBars);
-
-            if (!ret)
-            {
-                return ret;
-            }
-            try
-            {
-                menuBars.ForEach(menuBar =>
-                {
-                    GetMenu(menuBar, null, new List<AutomationElement>());
-                });
-            }
-            finally
-            {
-            }
-            return ret;
+            var menuBars = new List<AutomationElement>();
+            var ret = GetMenuBarsInternal(element, menuBars);
+            return menuBars;
         }
 
-        private bool GetMenuBars(AutomationElement element, List<AutomationElement> menuBars)
+        private bool GetMenuBarsInternal(AutomationElement element, List<AutomationElement> menuBars)
         {
             int retCounter = 0;
             PropertyCondition menubarCondition = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.MenuBar);
@@ -77,7 +62,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                 }
                 else
                 {
-                    if (GetMenuBars(el, menuBars))
+                    if (GetMenuBarsInternal(el, menuBars))
                     {
                         ++retCounter;
                     }
@@ -92,7 +77,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
             return element.FindAll(TreeScope.Children, menuItemCondition).Count > 0;
         }
 
-        private bool GetMenu(AutomationElement element, string parent, List<AutomationElement> groups)
+        private bool GetMenuItems(AutomationElement element, string parent, List<string> groups)
         {
             bool ret = false;
             var menuItems = element.FindAll(TreeScope.Children, Condition.TrueCondition).Cast<AutomationElement>();
@@ -128,7 +113,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                         {
                             // Expand
                             item.TryDoDefaultAction();
-                            groups.Add(item);
+                            groups.Add(itemName);
                             string ancestor = parent;
                             if (parent == null)
                             {
@@ -138,7 +123,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                             {
                                 ancestor = parent + Consts.Delimiter + itemName;
                             }
-                            GetMenu(item, ancestor, groups);
+                            GetMenuItems(item, ancestor, groups);
                             groups.RemoveAt(groups.Count - 1);
                             // Collapse
                             item.TryDoDefaultAction();
@@ -155,12 +140,12 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                             {
                                 ancestor = parent + Consts.Delimiter + itemName;
                             }
-                            groups.Add(item);
-                            GetMenu(item, ancestor, groups);
+                            groups.Add(itemName);
+                            GetMenuItems(item, ancestor, groups);
                             groups.RemoveAt(groups.Count - 1);
                             continue;
                         }
-                        var result = new MenuItemForWPF(itemName, fullpath, elementInfo.BoundingRectangle, elementInfo.IsEnabled, canExpand, groups.ToArray());
+                        var result = new MenuItemUIA(itemName, fullpath, elementInfo.BoundingRectangle, elementInfo.IsEnabled, canExpand, item, element, groups);
                         _results.Add(result);
                     }
 

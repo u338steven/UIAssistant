@@ -47,32 +47,45 @@ namespace UIAssistant.Plugin.SearchByText.Items
 
         public AutomationElement GetCurrentElement(AutomationElement root)
         {
-            return GetCurrentElement(root, AutomationElement.NameProperty); ;
+            return GetCurrentElement(root, AutomationElement.NameProperty, InternalText);
         }
 
-        public AutomationElement GetCurrentElement(AutomationElement root, AutomationProperty property)
+        public AutomationElement GetCurrentElement(AutomationElement root, string target)
         {
-            var propCondition = new PropertyCondition(property, InternalText);
-            var candidate = root.FindAll(TreeScope.Descendants, propCondition);
+            return GetCurrentElement(root, AutomationElement.NameProperty, target);
+        }
 
-            if (candidate.Count <= 0)
+        public List<AutomationElement> GetCandidates(AutomationElement root, AutomationProperty property, string target)
+        {
+            var propCondition = new PropertyCondition(property, target);
+            var candidates = root.FindAll(TreeScope.Descendants, propCondition)?.Cast<AutomationElement>();
+            return candidates?.ToList();
+        }
+
+        public AutomationElement GetCurrentElement(AutomationElement root, AutomationProperty property, string target)
+        {
+            var propCondition = new PropertyCondition(property, target);
+            var candidates = root.FindAll(TreeScope.Descendants, propCondition);
+
+            if (candidates.Count <= 0)
             {
                 return null;
             }
 
-            if (candidate.Count == 1)
+            if (candidates.Count == 1)
             {
-                return candidate[0];
+                return candidates[0];
             }
 
-            foreach (AutomationElement element in candidate)
+            AutomationElement candidate = null;
+            foreach (AutomationElement element in candidates)
             {
                 if (Bounds == element.Current.BoundingRectangle)
                 {
-                    return element;
+                    candidate = element;
                 }
             }
-            return null;
+            return candidate;
         }
 
         public virtual void Prepare()

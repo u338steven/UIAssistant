@@ -28,6 +28,7 @@ namespace UIAssistant.Core.Enumerators
         Commands,
         TextsInWindow,
         TextsInContainer,
+        ContextMenu,
     }
 
     public interface IHUDItem

@@ -26,6 +26,7 @@ namespace UIAssistant.Plugin.SearchByText
         public override void Initialize()
         {
             base.Initialize();
+            Hook.IgnoreInjected = true;
         }
 
         public override void Reset()

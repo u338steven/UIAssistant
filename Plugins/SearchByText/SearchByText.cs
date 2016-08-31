@@ -40,8 +40,9 @@ namespace UIAssistant.Plugin.SearchByText
             var argTextsInWindow = new ArgumentNode(Consts.TextsInWindow);
             var argTextsInContainer = new ArgumentNode(Consts.TextsInContainer);
             var argRunningApps = new ArgumentNode(Consts.RunningApps);
+            var argContextMenu = new ArgumentNode(Consts.ContextMenu);
 
-            var command = new CommandNode(Consts.Command, new[] { argCommands, argTextsInWindow, argTextsInContainer, argRunningApps, });
+            var command = new CommandNode(Consts.Command, new[] { argCommands, argTextsInWindow, argTextsInContainer, argRunningApps, argContextMenu });
 
             UIAssistantAPI.RegisterCommand(command);
         }
@@ -77,6 +78,10 @@ namespace UIAssistant.Plugin.SearchByText
             else if (args.Any(arg => Consts.RunningApps.EqualsWithCaseIgnored(arg)))
             {
                 return Generate(EnumerateTarget.RunningApps, args);
+            }
+            else if (args.Any(arg => Consts.ContextMenu.EqualsWithCaseIgnored(arg)))
+            {
+                return Generate(EnumerateTarget.ContextMenu, args);
             }
             return Generate(EnumerateTarget.TextsInWindow, args);
         }

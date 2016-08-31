@@ -101,7 +101,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                     var isEnabled = (itemInfo.fState & MFS_DISABLED) == 0;
                     var id = itemInfo.wID;
 
-                    var result = new MenuItem(itemName, isEnabled, id);
+                    var result = new MenuItem(itemName, isEnabled, id, MainWindowHandle);
                     _results.Add(result);
                     continue;
                 }
