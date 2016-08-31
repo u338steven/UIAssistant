@@ -35,6 +35,22 @@ namespace UIAssistant.Plugin.SearchByText.Items
             }
             Prepare();
 
+            if (Root.IsWPF())
+            {
+                Task.Run(() =>
+                {
+                    AutomationElement element = Root;
+                    Ancestors.ForEach(x =>
+                    {
+                        element = GetCurrentElement(element, x);
+                        element.TryExpand();
+                    });
+                    element = GetCurrentElement(element);
+                    element.TryDoDefaultAction();
+                });
+                return;
+            }
+
             Task.Run(() =>
             {
                 if (Ancestors.Count > 0)

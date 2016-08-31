@@ -103,20 +103,31 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                                 ancestor = parent + Consts.Delimiter + itemName;
                             }
 
-                            var observer = new PopupObserver();
-                            observer.Callback += x =>
+                            if (item.IsWPF())
                             {
-                                // HACK: デッドロックを避けるために、2箇所で Dispose しているけれど、微妙
-                                observer.Dispose();
-                                GetMenuItems(x, ancestor, new List<AutomationElement>());
+                                _expandableItems.Add(itemName);
+                                item.TryExpand();
+                                GetMenuItems(item, ancestor, new List<AutomationElement>());
                                 item.TryCollapse();
                                 _expandableItems.Remove(itemName);
-                            };
-                            _expandableItems.Add(itemName);
-                            observer.Observe();
-                            item.TryExpand();
-                            observer.Wait();
-                            observer.Dispose();
+                            }
+                            else
+                            {
+                                var observer = new PopupObserver();
+                                observer.Callback += x =>
+                                {
+                                    // HACK: デッドロックを避けるために、2箇所で Dispose しているけれど、微妙
+                                    observer.Dispose();
+                                    GetMenuItems(x, ancestor, new List<AutomationElement>());
+                                    item.TryCollapse();
+                                    _expandableItems.Remove(itemName);
+                                };
+                                _expandableItems.Add(itemName);
+                                observer.Observe();
+                                item.TryExpand();
+                                observer.Wait();
+                                observer.Dispose();
+                            }
                         }
                         var result = new MenuItemUIA(itemName, fullpath, elementInfo.BoundingRectangle, elementInfo.IsEnabled, canExpand, item, ContextRoot, _expandableItems.ToArray().ToList());
                         _results.Add(result);

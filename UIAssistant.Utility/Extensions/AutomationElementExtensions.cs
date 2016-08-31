@@ -174,6 +174,11 @@ namespace UIAssistant.Utility.Extensions
             return false;
         }
 
+        public static bool IsWPF(this AutomationElement el)
+        {
+            return el.GetPropertyValue(AutomationElement.FrameworkIdProperty) as string == "WPF";
+        }
+
         public static bool IsSelected(this AutomationElement el)
         {
             object legacyPattern;
