@@ -38,19 +38,21 @@ namespace UIAssistant.Utility
                 SystemParameters.VirtualScreenWidth,
                 SystemParameters.VirtualScreenHeight);
 
-        public static List<Rect> AllScreen => GetAllScreen();
-        private static List<Rect> GetAllScreen()
+        public static IReadOnlyCollection<Rect> AllScreen
         {
-            List<Rect> result = new List<Rect>();
-            EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero,
-                (IntPtr hMonitor, IntPtr hdcMonitor, ref Win32Interop.Rect lprcMonitor, IntPtr dwData) =>
-                {
-                    var info = new MONITORINFO { cbSize = Marshal.SizeOf(typeof(MONITORINFO)) };
-                    GetMonitorInfo(hMonitor, info);
-                    result.Add(info.rcMonitor.ToRectangle());
-                    return true;
-                }, IntPtr.Zero);
-            return result;
+            get
+            {
+                List<Rect> result = new List<Rect>();
+                EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero,
+                    (IntPtr hMonitor, IntPtr hdcMonitor, ref Win32Interop.Rect lprcMonitor, IntPtr dwData) =>
+                    {
+                        var info = new MONITORINFO { cbSize = Marshal.SizeOf(typeof(MONITORINFO)) };
+                        GetMonitorInfo(hMonitor, info);
+                        result.Add(info.rcMonitor.ToRectangle());
+                        return true;
+                    }, IntPtr.Zero);
+                return result;
+            }
         }
 
         public static Rect GetScreenFrom(Point pt)
