@@ -17,6 +17,7 @@ namespace UIAssistant.Plugin.SearchByText
     {
         private ISearchByTextEnumerator _enumerator;
         private HUDItemCollection _sourceForFiltering;
+        private bool _autoFire = false;
         public UserSettings Settings => UIAssistantAPI.UIAssistantSettings;
 
         public StateController()
@@ -27,6 +28,14 @@ namespace UIAssistant.Plugin.SearchByText
         {
             UIAssistantAPI.DefaultHUD.Initialize();
             UIAssistantAPI.DefaultHUD.ItemsCountPerPage = Settings.ItemsCountPerPage;
+        }
+
+        internal void ParseArguments(IList<string> args)
+        {
+            if (args.Contains("-autofire", StringComparer.CurrentCultureIgnoreCase))
+            {
+                _autoFire = true;
+            }
         }
 
         internal void Enumerate()
@@ -59,6 +68,11 @@ namespace UIAssistant.Plugin.SearchByText
         internal void Filter()
         {
             UIAssistantAPI.DefaultHUD.Filter(_sourceForFiltering, UIAssistantAPI.DefaultHUD.TextBox.Text);
+            if (_autoFire && UIAssistantAPI.DefaultHUD.Items.Count == 1)
+            {
+                System.Threading.Thread.Sleep(300);
+                Execute();
+            }
         }
 
         internal void Execute()

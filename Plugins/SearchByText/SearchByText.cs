@@ -54,6 +54,7 @@ namespace UIAssistant.Plugin.SearchByText
                 _stateController.Initialize();
                 _keyController.Initialize();
                 UIAssistantAPI.SwitchTheme(UIAssistantAPI.UIAssistantSettings.Theme);
+                _stateController.ParseArguments(args);
                 _stateController.ChangeTarget(target);
                 _stateController.Enumerate();
                 UIAssistantAPI.AddDefaultHUD();
