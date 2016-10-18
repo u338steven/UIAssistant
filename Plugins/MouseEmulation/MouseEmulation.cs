@@ -35,7 +35,14 @@ namespace UIAssistant.Plugin.MouseEmulation
         {
             return () =>
             {
-                MouseController.Start();
+                try
+                {
+                    MouseController.Start();
+                }
+                catch (Exception ex)
+                {
+                    UIAssistantAPI.PrintErrorMessage(ex);
+                }
             };
         }
 

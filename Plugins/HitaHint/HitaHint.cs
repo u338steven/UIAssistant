@@ -51,14 +51,21 @@ namespace UIAssistant.Plugin.HitaHint
         {
             return () =>
             {
-                _keyController.Initialize();
-                _stateController.Initialize();
-                _stateController.ChangeTarget(target);
-                _stateController.ParseArguments(args);
-                _stateController.PrintState();
-                UIAssistantAPI.AddDefaultHUD();
-                UIAssistantAPI.TopMost = true;
-                _stateController.Enumerate();
+                try
+                {
+                    _keyController.Initialize();
+                    _stateController.Initialize();
+                    _stateController.ChangeTarget(target);
+                    _stateController.ParseArguments(args);
+                    _stateController.PrintState();
+                    UIAssistantAPI.AddDefaultHUD();
+                    UIAssistantAPI.TopMost = true;
+                    _stateController.Enumerate();
+                }
+                catch (Exception ex)
+                {
+                    UIAssistantAPI.PrintErrorMessage(ex);
+                }
             };
         }
 

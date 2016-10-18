@@ -51,14 +51,21 @@ namespace UIAssistant.Plugin.SearchByText
         {
             return () =>
             {
-                _stateController.Initialize();
-                _keyController.Initialize();
-                UIAssistantAPI.SwitchTheme(UIAssistantAPI.UIAssistantSettings.Theme);
-                _stateController.ParseArguments(args);
-                _stateController.ChangeTarget(target);
-                _stateController.Enumerate();
-                UIAssistantAPI.AddDefaultHUD();
-                UIAssistantAPI.TopMost = true;
+                try
+                {
+                    _stateController.Initialize();
+                    _keyController.Initialize();
+                    UIAssistantAPI.SwitchTheme(UIAssistantAPI.UIAssistantSettings.Theme);
+                    _stateController.ParseArguments(args);
+                    _stateController.ChangeTarget(target);
+                    _stateController.Enumerate();
+                    UIAssistantAPI.AddDefaultHUD();
+                    UIAssistantAPI.TopMost = true;
+                }
+                catch(Exception ex)
+                {
+                    UIAssistantAPI.PrintErrorMessage(ex);
+                }
             };
         }
 

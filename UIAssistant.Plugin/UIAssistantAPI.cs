@@ -184,6 +184,16 @@ namespace UIAssistant.Plugin
             KeyVisualizer.Notify(key, keysState);
         }
 #endif
+        public static void PrintDebugMessage(string message)
+        {
+            Core.Logger.Log.Debug(message);
+        }
+
+        public static void PrintErrorMessage(Exception ex, string message = null)
+        {
+            Core.Logger.Log.Error(ex, message);
+        }
+
         public static void NotifyWarnMessage(string title, string message)
         {
             Notification.NotifyMessage(title, message, NotificationIcon.Warning);
