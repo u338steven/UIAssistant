@@ -313,6 +313,11 @@ namespace UIAssistant.Utility.Win32
             ForciblyControlWindow(() => ShowWindow(WindowHandle, flags));
         }
 
+        public void SetTopMost()
+        {
+            SetWindowPos(WindowHandle, HWND.TopMost);
+        }
+
         public static void SetWindowPos(IntPtr windowHandle, IntPtr insertAfterWindow, bool activate = false, bool hide = false)
         {
             SetWindowPosFlags flag = SetWindowPosFlags.IgnoreMove | SetWindowPosFlags.IgnoreResize;
@@ -367,6 +372,11 @@ namespace UIAssistant.Utility.Win32
             // SetWindowLong(Handle, GWL_EXSTYLE, GetWindowLong(Handle, GWL_EXSTYLE) ^ WS_EX_LAYERED);
             Win32Interop.SetWindowLongPtr(WindowHandle, Win32Interop.GWL.GWL_EXSTYLE, new IntPtr(Win32Interop.GetWindowLongPtr(WindowHandle, Win32Interop.GWL.GWL_EXSTYLE).ToInt32() ^ WS_EX_LAYERED));
             SetLayeredWindowAttributes(WindowHandle, 0, value, LWA_ALPHA);
+        }
+
+        public void Close()
+        {
+            Win32Interop.PostMessage(WindowHandle, Win32Interop.WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
         }
 
         public Rect Bounds => GetBounds();
