@@ -32,6 +32,7 @@ namespace UIAssistant.Plugin.SearchByText
 
         internal void ParseArguments(IList<string> args)
         {
+            _autoFire = false;
             if (args.Contains("-autofire", StringComparer.CurrentCultureIgnoreCase))
             {
                 _autoFire = true;
