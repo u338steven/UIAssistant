@@ -41,8 +41,10 @@ namespace UIAssistant.Plugin.HitaHint
             var argWidgetsInWindow = new ArgumentNode(Consts.WidgetsInWindow, Consts.Click, Consts.DoubleClick, Consts.DragAndDrop, Consts.Hover, Consts.MiddleClick, Consts.MouseEmulation, Consts.RightClick);
             var argWidgetsInTaskbar = new ArgumentNode(Consts.WidgetsInTaskbar, Consts.Click, Consts.DoubleClick, Consts.DragAndDrop, Consts.Hover, Consts.MiddleClick, Consts.MouseEmulation, Consts.RightClick);
             var argDividedscreen = new ArgumentNode(Consts.DividedScreen, Consts.Click, Consts.DoubleClick, Consts.DragAndDrop, Consts.Hover, Consts.MiddleClick, Consts.MouseEmulation, Consts.RightClick);
+            var optTheme = new OptionNode(Consts.Theme);
+            var optNoReturnCursor = new OptionNode(Consts.NoReturnCursor);
 
-            var command = new CommandNode(Consts.Command, new[] { argWidgetsInWindow, argRunningApps, argWidgetsInTaskbar, argDividedscreen, });
+            var command = new CommandNode(Consts.Command, new[] { argWidgetsInWindow, argRunningApps, argWidgetsInTaskbar, argDividedscreen, }, new[] { optTheme, optNoReturnCursor });
 
             UIAssistantAPI.RegisterCommand(command);
         }

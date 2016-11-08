@@ -42,7 +42,11 @@ namespace UIAssistant.Plugin.SearchByText
             var argRunningApps = new ArgumentNode(Consts.RunningApps);
             var argContextMenu = new ArgumentNode(Consts.ContextMenu);
 
-            var command = new CommandNode(Consts.Command, new[] { argCommands, argTextsInWindow, argTextsInContainer, argRunningApps, argContextMenu });
+            var optAutoFire = new OptionNode(Consts.AutoFire);
+
+            var command = new CommandNode(Consts.Command, 
+                new[] { argCommands, argTextsInWindow, argTextsInContainer, argRunningApps, argContextMenu },
+                new[] { optAutoFire });
 
             UIAssistantAPI.RegisterCommand(command);
         }

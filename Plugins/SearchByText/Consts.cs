@@ -14,6 +14,8 @@ namespace UIAssistant.Plugin.SearchByText
 
         internal const string Command = "/";
 
+        internal const string AutoFire = "-" + nameof(AutoFire);
+
         internal const string Commands = nameof(Commands);
         internal const string TextsInWindow = nameof(TextsInWindow);
         internal const string TextsInContainer = nameof(TextsInContainer);

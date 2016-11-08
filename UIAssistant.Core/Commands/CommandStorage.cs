@@ -36,6 +36,10 @@ namespace UIAssistant.Core.Commands
             var commandTokens = Tokenize(commandSource);
             if (IsCommandFixed(commandTokens))
             {
+                if (commandTokens.Last().StartsWithCaseIgnored("-"))
+                {
+                    return GetOptionCandidates(commandTokens)?.OrderBy(x => x);
+                }
                 return GetArgumentCandidates(commandTokens)?.OrderBy(s => s);
             }
             else
@@ -88,6 +92,15 @@ namespace UIAssistant.Core.Commands
                 return null;
             }
             return arguments?.Where(argNode => argNode.Value.StartsWithCaseIgnored(commandTokens.Last()))?.Select(argNode => argNode.Value);
+        }
+
+        private IEnumerable<string> GetOptionCandidates(IEnumerable<string> commandTokens)
+        {
+            var currentCommandNode = this.Find(cmdNode => cmdNode.IsResponsibleFor(commandTokens));
+            var options = currentCommandNode.Options;
+            var token = commandTokens.Last();
+
+            return options?.Where(x => x.Value.StartsWithCaseIgnored(token) && !x.Value.EqualsWithCaseIgnored(token))?.Select(x => x.Value);
         }
 
         public IEnumerable<string> Tokenize(string commandSource)
