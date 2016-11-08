@@ -43,6 +43,8 @@ namespace UIAssistant.Plugin.HitaHint
             }
         }
 
+        public bool IsMouseCursorHidden { get; set; }
+
         public string Theme { get; set; } = "General";
 
         public Keybind SwitchKeyboardLayout { get; } = UserSettings.Instance.SwitchKeyboardLayout;

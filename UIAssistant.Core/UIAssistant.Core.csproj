@@ -103,6 +103,8 @@
     <Compile Include="I18n\Translator.cs" />
     <Compile Include="Input\KeybindManager.cs" />
     <Compile Include="Input\KeyboardHook.cs" />
+    <Compile Include="Input\MouseCursor.cs" />
+    <Compile Include="Input\MouseHook.cs" />
     <Compile Include="Input\MouseOperation.cs" />
     <Compile Include="Logger\Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -101,6 +101,7 @@ namespace UIAssistant.Plugin.HitaHint
         {
             HitaHintSettings.Instance.Save();
             _keyController?.Reset();
+            _stateController?.Reset();
         }
 
         static Localizer _localizer = new Localizer();

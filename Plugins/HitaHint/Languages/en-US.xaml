@@ -16,5 +16,6 @@
 
     <system:String x:Key="hahHintkeys">Hint keys(used for a hint char)</system:String>
     <system:String x:Key="hahScreenWidthDivisionCount">Number of a screen partitions(used in screen division mode)</system:String>
+    <system:String x:Key="hahHideMouseCursor">Automatically hide the mouse cursor</system:String>
 
 </ResourceDictionary>

@@ -29,6 +29,16 @@ namespace UIAssistant.Plugin.HitaHint
         public StateController()
         {
             Settings = HitaHintSettings.Instance;
+            if (Settings.IsMouseCursorHidden)
+            {
+                Reset();
+            }
+        }
+
+        public void Reset()
+        {
+            MouseCursor.AutoHide = Settings.IsMouseCursorHidden;
+            MouseCursor.SetCursorVisibility(!Settings.IsMouseCursorHidden);
         }
 
         public void Initialize()
@@ -44,13 +54,14 @@ namespace UIAssistant.Plugin.HitaHint
             PreviousWindow?.Activate();
         }
 
+        private static bool _noReturnCursor = false;
         private static System.Windows.Point _prevMousePosition;
         private void SubscribeReturnMouseCursor()
         {
             _prevMousePosition = MouseOperation.GetMousePosition();
             Finished += () =>
             {
-                if (!OperationManager.CurrentCommand.IsReturnCursor)
+                if (!OperationManager.CurrentCommand.IsReturnCursor || _noReturnCursor)
                 {
                     return;
                 }
@@ -112,12 +123,13 @@ namespace UIAssistant.Plugin.HitaHint
         {
             OperationManager.SetDefaultOpration(args);
             SetTheme(args);
+            _noReturnCursor = args.Any(x => x.StartsWithCaseIgnored(Consts.NoReturnCursor));
         }
 
         // TODO: Experimental CommandOption
         public void SetTheme(IList<string> args)
         {
-            var theme = args.SkipWhile(x => !x.StartsWith("-theme:", StringComparison.CurrentCultureIgnoreCase));
+            var theme = args.SkipWhile(x => !x.StartsWithCaseIgnored(Consts.Theme));
             if (theme.Count() > 0)
                 _themeSwitcher.Switch(theme.ElementAt(0).Split(':')[1]);
             else
@@ -286,6 +298,16 @@ namespace UIAssistant.Plugin.HitaHint
                 Enumerate();
                 PrintState();
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (Settings.IsMouseCursorHidden)
+            {
+                MouseCursor.SetCursorVisibility(true);
+                MouseCursor.DestroyCursor();
+            }
+            base.Dispose(disposing);
         }
     }
 }

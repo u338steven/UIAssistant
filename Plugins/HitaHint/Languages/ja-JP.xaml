@@ -16,5 +16,6 @@
 
     <system:String x:Key="hahHintkeys">ヒントに使用する文字列</system:String>
     <system:String x:Key="hahScreenWidthDivisionCount">画面分割数(画面分割モード時に使用)</system:String>
+    <system:String x:Key="hahHideMouseCursor">マウスを使用していないとき、マウスカーソルを隠す</system:String>
 
 </ResourceDictionary>
