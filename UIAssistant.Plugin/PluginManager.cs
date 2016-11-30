@@ -52,29 +52,45 @@ namespace UIAssistant.Plugin
             container = new CompositionContainer(catalog);
             container.ComposeParts(this);
 
-            Plugins.ForEach(plugin =>
+            LoadAllPlugins();
+            Localize();
+
+            RemoveRemovedPlugins();
+        }
+
+        private void RemoveRemovedPlugins()
+        {
+            var settings = UserSettings.Instance;
+
+            var oldDisabledPlugins = new HashSet<string>(settings.DisabledPlugins);
+            oldDisabledPlugins.ForEach(x =>
             {
-                try
+                if (!Plugins.Any(y => y.Metadata.CommandName.EqualsWithCaseIgnored(x)))
                 {
-                    plugin.Value.Initialize();
-                }
-                catch(Exception ex)
-                {
-                    var message = string.Format(TextID.PluginInitializeError.GetLocalizedText(), plugin.Metadata.Name);
-                    UIAssistantAPI.NotifyWarnMessage("Warning", message);
-                    Log.Error(ex);
-                    Log.Warn(message);
-                }
-                if (!plugins.ContainsKey(plugin.Metadata.CommandName))
-                {
-                    plugins.Add(plugin.Metadata.CommandName, plugin.Value);
-                }
-                else
-                {
-                    UIAssistantAPI.NotifyWarnMessage("Warning", string.Format(TextID.PluginCommandDuplication.GetLocalizedText(), plugin.Metadata.Name));
+                    settings.DisabledPlugins.Remove(x);
                 }
             });
+        }
 
+        private void LoadAllPlugins()
+        {
+            var settings = UserSettings.Instance;
+
+            Plugins.ForEach(plugin =>
+            {
+                if (settings.DisabledPlugins.Contains(plugin.Metadata.CommandName))
+                {
+                    return;
+                }
+                Load(plugin);
+            });
+        }
+
+        public void ResetAllPlugins()
+        {
+            DisposablePlugins.ForEach(plugin => plugin.Dispose());
+            plugins = new Dictionary<string, IPlugin>();
+            LoadAllPlugins();
             Localize();
         }
 
@@ -85,7 +101,11 @@ namespace UIAssistant.Plugin
                 return null;
             }
             var args = command.Split(' ');
-            var action = Plugins.Where(plugin => plugin.Metadata.CommandName == args[0]).FirstOrDefault()?.Value.GenerateAction(args);
+            if (!plugins.ContainsKey(args[0]))
+            {
+                return null;
+            }
+            var action = plugins[args[0]].GenerateAction(args);
             return () =>
             {
                 InitializeBeforePluginCalled();
@@ -107,6 +127,29 @@ namespace UIAssistant.Plugin
         public bool Exists(string command)
         {
             return GenerateAction(command) != null;
+        }
+
+        private void Load(Lazy<IPlugin, IPluginMetadata> plugin)
+        {
+            try
+            {
+                plugin.Value.Initialize();
+            }
+            catch (Exception ex)
+            {
+                var message = string.Format(TextID.PluginInitializeError.GetLocalizedText(), plugin.Metadata.Name);
+                UIAssistantAPI.NotifyWarnMessage("Warning", message);
+                Log.Error(ex);
+                Log.Warn(message);
+            }
+            if (!plugins.ContainsKey(plugin.Metadata.CommandName))
+            {
+                plugins.Add(plugin.Metadata.CommandName, plugin.Value);
+            }
+            else
+            {
+                UIAssistantAPI.NotifyWarnMessage("Warning", string.Format(TextID.PluginCommandDuplication.GetLocalizedText(), plugin.Metadata.Name));
+            }
         }
 
         public event Action Resume;

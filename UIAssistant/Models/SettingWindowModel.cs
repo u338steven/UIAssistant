@@ -28,13 +28,19 @@ namespace UIAssistant.Models
             HotkeyResistrant.UnregisterAll();
             foreach (var hotkey in setting.Commands)
             {
+                var action = PluginManager.Instance.GenerateAction(hotkey.Text);
+                if (action == null)
+                {
+                    Notification.NotifyMessage("Waring", string.Format(TextID.DisabledPlugin.GetLocalizedText(), hotkey.Text), NotificationIcon.Warning);
+                    continue;
+                }
                 try
                 {
-                    HotkeyResistrant.Register(hotkey.ModifierKeys, hotkey.Key, PluginManager.Instance.GenerateAction(hotkey.Text));
+                    HotkeyResistrant.Register(hotkey.ModifierKeys, hotkey.Key, action);
                 }
                 catch (DuplicateHotkeyException ex)
                 {
-                    Notification.NotifyMessage("Waring", string.Format(TextID.HotkeyDuplication, ex.Message), NotificationIcon.Warning);
+                    Notification.NotifyMessage("Waring", string.Format(TextID.HotkeyDuplication.GetLocalizedText(), ex.Message), NotificationIcon.Warning);
                 }
             }
         }

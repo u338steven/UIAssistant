@@ -16,6 +16,7 @@ namespace UIAssistant.Core.Settings
     {
         public bool RunAtLogin { get; set; }
         public bool UseMigemo { get; set; }
+        public HashSet<string> DisabledPlugins { get; set; } = new HashSet<string>();
         public string Culture { get; set; }
         public string MigemoDllPath { get; set; }
         public string MigemoDictionaryPath { get; set; }

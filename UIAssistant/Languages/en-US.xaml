@@ -12,6 +12,7 @@
     <system:String x:Key="switchTheme">Switch to {0} Theme</system:String>
     <system:String x:Key="switchKeyboardLayout">Switch to {0}</system:String>
     <system:String x:Key="hotkeyDuplication">Duplicate hotkey: {0}</system:String>
+    <system:String x:Key="disabledPlugin">Disabled plugin's hotkey command: {0}</system:String>
     <system:String x:Key="keybindDuplication">Duplicate keybind: {0}</system:String>
     <system:String x:Key="forcedTermination">Forcibly terminate UIAssistant in 3 seconds</system:String>
     <system:String x:Key="settingsLoadError">Cannot load {0}, default settings is used</system:String>
@@ -37,6 +38,7 @@
     <system:String x:Key="pluginHeader">_Plugin</system:String>
     <system:String x:Key="author">Author</system:String>
     <system:String x:Key="pluginsKeybinds">This plugin's keybinds</system:String>
+    <system:String x:Key="enable">Enable</system:String>
 
     <!--Setting Hotkey-->
     <system:String x:Key="hotkeyHeader">_Hotkey</system:String>

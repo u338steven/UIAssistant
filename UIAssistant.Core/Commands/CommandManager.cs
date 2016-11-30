@@ -17,6 +17,11 @@ namespace UIAssistant.Core.Commands
             _storage.Add(item);
         }
 
+        public static void Clear()
+        {
+            _storage.Clear();
+        }
+
         public static bool IsValid(string command)
         {
             return _storage.Validate(command) != null;

@@ -157,6 +157,31 @@ namespace UIAssistant.ViewModels
         }
         #endregion
 
+        #region PluginEnable変更通知プロパティ
+        private bool _PluginEnable;
+
+        public bool PluginEnable
+        {
+            get
+            { return _PluginEnable; }
+            set
+            { 
+                if (_PluginEnable == value)
+                    return;
+                _PluginEnable = value;
+                if (value)
+                {
+                    Settings.DisabledPlugins.Remove(CurrentPluginMetadata.CommandName);
+                }
+                else
+                {
+                    Settings.DisabledPlugins.Add(CurrentPluginMetadata.CommandName);
+                }
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
         #region Generator変更通知プロパティ
         private ICandidatesGenerator _Generator;
 
@@ -246,6 +271,8 @@ namespace UIAssistant.ViewModels
 
             var plugin = Plugins.ElementAt(selectedIndex);
             CurrentPluginMetadata = plugin.Metadata;
+
+            PluginEnable = !Settings.DisabledPlugins.Contains(CurrentPluginMetadata.CommandName);
 
             if (_cachedPluginPanels.ContainsKey(selectedIndex))
             {
@@ -359,11 +386,15 @@ namespace UIAssistant.ViewModels
         protected override void Dispose(bool disposing)
         {
             Settings.Save();
-            SettingsWindowModel.RegisterHotkeys();
             foreach (var plugin in Plugins)
             {
                 (plugin.Value as IConfigurablePlugin)?.Save();
             }
+
+            CommandManager.Clear();
+            PluginManager.Instance.ResetAllPlugins();
+            SettingsWindowModel.RegisterHotkeys();
+
             _pluginsPanel.Content = null;
             _pluginsPanel = null;
             PluginIcon = null;

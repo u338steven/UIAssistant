@@ -12,6 +12,7 @@
     <system:String x:Key="switchTheme">テーマを {0} に変更しました</system:String>
     <system:String x:Key="switchKeyboardLayout">キーボードレイアウトを {0} に変更しました</system:String>
     <system:String x:Key="hotkeyDuplication">ホットキーが重複しているため、どちらか片方が無視されます {0}</system:String>
+    <system:String x:Key="disabledPlugin">以下のコマンドで無効化されたプラグインを使用しています {0}</system:String>
     <system:String x:Key="keybindDuplication">キーバインド {0} が重複しているため、どちらか片方が無視されます</system:String>
     <system:String x:Key="forcedTermination">3 秒後に、UIAssistant を強制終了します</system:String>
     <system:String x:Key="settingsLoadError">{0} を読みこめませんでした。デフォルトの設定が使用されます</system:String>
@@ -37,6 +38,7 @@
     <system:String x:Key="pluginHeader">プラグイン(_P)</system:String>
     <system:String x:Key="author">作者</system:String>
     <system:String x:Key="pluginsKeybinds">プラグイン独自のキーバインド</system:String>
+    <system:String x:Key="enable">有効にする</system:String>
 
     <!--Setting Hotkey-->
     <system:String x:Key="hotkeyHeader">ホットキー(_H)</system:String>

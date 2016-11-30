@@ -129,9 +129,10 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Image Source="{Binding PluginIcon}" Width="64" Height="64" Grid.RowSpan="4" Margin="0,0,10,10"/>
+                        <Image Source="{Binding PluginIcon}" Width="64" Height="64" Grid.RowSpan="5" Margin="0,0,10,10"/>
 
                         <TextBlock Text="Command: " Grid.Column="1"/>
                         <TextBlock Text="{Binding CurrentPluginMetadata.CommandName}" Grid.Column="2"/>
@@ -145,7 +146,9 @@
                         <TextBlock Text="Version: " Grid.Row="3" Grid.Column="1"/>
                         <TextBlock Text="{Binding CurrentPluginMetadata.Version}" Grid.Row="3" Grid.Column="2"/>
 
-                        <UserControl x:Name="pluginPanel" HorizontalAlignment="Stretch" Grid.Row="4" Grid.ColumnSpan="3"/>
+                        <CheckBox IsChecked="{Binding PluginEnable}" Content="{DynamicResource enable}" Grid.Row="4" Grid.Column="1"/>
+
+                        <UserControl x:Name="pluginPanel" HorizontalAlignment="Stretch" Grid.Row="5" Grid.ColumnSpan="3"/>
                     </Grid>
                 </ScrollViewer>
             </StackPanel>

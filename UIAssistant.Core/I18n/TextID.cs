@@ -13,6 +13,7 @@
         public const string SwitchTheme = "switchTheme";
         public const string SwitchKeyboardLayout = "switchKeyboardLayout";
         public const string HotkeyDuplication = "hotkeyDuplication";
+        public const string DisabledPlugin = "disabledPlugin";
         public const string KeybindDuplication = "keybindDuplication";
         public const string ForcedTermination = "forcedTermination";
         public const string SettingsLoadError = "settingsLoadError";
