@@ -456,7 +456,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
         bool _isOneShotCandidate = false;
         Key _repeatKey;
-        KeySet _currentKeySet;
+        KeySet _currentKeySet = new KeySet();
         protected override void OnKeyDown(KeyEvent keyEvent, Key key, KeySet keysState, ref bool handled)
         {
             if (keysState.IsInjected)
