@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIAssistant.Utility", "UIAssistant.Utility\UIAssistant.Utility.csproj", "{9C9EBD40-2656-4217-9BD3-3CBA29F95DBB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIAssistant.Core", "UIAssistant.Core\UIAssistant.Core.csproj", "{A1D8D3E3-6075-4C68-8D27-7F113A2C7755}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7A300BC2-C0B0-4BBF-B689-E86E493BF3A0} = {7A300BC2-C0B0-4BBF-B689-E86E493BF3A0}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIAssistant.Plugin", "UIAssistant.Plugin\UIAssistant.Plugin.csproj", "{F8038B99-5E66-40D3-B8EE-576B1BC34502}"
 EndProject

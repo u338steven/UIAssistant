@@ -212,6 +212,7 @@ namespace UIAssistant.ViewModels
         public IList<Language> Languages { get { return DefaultLocalizer.AvailableLanguages; } }
 
         private UserControl _pluginsPanel;
+        private bool _isInitialized;
 
         public void Initialize(UserControl pluginsPanel)
         {
@@ -229,6 +230,7 @@ namespace UIAssistant.ViewModels
 
             Generator = CommandManager.GetGenerator();
             LocalizeKeybindsText();
+            _isInitialized = true;
         }
 
         private void LocalizeKeybindsText()
@@ -335,6 +337,10 @@ namespace UIAssistant.ViewModels
 
         private void OnLanguageChanged()
         {
+            if (!_isInitialized)
+            {
+                return;
+            }
             Settings.Culture = Language.CultureName;
             DefaultLocalizer.SwitchLanguage(Language);
             LocalizeKeybindsText();
@@ -345,6 +351,10 @@ namespace UIAssistant.ViewModels
 
         private void OnRunAtLoginChanged()
         {
+            if (!_isInitialized)
+            {
+                return;
+            }
             Settings.RunAtLogin = RunAtLogin;
             if (RunAtLogin)
             {
@@ -358,6 +368,10 @@ namespace UIAssistant.ViewModels
 
         private void OnPluginEnableChanged(bool value)
         {
+            if (!_isInitialized)
+            {
+                return;
+            }
             if (value)
             {
                 Settings.DisabledPlugins.Remove(CurrentPluginMetadata.Guid);
@@ -370,6 +384,10 @@ namespace UIAssistant.ViewModels
 
         private void OnUseMigemo()
         {
+            if (!_isInitialized)
+            {
+                return;
+            }
             Settings.UseMigemo = UseMigemo;
             if (UseMigemo)
             {
