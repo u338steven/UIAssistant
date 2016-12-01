@@ -169,14 +169,7 @@ namespace UIAssistant.ViewModels
                 if (_PluginEnable == value)
                     return;
                 _PluginEnable = value;
-                if (value)
-                {
-                    Settings.DisabledPlugins.Remove(CurrentPluginMetadata.CommandName);
-                }
-                else
-                {
-                    Settings.DisabledPlugins.Add(CurrentPluginMetadata.CommandName);
-                }
+                OnPluginEnableChanged(value);
                 RaisePropertyChanged();
             }
         }
@@ -272,7 +265,7 @@ namespace UIAssistant.ViewModels
             var plugin = Plugins.ElementAt(selectedIndex);
             CurrentPluginMetadata = plugin.Metadata;
 
-            PluginEnable = !Settings.DisabledPlugins.Contains(CurrentPluginMetadata.CommandName);
+            PluginEnable = !Settings.DisabledPlugins.Contains(CurrentPluginMetadata.Guid);
 
             if (_cachedPluginPanels.ContainsKey(selectedIndex))
             {
@@ -360,6 +353,18 @@ namespace UIAssistant.ViewModels
             else
             {
                 AutoRunAtLoginScheduler.Unregister();
+            }
+        }
+
+        private void OnPluginEnableChanged(bool value)
+        {
+            if (value)
+            {
+                Settings.DisabledPlugins.Remove(CurrentPluginMetadata.Guid);
+            }
+            else
+            {
+                Settings.DisabledPlugins.Add(CurrentPluginMetadata.Guid);
             }
         }
 

@@ -12,6 +12,7 @@ namespace UIAssistant.Plugin.MouseEmulation
     [Export(typeof(IConfigurablePlugin))]
     [Export(typeof(ILocalizablePlugin))]
     [Export(typeof(IDisposable))]
+    [ExportMetadata("Guid", "b0744325-4b37-44f4-bb5d-683667f3f3ee")]
     [ExportMetadata("Name", "Mouse Emulation")]
     [ExportMetadata("Author", "u338.steven")]
     [ExportMetadata("SupportUri", "https://github.com/u338steven/UIAssistant/")]

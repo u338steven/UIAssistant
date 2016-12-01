@@ -29,6 +29,7 @@ namespace UIAssistant.Plugin.SpatialNavigation
 
     [Export(typeof(IPlugin))]
     [Export(typeof(IDisposable))]
+    [ExportMetadata("Guid", "426f2567-b37e-4cf1-8c69-ea27850a67b4")]
     [ExportMetadata("Name", "Spatial Navigation")]
     [ExportMetadata("Author", "u338.steven")]
     [ExportMetadata("SupportUri", "https://github.com/u338steven/UIAssistant/")]

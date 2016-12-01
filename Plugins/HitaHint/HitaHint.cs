@@ -17,6 +17,7 @@ namespace UIAssistant.Plugin.HitaHint
     [Export(typeof(IConfigurablePlugin))]
     [Export(typeof(ILocalizablePlugin))]
     [Export(typeof(IDisposable))]
+    [ExportMetadata("Guid", "dd89b0bf-b416-4329-8f9a-31051e810740")]
     [ExportMetadata("Name", "Hit-a-Hint")]
     [ExportMetadata("Author", "u338.steven")]
     [ExportMetadata("SupportUri", "https://github.com/u338steven/UIAssistant/")]

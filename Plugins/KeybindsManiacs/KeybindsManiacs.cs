@@ -14,6 +14,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
     [Export(typeof(IConfigurablePlugin))]
     [Export(typeof(ILocalizablePlugin))]
     [Export(typeof(IDisposable))]
+    [ExportMetadata("Guid", "a9f485e8-9b42-47fa-90c3-95c40432da06")]
     [ExportMetadata("Name", "Keybinds Maniacs")]
     [ExportMetadata("Author", "u338.steven")]
     [ExportMetadata("SupportUri", "https://github.com/u338steven/UIAssistant/")]

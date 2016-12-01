@@ -23,6 +23,7 @@ namespace UIAssistant.Plugin
 
     public interface IPluginMetadata
     {
+        string Guid { get; }
         string Name { get; }
         string Author { get; }
         string SupportUri { get; }

@@ -16,6 +16,7 @@ namespace UIAssistant.Plugin.SearchByText
     [Export(typeof(IConfigurablePlugin))]
     [Export(typeof(ILocalizablePlugin))]
     [Export(typeof(IDisposable))]
+    [ExportMetadata("Guid", "cd70037d-4b69-4c5d-8882-5db95fdd5127")]
     [ExportMetadata("Name", "Search by Text")]
     [ExportMetadata("Author", "u338.steven")]
     [ExportMetadata("SupportUri", "https://github.com/u338steven/UIAssistant/")]

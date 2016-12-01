@@ -65,7 +65,7 @@ namespace UIAssistant.Plugin
             var oldDisabledPlugins = new HashSet<string>(settings.DisabledPlugins);
             oldDisabledPlugins.ForEach(x =>
             {
-                if (!Plugins.Any(y => y.Metadata.CommandName.EqualsWithCaseIgnored(x)))
+                if (!Plugins.Any(y => y.Metadata.Guid.EqualsWithCaseIgnored(x)))
                 {
                     settings.DisabledPlugins.Remove(x);
                 }
@@ -78,7 +78,7 @@ namespace UIAssistant.Plugin
 
             Plugins.ForEach(plugin =>
             {
-                if (settings.DisabledPlugins.Contains(plugin.Metadata.CommandName))
+                if (settings.DisabledPlugins.Contains(plugin.Metadata.Guid))
                 {
                     return;
                 }
