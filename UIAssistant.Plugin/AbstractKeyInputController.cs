@@ -22,8 +22,8 @@ namespace UIAssistant.Plugin
         public AbstractKeyInputController(AbstractStateController controller)
         {
             StateController = controller;
-            StateController.Pausing += () => Hook.IsActive = true;
-            StateController.Resumed += () => Hook.IsActive = false;
+            StateController.Pausing += (_, __) => Hook.IsActive = true;
+            StateController.Resumed += (_, __) => Hook.IsActive = false;
         }
 
         public virtual void Reset()
@@ -37,7 +37,7 @@ namespace UIAssistant.Plugin
             Hook.Hook();
             Hook.HookedKeyboardCallback += hookedKeyboardCallback;
 
-            StateController.Finished += () =>
+            StateController.Finished += (_, __) =>
             {
                 Hook.HookedKeyboardCallback -= hookedKeyboardCallback;
                 Hook.Dispose();
@@ -60,7 +60,7 @@ namespace UIAssistant.Plugin
                 }
                 else
                 {
-                    RemoveUsagePanel();
+                    RemoveUsagePanel(this, EventArgs.Empty);
                     StateController.Finished -= RemoveUsagePanel;
                 }
             });
@@ -107,7 +107,7 @@ namespace UIAssistant.Plugin
         protected abstract void OnKeyDown(KeyEvent keyEvent, Key key, KeySet keysState, ref bool handled);
         protected abstract void OnKeyUp(KeyEvent keyEvent, Key key, KeySet keysState, ref bool handled);
 
-        private void RemoveUsagePanel()
+        private void RemoveUsagePanel(object sender, EventArgs e)
         {
             UIAssistantAPI.RemovePanel(UsagePanel);
         }

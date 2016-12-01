@@ -12,7 +12,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
     {
         void Enumerate(HUDItemCollection resultsContainer);
         void Cancel();
-        event Action Updated;
-        event Action Finished;
+        event EventHandler Updated;
+        event EventHandler Finished;
     }
 }

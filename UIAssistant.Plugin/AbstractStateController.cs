@@ -10,14 +10,14 @@ namespace UIAssistant.Plugin
 {
     public abstract class AbstractStateController : IDisposable
     {
-        public event Action Finished;
-        public event Action Pausing;
-        public event Action Resumed;
+        public event EventHandler Finished;
+        public event EventHandler Pausing;
+        public event EventHandler Resumed;
 
         public abstract void SwitchNextTheme();
         public virtual void Cleanup()
         {
-            Finished?.Invoke();
+            Finished?.Invoke(this, EventArgs.Empty);
             Finished = null;
             Pausing = null;
             Resumed = null;
@@ -28,12 +28,12 @@ namespace UIAssistant.Plugin
             // TODO: Experiment: Another plugin execution
             if (PluginManager.Instance.Exists(command))
             {
-                Pausing?.Invoke();
+                Pausing?.Invoke(this, EventArgs.Empty);
                 UIAssistantAPI.DefaultHUD.Initialize();
                 PluginManager.Instance.Execute(command);
                 PluginManager.Instance.Resume += () =>
                 {
-                    Resumed?.Invoke();
+                    Resumed?.Invoke(this, EventArgs.Empty);
                 };
                 PluginManager.Instance.Quit += () =>
                 {

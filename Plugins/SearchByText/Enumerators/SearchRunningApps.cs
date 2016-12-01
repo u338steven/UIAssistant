@@ -13,10 +13,9 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
 {
     class SearchRunningApps : ISearchByTextEnumerator
     {
-#pragma warning disable 414
-        public event Action Updated;
-        public event Action Finished;
-#pragma warning restore 414
+        public event EventHandler Updated;
+        public event EventHandler Finished;
+
         public void Enumerate(HUDItemCollection resultsContainer)
         {
             var results = new List<IHUDItem>();
@@ -32,6 +31,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
                 return true;
             });
             results.OrderBy(x => x.DisplayText).ForEach(x => resultsContainer.Add(x));
+            Updated?.Invoke(this, EventArgs.Empty);
+            Finished?.Invoke(this, EventArgs.Empty);
         }
 
         public void Cancel()

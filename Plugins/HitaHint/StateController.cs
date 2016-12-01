@@ -59,7 +59,7 @@ namespace UIAssistant.Plugin.HitaHint
         private void SubscribeReturnMouseCursor()
         {
             _prevMousePosition = MouseOperation.GetMousePosition();
-            Finished += () =>
+            Finished += (_, __) =>
             {
                 if (!OperationManager.CurrentCommand.IsReturnCursor || _noReturnCursor)
                 {
@@ -186,7 +186,7 @@ namespace UIAssistant.Plugin.HitaHint
 
         public void InvokePlugin(string command)
         {
-            Resumed += () =>
+            Resumed += (_, __) =>
             {
                 _inputText.Clear();
                 Enumerate();

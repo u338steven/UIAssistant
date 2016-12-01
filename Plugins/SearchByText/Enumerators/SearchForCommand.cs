@@ -11,8 +11,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
 {
     class SearchForCommand : ISearchByTextEnumerator
     {
-        public event Action Updated;
-        public event Action Finished;
+        public event EventHandler Updated;
+        public event EventHandler Finished;
         AbstarctSearchForCommand _current;
 
         public void Enumerate(HUDItemCollection results)
@@ -20,7 +20,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
             EnumerateInternal(new RibbonUI(), results);
             if (results.Count > 0)
             {
-                Finished?.Invoke();
+                Finished?.Invoke(this, EventArgs.Empty);
                 return;
             }
 
@@ -30,7 +30,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
                 EnumerateInternal(new WPFMenu(), results);
             }
             EnumerateInternal(new Toolbar(), results);
-            Finished?.Invoke();
+            Finished?.Invoke(this, EventArgs.Empty);
             Finished = null;
         }
 

@@ -42,8 +42,8 @@ namespace UIAssistant.Plugin.SearchByText
         internal void Enumerate()
         {
             _sourceForFiltering = UIAssistantAPI.DefaultHUD.Items;
-            _enumerator.Updated += () => Filter();
-            _enumerator.Finished += () =>
+            _enumerator.Updated += (_, __) => Filter();
+            _enumerator.Finished += (_, __) =>
             {
                 _enumerator.Dispose();
                 if (_sourceForFiltering.Count == 0)

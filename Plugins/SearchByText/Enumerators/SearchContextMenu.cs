@@ -15,8 +15,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
     class SearchContextMenu : ISearchByTextEnumerator
     {
         const int MN_GETHMENU = 0x01E1;
-        public event Action Updated;
-        public event Action Finished;
+        public event EventHandler Updated;
+        public event EventHandler Finished;
         AbstarctSearchForCommand _current;
 
         public void Enumerate(HUDItemCollection results)
@@ -37,14 +37,14 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
             {
                 // timeout
                 observer.Dispose();
-                Finished?.Invoke();
+                Finished?.Invoke(this, EventArgs.Empty);
                 Finished = null;
                 return;
             }
             observer.Dispose();
 
             EnumerateInternal(menuEnumerator, results);
-            Finished?.Invoke();
+            Finished?.Invoke(this, EventArgs.Empty);
             Finished = null;
         }
 

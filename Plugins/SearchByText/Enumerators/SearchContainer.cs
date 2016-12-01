@@ -13,10 +13,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
 {
     class SearchContainer : ISearchByTextEnumerator
     {
-#pragma warning disable 414
-        public event Action Updated;
-        public event Action Finished;
-#pragma warning restore 414
+        public event EventHandler Updated;
+        public event EventHandler Finished;
 
         public void Cancel()
         {
@@ -32,7 +30,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
         public void Enumerate(HUDItemCollection results)
         {
             EnumerateInternal(results);
-            Finished?.Invoke();
+            Updated?.Invoke(this, EventArgs.Empty);
+            Finished?.Invoke(this, EventArgs.Empty);
             Finished = null;
         }
 

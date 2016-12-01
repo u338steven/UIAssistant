@@ -15,8 +15,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
 {
     abstract class AbstarctSearchForCommand : IDisposable
     {
-        public event Action Updated;
-        public event Action Finished;
+        public event EventHandler Updated;
+        public event EventHandler Finished;
         protected IntPtr MainWindowHandle { get; private set; } = Win32Window.ActiveWindow.WindowHandle;
         protected HUDItemCollection _results;
 
@@ -30,12 +30,12 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
 
         public void Update()
         {
-            Updated?.Invoke();
+            Updated?.Invoke(this, EventArgs.Empty);
         }
 
         public void Finish()
         {
-            Finished?.Invoke();
+            Finished?.Invoke(this, EventArgs.Empty);
             Updated = null;
             Finished = null;
         }

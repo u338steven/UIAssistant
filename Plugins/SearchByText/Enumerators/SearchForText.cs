@@ -42,8 +42,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
 
     class SearchForText : ISearchByTextEnumerator
     {
-        public event Action Updated;
-        public event Action Finished;
+        public event EventHandler Updated;
+        public event EventHandler Finished;
         Queue<AutomationElement> _groups = new Queue<AutomationElement>(100);
         HUDItemCollection _results;
         List<IDisposable> _disposables = new List<IDisposable>();
@@ -77,8 +77,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
             if (tabGroups.Count == 0)
             {
                 GetElements(root);
-                Updated?.Invoke();
-                Finished?.Invoke();
+                Updated?.Invoke(this, EventArgs.Empty);
+                Finished?.Invoke(this, EventArgs.Empty);
                 return;
             }
 
@@ -112,7 +112,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
                             GetGroupElement(element, parents, tabHandle, tabCount, tabItem);
                         }
                         ++tabCount;
-                        Updated?.Invoke();
+                        Updated?.Invoke(this, EventArgs.Empty);
                     });
 
                     var rootHandle = root.Current.NativeWindowHandle;
@@ -126,8 +126,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
                     {
                         tabGroup.InitialTab?.TrySelectItem();
                     }
-                    Updated?.Invoke();
-                    Finished?.Invoke();
+                    Updated?.Invoke(this, EventArgs.Empty);
+                    Finished?.Invoke(this, EventArgs.Empty);
                 });
             }).Tap(x => _disposables?.Add(x));
         }
