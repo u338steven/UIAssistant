@@ -120,6 +120,8 @@ namespace UIAssistant.ViewModels
             Height = SystemParameters.VirtualScreenHeight;
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
             UIAssistantAPI.TopMost = false;
+
+            Core.Input.KeyboardHook.ForceClosing += (_, __) => MainWindowModel.ExitApplication();
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
