@@ -166,6 +166,7 @@ namespace UIAssistant.Utility.Win32
             WPF_SETMINPOSITION = 0x0001,
         }
 
+        public const int WS_EX_TOPMOST = 0x00000008;
         public const int WS_EX_TOOLWINDOW = 0x00000080;
         public const int WS_EX_TRANSPARENT = 0x00000020;
         public const int WS_EX_LAYERED = 0x80000;
@@ -313,9 +314,34 @@ namespace UIAssistant.Utility.Win32
             ForciblyControlWindow(() => ShowWindow(WindowHandle, flags));
         }
 
+        public bool IsTopMost
+        {
+            get
+            {
+                return (Win32Interop.GetWindowLongPtr(WindowHandle, Win32Interop.GWL.GWL_EXSTYLE).ToInt32() & WS_EX_TOPMOST) != 0;
+            }
+        }
+
+        public void ToggleTopMost()
+        {
+            if (IsTopMost)
+            {
+                SetNoTopMost();
+            }
+            else
+            {
+                SetTopMost();
+            }
+        }
+
         public void SetTopMost()
         {
             SetWindowPos(WindowHandle, HWND.TopMost);
+        }
+
+        public void SetNoTopMost()
+        {
+            SetWindowPos(WindowHandle, HWND.NoTopMost);
         }
 
         public static void SetWindowPos(IntPtr windowHandle, IntPtr insertAfterWindow, bool activate = false, bool hide = false)

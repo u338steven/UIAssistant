@@ -54,6 +54,7 @@
     <system:String x:Key="keybindsHeader">Base _Keybinds</system:String>
     <system:String x:Key="keybindsUseBase">From base keybinds</system:String>
     <system:String x:Key="keybindsExecute">Execute selected element</system:String>
+    <system:String x:Key="keybindsShowExtraActions">Show/Hide extra executable actions</system:String>
     <system:String x:Key="keybindsQuit">Quit</system:String>
     <system:String x:Key="keybindsBack">Backspace</system:String>
     <system:String x:Key="keybindsClear">Clear</system:String>
@@ -77,5 +78,11 @@
     <!--Setting About-->
     <system:String x:Key="aboutHeader">About _UIAssistant</system:String>
     <system:String x:Key="version">Version</system:String>
+
+    <!--Extra actions-->
+    <system:String x:Key="actionsCopy">Copy item name</system:String>
+    <system:String x:Key="actionsCopyHwnd">Copy window handle</system:String>
+    <system:String x:Key="actionsToggleTopMost">Toggle topmost</system:String>
+    <system:String x:Key="actionsCloseWindow">Close window</system:String>
 
 </ResourceDictionary>

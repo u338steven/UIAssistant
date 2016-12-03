@@ -16,7 +16,7 @@ namespace UIAssistant.Plugin.SearchByText
     internal class StateController : AbstractStateController
     {
         private ISearchByTextEnumerator _enumerator;
-        private HUDItemCollection _sourceForFiltering;
+        private HUDItemCollection _sourceForFiltering, _contextSource;
         private bool _autoFire = false;
         public UserSettings Settings => UIAssistantAPI.UIAssistantSettings;
 
@@ -28,6 +28,8 @@ namespace UIAssistant.Plugin.SearchByText
         {
             UIAssistantAPI.DefaultHUD.Initialize();
             UIAssistantAPI.DefaultHUD.ItemsCountPerPage = Settings.ItemsCountPerPage;
+            UIAssistantAPI.DefaultContextHUD.Initialize();
+            UIAssistantAPI.DefaultContextHUD.ItemsCountPerPage = Settings.ItemsCountPerPage;
         }
 
         internal void ParseArguments(IList<string> args)
@@ -56,6 +58,23 @@ namespace UIAssistant.Plugin.SearchByText
             Task.Run(() => _enumerator.Enumerate(_sourceForFiltering));
         }
 
+        // to abstract
+        protected override void OnSwitchingToContext()
+        {
+            // prepare context items
+            UIAssistantAPI.DefaultContextHUD.Items.Clear();
+            var selectedItem = UIAssistantAPI.DefaultHUD.SelectedItem;
+            UIAssistantAPI.DefaultContextHUD.Items.Add(new Copy());
+            if (selectedItem is RunningApp)
+            {
+                UIAssistantAPI.DefaultContextHUD.Items.Add(new CopyHwnd());
+                UIAssistantAPI.DefaultContextHUD.Items.Add(new ToggleTopMost());
+                UIAssistantAPI.DefaultContextHUD.Items.Add(new CloseWindow());
+            }
+            _contextSource = UIAssistantAPI.DefaultContextHUD.Items;
+            UIAssistantAPI.DefaultContextHUD.TextBox.Clear();
+        }
+
         internal void ChangeTarget(EnumerateTarget target)
         {
             _enumerator = Enumerator.Factory(target);
@@ -68,7 +87,14 @@ namespace UIAssistant.Plugin.SearchByText
 
         internal void Filter()
         {
-            UIAssistantAPI.DefaultHUD.Filter(_sourceForFiltering, UIAssistantAPI.DefaultHUD.TextBox.Text);
+            if (UIAssistantAPI.IsContextVisible)
+            {
+                UIAssistantAPI.CurrentHUD.Filter(_contextSource, UIAssistantAPI.CurrentHUD.TextBox.Text);
+            }
+            else
+            {
+                UIAssistantAPI.CurrentHUD.Filter(_sourceForFiltering, UIAssistantAPI.CurrentHUD.TextBox.Text);
+            }
             if (_autoFire && UIAssistantAPI.DefaultHUD.Items.Count == 1)
             {
                 System.Threading.Thread.Sleep(300);
@@ -87,13 +113,20 @@ namespace UIAssistant.Plugin.SearchByText
                 }
             }
             Cancel();
-            UIAssistantAPI.DefaultHUD.Execute();
+            if (UIAssistantAPI.IsContextVisible)
+            {
+                (UIAssistantAPI.DefaultContextHUD.SelectedItem as ContextItemBase).Execute(UIAssistantAPI.DefaultHUD.SelectedItem);
+            }
+            else
+            {
+                UIAssistantAPI.DefaultHUD.Execute();
+            }
             Quit();
         }
 
         internal void Input(string input)
         {
-            UIAssistantAPI.DefaultHUD.TextBox.Input(input);
+            UIAssistantAPI.CurrentHUD.TextBox.Input(input);
             Filter();
         }
 
@@ -111,6 +144,7 @@ namespace UIAssistant.Plugin.SearchByText
             {
                 Cleanup();
                 UIAssistantAPI.RemoveDefaultHUD();
+                UIAssistantAPI.RemoveContextHUD();
                 UIAssistantAPI.TopMost = false;
             });
         }

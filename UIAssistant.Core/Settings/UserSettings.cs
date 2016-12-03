@@ -41,6 +41,7 @@ namespace UIAssistant.Core.Settings
         public Keybind End { get; set; } = new Keybind();
 
         public Keybind Execute { get; set; } = new Keybind();
+        public Keybind ShowExtraActions { get; set; } = new Keybind();
         public Keybind TemporarilyHide { get; set; } = new Keybind();
         public Keybind SwitchKeyboardLayout { get; set; } = new Keybind();
         public Keybind SwitchTheme { get; set; } = new Keybind();
@@ -95,6 +96,7 @@ namespace UIAssistant.Core.Settings
             End = new Keybind(Key.E, LRExtendedModifierKeys.LControl);
 
             Execute = new Keybind(Key.Enter);
+            ShowExtraActions = new Keybind(Key.Tab);
 
             TemporarilyHide = new Keybind(Key.T, LRExtendedModifierKeys.LControl);
             SwitchKeyboardLayout = new Keybind(Key.Space, LRExtendedModifierKeys.LWindows);

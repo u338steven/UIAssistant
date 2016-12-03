@@ -54,6 +54,7 @@
     <system:String x:Key="keybindsHeader">基底のキーバインド(_K)</system:String>
     <system:String x:Key="keybindsUseBase">基底のキーバインドを使用しているもの</system:String>
     <system:String x:Key="keybindsExecute">選択している要素の実行</system:String>
+    <system:String x:Key="keybindsShowExtraActions">その他の動作の表示/非表示</system:String>
     <system:String x:Key="keybindsQuit">処理の終了</system:String>
     <system:String x:Key="keybindsBack">バックスペース/一手戻る</system:String>
     <system:String x:Key="keybindsClear">クリア</system:String>
@@ -78,5 +79,11 @@
     <!--Setting About-->
     <system:String x:Key="aboutHeader">UIAssistantについて(_U)</system:String>
     <system:String x:Key="version">バージョン</system:String>
+    
+    <!--Extra actions-->
+    <system:String x:Key="actionsCopy">文字列をコピー</system:String>
+    <system:String x:Key="actionsCopyHwnd">ウィンドウハンドルをコピー</system:String>
+    <system:String x:Key="actionsToggleTopMost">ウィンドウを最前面に設定/解除</system:String>
+    <system:String x:Key="actionsCloseWindow">ウィンドウを閉じる</system:String>
 
 </ResourceDictionary>

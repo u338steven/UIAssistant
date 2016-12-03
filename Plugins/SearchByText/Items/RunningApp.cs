@@ -1,9 +1,10 @@
 ﻿using System.Windows;
+using UIAssistant.Core.Enumerators;
 using UIAssistant.Utility.Win32;
 
 namespace UIAssistant.Plugin.SearchByText.Items
 {
-    class RunningApp : SearchByTextItem
+    class RunningApp : SearchByTextItem, IWindowItem
     {
         public Win32Window Window { get; set; }
         public RunningApp(string fullName, Win32Window window)

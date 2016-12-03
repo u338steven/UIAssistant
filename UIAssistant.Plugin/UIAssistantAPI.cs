@@ -22,9 +22,11 @@ namespace UIAssistant.Plugin
     public static class UIAssistantAPI
     {
         private static Window window { get; set; } = Application.Current.MainWindow;
-        private static Control hudPanel { set; get; }
+        private static Control hudPanel { get; set; }
+        private static Control contextPanel { get; set; }
+        private static Control currentPanel { get; set; }
 
-        public static void Initialize(Control defaultHUDPanel)
+        public static void Initialize(Control defaultHUDPanel, Control defaultContextPanel)
         {
             if (hudPanel != null)
             {
@@ -32,6 +34,8 @@ namespace UIAssistant.Plugin
                 return;
             }
             hudPanel = defaultHUDPanel;
+            contextPanel = defaultContextPanel;
+            currentPanel = hudPanel;
         }
 
         public static System.Windows.Threading.Dispatcher UIDispatcher => window.Dispatcher;
@@ -74,6 +78,24 @@ namespace UIAssistant.Plugin
             return HintGenerator.Generate(hintKeys, quantity);
         }
 
+        public static bool IsContextAvailable { get; private set; }
+
+        public static bool IsContextVisible
+        {
+            get { return (currentPanel == contextPanel); }
+        }
+
+        public static IHUD CurrentHUD
+        {
+            get
+            {
+                return window.Dispatcher.Invoke(() =>
+                {
+                    return currentPanel.DataContext as IHUD;
+                });
+            }
+        }
+
         public static IHUD DefaultHUD
         {
             get
@@ -90,7 +112,24 @@ namespace UIAssistant.Plugin
             AddPanel(hudPanel);
         }
 
-        public static void AddPanel(UIElement uielement)
+        public static IHUD DefaultContextHUD
+        {
+            get
+            {
+                return window.Dispatcher.Invoke(() =>
+                {
+                    return contextPanel.DataContext as IHUD;
+                });
+            }
+        }
+
+        public static void AddContextHUD()
+        {
+            AddPanel(contextPanel, Visibility.Hidden);
+            IsContextAvailable = true;
+        }
+
+        public static void AddPanel(UIElement uielement, Visibility visibility = Visibility.Visible)
         {
             window.Dispatcher.Invoke(() =>
             {
@@ -99,7 +138,24 @@ namespace UIAssistant.Plugin
                 {
                     panel.Children.Add(uielement);
                 }
-                uielement.Visibility = Visibility.Visible;
+                uielement.Visibility = visibility;
+            });
+        }
+
+        public static void SwitchHUD()
+        {
+            window.Dispatcher.Invoke(() =>
+            {
+                currentPanel.Visibility = Visibility.Hidden;
+                if (currentPanel == hudPanel)
+                {
+                    currentPanel = contextPanel;
+                }
+                else
+                {
+                    currentPanel = hudPanel;
+                }
+                currentPanel.Visibility = Visibility.Visible;
             });
         }
 
@@ -107,6 +163,14 @@ namespace UIAssistant.Plugin
         {
             RemovePanel(hudPanel);
             DefaultHUD.Initialize();
+            currentPanel = hudPanel;
+        }
+
+        public static void RemoveContextHUD()
+        {
+            RemovePanel(contextPanel);
+            DefaultContextHUD.Initialize();
+            IsContextAvailable = false;
         }
 
         public static void RemovePanel(UIElement uielement)

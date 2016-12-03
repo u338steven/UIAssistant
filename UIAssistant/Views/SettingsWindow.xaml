@@ -199,6 +199,7 @@
                     <ListViewItem Content="{Binding Settings.Delete}"/>
                     <ListViewItem Content="{Binding Settings.Clear}"/>
                     <ListViewItem Content="{Binding Settings.Execute}"/>
+                    <ListViewItem Content="{Binding Settings.ShowExtraActions}"/>
                     <ListViewItem Content="{Binding Settings.Left}"/>
                     <ListViewItem Content="{Binding Settings.Right}"/>
                     <ListViewItem Content="{Binding Settings.Up}"/>

@@ -240,6 +240,7 @@ namespace UIAssistant.ViewModels
             Settings.Clear.Text = TextID.KeybindsClear.GetLocalizedText();
             Settings.Delete.Text = TextID.KeybindsDelete.GetLocalizedText();
             Settings.Execute.Text = TextID.KeybindsExecute.GetLocalizedText();
+            Settings.ShowExtraActions.Text = TextID.KeybindsShowExtraActions.GetLocalizedText();
             Settings.Left.Text = TextID.KeybindsLeft.GetLocalizedText();
             Settings.Right.Text = TextID.KeybindsRight.GetLocalizedText();
             Settings.Up.Text = TextID.KeybindsUp.GetLocalizedText();

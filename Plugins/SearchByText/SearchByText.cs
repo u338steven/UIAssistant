@@ -65,6 +65,7 @@ namespace UIAssistant.Plugin.SearchByText
                     _stateController.ChangeTarget(target);
                     _stateController.Enumerate();
                     UIAssistantAPI.AddDefaultHUD();
+                    UIAssistantAPI.AddContextHUD();
                     UIAssistantAPI.TopMost = true;
                 }
                 catch(Exception ex)

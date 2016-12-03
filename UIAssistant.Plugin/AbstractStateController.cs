@@ -49,6 +49,31 @@ namespace UIAssistant.Plugin
 
         public abstract void Quit();
 
+        public void SwitchHUD()
+        {
+            if (!UIAssistantAPI.IsContextAvailable)
+            {
+                return;
+            }
+
+            if (UIAssistantAPI.DefaultHUD.SelectedItem == null)
+            {
+                return;
+            }
+
+            if (!UIAssistantAPI.IsContextVisible)
+            {
+                OnSwitchingToContext();
+            }
+
+            UIAssistantAPI.SwitchHUD();
+        }
+
+        protected virtual void OnSwitchingToContext()
+        {
+
+        }
+
         #region IDisposable Support
         private bool disposedValue = false; // 重複する呼び出しを検出するには
 

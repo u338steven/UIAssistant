@@ -29,6 +29,7 @@ namespace UIAssistant.ViewModels
     public class MainWindowViewModel : ViewModel
     {
         public HUDPanel DefaultHUDPanel => new HUDPanel();
+        public HUDPanel DefaultContextPanel => new HUDPanel();
 
         #region Left変更通知プロパティ
         private double _Left;
@@ -100,7 +101,7 @@ namespace UIAssistant.ViewModels
 
         public void Initialize()
         {
-            UIAssistantAPI.Initialize(DefaultHUDPanel);
+            UIAssistantAPI.Initialize(DefaultHUDPanel, DefaultContextPanel);
 
             IntPtr windowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
             Win32Interop.SetWindowExTransparent(windowHandle);

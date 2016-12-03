@@ -26,6 +26,7 @@
         public const string KeybindsClear = "keybindsClear";
         public const string KeybindsDelete = "keybindsDelete";
         public const string KeybindsExecute = "keybindsExecute";
+        public const string KeybindsShowExtraActions= "keybindsShowExtraActions";
         public const string KeybindsQuit = "keybindsQuit";
         public const string KeybindsLeft = "keybindsLeft";
         public const string KeybindsRight = "keybindsRight";
@@ -40,5 +41,11 @@
         public const string KeybindsSwitchTheme = "keybindsSwitchTheme";
         public const string KeybindsUsage = "keybindsUsage";
         public const string KeybindsEmergencySwitch = "keybindsEmergencySwitch";
+
+        // often used extra actions
+        public const string ActionsCopy = "actionsCopy";
+        public const string ActionsCopyHwnd = "actionsCopyHwnd";
+        public const string ActionsToggleTopMost = "actionsToggleTopMost";
+        public const string ActionsCloseWindow = "actionsCloseWindow";
     }
 }
