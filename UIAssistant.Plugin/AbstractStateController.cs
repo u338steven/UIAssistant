@@ -56,20 +56,15 @@ namespace UIAssistant.Plugin
                 return;
             }
 
-            if (UIAssistantAPI.DefaultHUD.SelectedItem == null)
-            {
-                return;
-            }
-
             if (!UIAssistantAPI.IsContextVisible)
             {
-                OnSwitchingToContext();
+                OnSwitchingToContext(UIAssistantAPI.DefaultHUD.SelectedItem != null);
             }
 
             UIAssistantAPI.SwitchHUD();
         }
 
-        protected virtual void OnSwitchingToContext()
+        protected virtual void OnSwitchingToContext(bool isItemSelected)
         {
 
         }

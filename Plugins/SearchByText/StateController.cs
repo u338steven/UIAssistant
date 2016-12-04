@@ -58,19 +58,21 @@ namespace UIAssistant.Plugin.SearchByText
             Task.Run(() => _enumerator.Enumerate(_sourceForFiltering));
         }
 
-        // to abstract
-        protected override void OnSwitchingToContext()
+        protected override void OnSwitchingToContext(bool isItemSelected)
         {
-            // prepare context items
             UIAssistantAPI.DefaultContextHUD.Items.Clear();
-            var selectedItem = UIAssistantAPI.DefaultHUD.SelectedItem;
-            UIAssistantAPI.DefaultContextHUD.Items.Add(new Copy());
-            if (selectedItem is RunningApp)
+            if (isItemSelected)
             {
-                UIAssistantAPI.DefaultContextHUD.Items.Add(new CopyHwnd());
-                UIAssistantAPI.DefaultContextHUD.Items.Add(new ToggleTopMost());
-                UIAssistantAPI.DefaultContextHUD.Items.Add(new CloseWindow());
+                var selectedItem = UIAssistantAPI.DefaultHUD.SelectedItem;
+                UIAssistantAPI.DefaultContextHUD.Items.Add(new Copy());
+                if (selectedItem is IWindowItem)
+                {
+                    UIAssistantAPI.DefaultContextHUD.Items.Add(new CopyHwnd());
+                    UIAssistantAPI.DefaultContextHUD.Items.Add(new ToggleTopMost());
+                    UIAssistantAPI.DefaultContextHUD.Items.Add(new CloseWindow());
+                }
             }
+            UIAssistantAPI.DefaultContextHUD.Items.Add(new CopyAll());
             _contextSource = UIAssistantAPI.DefaultContextHUD.Items;
             UIAssistantAPI.DefaultContextHUD.TextBox.Clear();
         }
@@ -104,7 +106,7 @@ namespace UIAssistant.Plugin.SearchByText
 
         internal void Execute()
         {
-            if (!(_enumerator is SearchForText))
+            if (!(_enumerator is SearchForText) && !UIAssistantAPI.IsContextVisible)
             {
                 var selectedItem = UIAssistantAPI.DefaultHUD.SelectedItem as SearchByTextItem;
                 if (selectedItem == null || !selectedItem.IsEnabled)
@@ -113,14 +115,7 @@ namespace UIAssistant.Plugin.SearchByText
                 }
             }
             Cancel();
-            if (UIAssistantAPI.IsContextVisible)
-            {
-                (UIAssistantAPI.DefaultContextHUD.SelectedItem as ContextItemBase).Execute(UIAssistantAPI.DefaultHUD.SelectedItem);
-            }
-            else
-            {
-                UIAssistantAPI.DefaultHUD.Execute();
-            }
+            UIAssistantAPI.CurrentHUD.Execute();
             Quit();
         }
 

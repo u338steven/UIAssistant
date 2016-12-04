@@ -81,6 +81,7 @@
 
     <!--Extra actions-->
     <system:String x:Key="actionsCopy">Copy item name</system:String>
+    <system:String x:Key="actionsCopyAll">Copy all item names</system:String>
     <system:String x:Key="actionsCopyHwnd">Copy window handle</system:String>
     <system:String x:Key="actionsToggleTopMost">Toggle topmost</system:String>
     <system:String x:Key="actionsCloseWindow">Close window</system:String>

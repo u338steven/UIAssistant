@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="AbstractKeyInputController.cs" />
     <Compile Include="AbstractStateController.cs" />
+    <Compile Include="ContextItem.cs" />
     <Compile Include="IHUD.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="PluginManager.cs" />

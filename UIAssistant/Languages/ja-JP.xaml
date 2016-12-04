@@ -82,6 +82,7 @@
     
     <!--Extra actions-->
     <system:String x:Key="actionsCopy">文字列をコピー</system:String>
+    <system:String x:Key="actionsCopyAll">表示されている全ての項目の文字列をコピー</system:String>
     <system:String x:Key="actionsCopyHwnd">ウィンドウハンドルをコピー</system:String>
     <system:String x:Key="actionsToggleTopMost">ウィンドウを最前面に設定/解除</system:String>
     <system:String x:Key="actionsCloseWindow">ウィンドウを閉じる</system:String>

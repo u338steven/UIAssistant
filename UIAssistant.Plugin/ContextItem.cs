@@ -6,16 +6,11 @@ using System.Threading.Tasks;
 
 using System.Windows;
 using System.Windows.Media;
-using UIAssistant.Utility.Win32;
 using UIAssistant.Core.I18n;
+using UIAssistant.Core.Enumerators;
 
-namespace UIAssistant.Core.Enumerators
+namespace UIAssistant.Plugin
 {
-    public interface IWindowItem
-    {
-        Win32Window Window { get; set; }
-    }
-
     public abstract class ContextItemBase : IHUDItem
     {
         public bool IsEnabled { get; set; }
@@ -27,11 +22,7 @@ namespace UIAssistant.Core.Enumerators
         public int ColoredStart { get; set; }
         public int ColoredLength { get; set; }
 
-        public void Execute()
-        {
-        }
-
-        public abstract void Execute(IHUDItem item);
+        public abstract void Execute();
     }
 
     public class Copy : ContextItemBase
@@ -42,9 +33,29 @@ namespace UIAssistant.Core.Enumerators
             IsEnabled = true;
         }
 
-        public override void Execute(IHUDItem item)
+        public override void Execute()
         {
+            var item = UIAssistantAPI.DefaultHUD.SelectedItem;
+            if (item == null)
+            {
+                return;
+            }
             Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(item.InternalText));
+        }
+    }
+
+    public class CopyAll : ContextItemBase
+    {
+        public CopyAll()
+        {
+            DisplayText = TextID.ActionsCopyAll.GetLocalizedText();
+            IsEnabled = true;
+        }
+
+        public override void Execute()
+        {
+            var result = UIAssistantAPI.DefaultHUD.Items.Select(x => x.DisplayText).Aggregate((x, y) => $"{x}\r\n{y}");
+            Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(result));
         }
     }
 
@@ -56,9 +67,14 @@ namespace UIAssistant.Core.Enumerators
             IsEnabled = true;
         }
 
-        public override void Execute(IHUDItem item)
+        public override void Execute()
         {
-            Application.Current.Dispatcher.Invoke(() => Clipboard.SetText((item as IWindowItem).Window.WindowHandle.ToString()));
+            var item = UIAssistantAPI.DefaultHUD.SelectedItem as IWindowItem;
+            if (item == null)
+            {
+                return;
+            }
+            Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(item.Window.WindowHandle.ToString()));
         }
     }
 
@@ -70,9 +86,10 @@ namespace UIAssistant.Core.Enumerators
             IsEnabled = true;
         }
 
-        public override void Execute(IHUDItem item)
+        public override void Execute()
         {
-            (item as IWindowItem)?.Window.ToggleTopMost();
+            var item = UIAssistantAPI.DefaultHUD.SelectedItem as IWindowItem;
+            item?.Window.ToggleTopMost();
         }
     }
 
@@ -84,9 +101,10 @@ namespace UIAssistant.Core.Enumerators
             IsEnabled = true;
         }
 
-        public override void Execute(IHUDItem item)
+        public override void Execute()
         {
-            (item as IWindowItem)?.Window.Close();
+            var item = UIAssistantAPI.DefaultHUD.SelectedItem as IWindowItem;
+            item?.Window.Close();
         }
     }
 }

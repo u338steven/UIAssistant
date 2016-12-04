@@ -44,6 +44,7 @@
 
         // often used extra actions
         public const string ActionsCopy = "actionsCopy";
+        public const string ActionsCopyAll = "actionsCopyAll";
         public const string ActionsCopyHwnd = "actionsCopyHwnd";
         public const string ActionsToggleTopMost = "actionsToggleTopMost";
         public const string ActionsCloseWindow = "actionsCloseWindow";

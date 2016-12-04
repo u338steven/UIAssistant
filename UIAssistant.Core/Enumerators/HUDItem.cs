@@ -44,6 +44,11 @@ namespace UIAssistant.Core.Enumerators
         void Execute();
     }
 
+    public interface IWindowItem
+    {
+        Win32Window Window { get; set; }
+    }
+
     public class WidgetInfo : IHUDItem, IWindowItem
     {
         public string InternalText { get; set; }
