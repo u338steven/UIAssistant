@@ -425,6 +425,8 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                 UIAssistantAPI.NotifyInfoMessage("Keybinds Maniacs", KeybindsManiacs.Localizer.GetLocalizedText(Consts.Activate));
                 Initialize();
                 Hook.IgnoreInjected = true;
+                Hook.KeyDown += Hook_KeyDown;
+                Hook.KeyUp += Hook_KeyUp;
             }
             else
             {
@@ -434,37 +436,24 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             _isActive = !_isActive;
         }
 
-        private void ReleaseKeys(KeySet keysState)
-        {
-            if (_currentKeybinds.IsEnabledWindowsKeybinds)
-            {
-                var pressedKeys = keysState.Keys.Where(x => x.IsModifiersKey()).ToArray();
-                KeyboardOperation.Initialize(pressedKeys);
-            }
-            else
-            {
-                KeyboardOperation.Initialize(Key.None);
-            }
-        }
-
-        private KeySet GenerateKeySet(Key key, KeySet keysState)
-        {
-            var mod = keysState.Keys.Where(x => x.IsModifiersKey());
-            var result = new KeySet(mod.Concat(new[] { key }).ToArray());
-            return result;
-        }
-
         bool _isOneShotCandidate = false;
         Key _repeatKey;
         KeySet _currentKeySet = new KeySet();
-        protected override void OnKeyDown(KeyEvent keyEvent, Key key, KeySet keysState, ref bool handled)
+        private void Hook_KeyDown(object sender, LowLevelKeyEventArgs e)
         {
-            if (keysState.IsInjected)
+            if (e.Handled)
             {
-                handled = false;
                 return;
             }
+            if (e.CurrentKey.IsInjected)
+            {
+                e.Handled = false;
+                return;
+            }
+            e.Handled = true;
 
+            var keysState = e.PressedKeys;
+            var key = e.CurrentKey.Key;
             _currentKeySet = keysState;
             if (_isOneShotCandidate && _repeatKey == key)
             {
@@ -485,7 +474,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                 }
             }
 
-            var input = keysState.ConvertToCurrentLanguage();
+            var input = e.ConvertToCurrentLanguage();
             if (input.Length > 0 && _command != null)
             {
                 _command.Invoke(input, keysState);
@@ -509,18 +498,24 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                 return;
             }
 
-            handled = !_currentKeybinds.IsEnabledWindowsKeybinds;
+            e.Handled = !_currentKeybinds.IsEnabledWindowsKeybinds;
             return;
         }
 
-        protected override void OnKeyUp(KeyEvent keyEvent, Key key, KeySet keysState, ref bool handled)
+        private void Hook_KeyUp(object sender, LowLevelKeyEventArgs e)
         {
-            if (keysState.IsInjected)
+            if (e.Handled)
             {
-                handled = false;
                 return;
             }
+            if (e.CurrentKey.IsInjected)
+            {
+                e.Handled = false;
+                return;
+            }
+            e.Handled = true;
 
+            var key = e.CurrentKey.Key;
             var oldKeysState = new KeySet(key);
             if (_currentKeybinds.OneShotKeybinds.Contains(oldKeysState))
             {
@@ -534,13 +529,33 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             }
             _isOneShotCandidate = false;
 
-            if (Keybinds.Contains(keysState) && !key.IsModifiersKey())
+            if (Keybinds.Contains(e.PressedKeys) && !key.IsModifiersKey())
             {
                 return;
             }
 
-            handled = !_currentKeybinds.IsEnabledWindowsKeybinds;
+            e.Handled = !_currentKeybinds.IsEnabledWindowsKeybinds;
             return;
+        }
+
+        private void ReleaseKeys(KeySet keysState)
+        {
+            if (_currentKeybinds.IsEnabledWindowsKeybinds)
+            {
+                var pressedKeys = keysState.Keys.Where(x => x.IsModifiersKey()).ToArray();
+                KeyboardOperation.Initialize(pressedKeys);
+            }
+            else
+            {
+                KeyboardOperation.Initialize(Key.None);
+            }
+        }
+
+        private KeySet GenerateKeySet(Key key, KeySet keysState)
+        {
+            var mod = keysState.Keys.Where(x => x.IsModifiersKey());
+            var result = new KeySet(mod.Concat(new[] { key }).ToArray());
+            return result;
         }
     }
 }

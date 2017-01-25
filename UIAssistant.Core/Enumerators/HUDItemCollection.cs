@@ -10,7 +10,6 @@ namespace UIAssistant.Core.Enumerators
 {
     public class HUDItemCollection : ObservableCollection<IHUDItem>
     {
-        private object _lock;
         public HUDItemCollection()
         {
             Initialize();
@@ -25,8 +24,7 @@ namespace UIAssistant.Core.Enumerators
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
-                _lock = new object();
-                System.Windows.Data.BindingOperations.EnableCollectionSynchronization(this, _lock);
+                System.Windows.Data.BindingOperations.EnableCollectionSynchronization(this, new object());
             });
         }
     }

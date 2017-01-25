@@ -26,20 +26,20 @@ namespace UIAssistant.UI.Controls
             IsActive = true;
         }
 
-        public static void Notify(System.Windows.Input.Key key, KeySet keysState)
+        public static void Notify(LowLevelKeyEventArgs e)
         {
             if (!IsActive)
             {
                 Initialize();
             }
-            var input = keysState.ConvertToCurrentLanguage();
+            var input = e.ConvertToCurrentLanguage();
             if (input.Trim().Length > 0 && char.IsLetterOrDigit(input[0]))
             {
                 _visualizer?.Dispatcher.Invoke((Action)(() => Notify(input)));
             }
-            else if (!key.IsModifiersKey())
+            else if (!e.CurrentKey.Key.IsModifiersKey())
             {
-                _visualizer?.Dispatcher.Invoke((Action)(() => Notify(keysState.ToString(), true)));
+                _visualizer?.Dispatcher.Invoke((Action)(() => Notify(e.PressedKeys.ToString(), true)));
             }
         }
 

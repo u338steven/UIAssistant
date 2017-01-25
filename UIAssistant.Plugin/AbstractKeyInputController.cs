@@ -35,13 +35,41 @@ namespace UIAssistant.Plugin
         {
             Hook = new KeyboardHook();
             Hook.Hook();
-            Hook.HookedKeyboardCallback += hookedKeyboardCallback;
+            Hook.KeyDown += Hook_KeyDown;
+            Hook.KeyUp += Hook_KeyUp;
 
             StateController.Finished += (_, __) =>
             {
-                Hook.HookedKeyboardCallback -= hookedKeyboardCallback;
                 Hook.Dispose();
             };
+        }
+
+        private void Hook_KeyUp(object sender, LowLevelKeyEventArgs e)
+        {
+            if (UIAssistantAPI.Transparent)
+            {
+                UIAssistantAPI.Transparent = false;
+                e.Handled = true;
+                return;
+            }
+        }
+
+        private void Hook_KeyDown(object sender, LowLevelKeyEventArgs e)
+        {
+            var keysState = e.PressedKeys;
+#if DEBUG
+            if (!e.CurrentKey.IsInjected)
+            {
+                UIAssistantAPI.DisplayKeystroke(e);
+            }
+            //System.Diagnostics.Debug.Print($"key:{keysState.ToString()}, {input}, {input.ToUpper()}");
+#endif
+            if (keysState.Equals(_temporarilyHide))
+            {
+                UIAssistantAPI.Transparent = true;
+                e.Handled = true;
+                return;
+            }
         }
 
         protected virtual void InitializeKeybind()
@@ -67,46 +95,6 @@ namespace UIAssistant.Plugin
             _temporarilyHide = new KeySet(UIAssistantAPI.UIAssistantSettings.TemporarilyHide);
         }
 
-        private bool hookedKeyboardCallback(KeyEvent keyEvent, Key key, KeySet keysState)
-        {
-            bool handled = true;
-            switch (keyEvent)
-            {
-                case KeyEvent.WM_KEYDOWN:
-                case KeyEvent.WM_SYSKEYDOWN:
-#if DEBUG
-                    if (!keysState.IsInjected)
-                    {
-                        UIAssistantAPI.DisplayKeystroke(key, keysState);
-                    }
-                    //System.Diagnostics.Debug.Print($"key:{keysState.ToString()}, {input}, {input.ToUpper()}");
-#endif
-                    if (keysState.Equals(_temporarilyHide))
-                    {
-                        UIAssistantAPI.Transparent = true;
-                        return true;
-                    }
-
-                    OnKeyDown(keyEvent, key, keysState, ref handled);
-                    return handled;
-                case KeyEvent.WM_KEYUP:
-                case KeyEvent.WM_SYSKEYUP:
-                    if (UIAssistantAPI.Transparent)
-                    {
-                        UIAssistantAPI.Transparent = false;
-                        return true;
-                    }
-                    OnKeyUp(keyEvent, key, keysState, ref handled);
-                    return handled;
-                default:
-                    break;
-            }
-            return false;
-        }
-
-        protected abstract void OnKeyDown(KeyEvent keyEvent, Key key, KeySet keysState, ref bool handled);
-        protected abstract void OnKeyUp(KeyEvent keyEvent, Key key, KeySet keysState, ref bool handled);
-
         private void RemoveUsagePanel(object sender, EventArgs e)
         {
             UIAssistantAPI.RemovePanel(UsagePanel);
@@ -123,7 +111,6 @@ namespace UIAssistant.Plugin
                 {
                     if (Hook != null)
                     {
-                        Hook.HookedKeyboardCallback -= hookedKeyboardCallback;
                         Hook.Dispose();
                     }
                 }

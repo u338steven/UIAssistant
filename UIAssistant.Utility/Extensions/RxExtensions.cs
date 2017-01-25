@@ -22,5 +22,9 @@ namespace UIAssistant.Utility.Extensions
                 .Select(x => x.Item);
         }
 
+        public static void AddTo(this IDisposable disposable, ICollection<IDisposable> list)
+        {
+            list.Add(disposable);
+        }
     }
 }

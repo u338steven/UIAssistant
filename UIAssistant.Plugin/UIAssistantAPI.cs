@@ -243,9 +243,9 @@ namespace UIAssistant.Plugin
 
         public static UserSettings UIAssistantSettings { get { return UserSettings.Instance; } }
 #if DEBUG
-        public static void DisplayKeystroke(System.Windows.Input.Key key, KeySet keysState)
+        public static void DisplayKeystroke(LowLevelKeyEventArgs e)
         {
-            KeyVisualizer.Notify(key, keysState);
+            KeyVisualizer.Notify(e);
         }
 #endif
         public static void PrintDebugMessage(string message)

@@ -127,8 +127,10 @@ namespace UIAssistant.ViewModels
         {
             SelectedIndex = -1;
             DispatcherHelper.UIDispatcher.Invoke(() => Items = new HUDItemCollection());
-            TextBox.Clear();
+            TextBox.Initialize();
             CustomFilter = null;
+            CoordinateOrigin = new CoordinateOrigin();
+            RaisePropertyChanged(nameof(CoordinateOrigin));
         }
 
         public void Update()
@@ -185,12 +187,13 @@ namespace UIAssistant.ViewModels
         public Func<IEnumerable<IHUDItem>, string, IEnumerable<IHUDItem>> CustomFilter { get; set; }
         public void Filter(HUDItemCollection items, string input)
         {
+            HUDItemCollection clonedItems = new HUDItemCollection(items);
             if (CustomFilter != null)
             {
-                Items = new HUDItemCollection(CustomFilter.Invoke(items, input));
+                Items = new HUDItemCollection(CustomFilter.Invoke(clonedItems, input));
                 return;
             }
-            Items = new HUDItemCollection(DefaultFilter(items, input.Split(' ')));
+            Items = new HUDItemCollection(DefaultFilter(clonedItems, input.Split(' ')));
         }
 
         private Regex _ascii = new Regex("^[\x20-\x7E]+$");

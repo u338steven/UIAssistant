@@ -31,7 +31,7 @@ namespace UIAssistant.Plugin.MouseEmulation
         {
             _keyHook = new KeyboardHook();
             _keyHook.Hook();
-            _keyHook.HookedKeyboardCallback += Keyboard_hookedKeyboardCallback;
+            _keyHook.KeyDown += _keyHook_KeyDown;
             _timer = new Timer();
             _timer.Interval = 100d / 6d;
             _timer.Elapsed += Timer_Elapsed;
@@ -61,6 +61,20 @@ namespace UIAssistant.Plugin.MouseEmulation
             UIAssistantAPI.AddTargetingReticle();
         }
 
+        private static void _keyHook_KeyDown(object sender, LowLevelKeyEventArgs e)
+        {
+            if (e.Handled)
+            {
+                return;
+            }
+            var keysState = e.PressedKeys;
+            if (_keybinds.ContainsKey(keysState))
+            {
+                _keybinds[keysState].Invoke();
+            }
+            e.Handled = true;
+        }
+
         private static void RemoveUsagePanel()
         {
             UIAssistantAPI.RemovePanel(_usagePanel);
@@ -68,21 +82,6 @@ namespace UIAssistant.Plugin.MouseEmulation
         }
 
         private static Usage _usagePanel;
-
-        private static bool Keyboard_hookedKeyboardCallback(KeyEvent keyEvent, Key key, KeySet keysState)
-        {
-#if DEBUG
-            if (keyEvent == KeyEvent.WM_KEYDOWN || keyEvent == KeyEvent.WM_SYSKEYDOWN)
-            {
-                UIAssistantAPI.DisplayKeystroke(key, keysState);
-            }
-#endif
-            if (_keybinds.ContainsKey(keysState))
-            {
-                _keybinds[keysState].Invoke();
-            }
-            return true;
-        }
 
         static void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
@@ -158,7 +157,6 @@ namespace UIAssistant.Plugin.MouseEmulation
         {
             if (_timer.Enabled)
             {
-                _keyHook.HookedKeyboardCallback -= Keyboard_hookedKeyboardCallback;
                 _keyHook.Dispose();
                 _timer.Stop();
                 _timer.Enabled = false;

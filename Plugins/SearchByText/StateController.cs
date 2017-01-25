@@ -89,18 +89,25 @@ namespace UIAssistant.Plugin.SearchByText
 
         internal void Filter()
         {
-            if (UIAssistantAPI.IsContextVisible)
+            try
             {
-                UIAssistantAPI.CurrentHUD.Filter(_contextSource, UIAssistantAPI.CurrentHUD.TextBox.Text);
+                if (UIAssistantAPI.IsContextVisible)
+                {
+                    UIAssistantAPI.CurrentHUD.Filter(_contextSource, UIAssistantAPI.CurrentHUD.TextBox.Text);
+                }
+                else
+                {
+                    UIAssistantAPI.CurrentHUD.Filter(_sourceForFiltering, UIAssistantAPI.CurrentHUD.TextBox.Text);
+                }
+                if (_autoFire && UIAssistantAPI.DefaultHUD.Items.Count == 1)
+                {
+                    System.Threading.Thread.Sleep(300);
+                    Execute();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                UIAssistantAPI.CurrentHUD.Filter(_sourceForFiltering, UIAssistantAPI.CurrentHUD.TextBox.Text);
-            }
-            if (_autoFire && UIAssistantAPI.DefaultHUD.Items.Count == 1)
-            {
-                System.Threading.Thread.Sleep(300);
-                Execute();
+                Core.Logger.Log.Error(ex);
             }
         }
 
@@ -122,7 +129,6 @@ namespace UIAssistant.Plugin.SearchByText
         internal void Input(string input)
         {
             UIAssistantAPI.CurrentHUD.TextBox.Input(input);
-            Filter();
         }
 
         public override void SwitchNextTheme()

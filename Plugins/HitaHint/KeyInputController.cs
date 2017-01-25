@@ -28,6 +28,37 @@ namespace UIAssistant.Plugin.HitaHint
         {
             base.Initialize();
             _stateController.SetKeyboardLayoutName(Hook.GetKeyboardLayoutLanguage());
+            Hook.KeyDown += Hook_KeyDown;
+        }
+
+        private void Hook_KeyDown(object sender, LowLevelKeyEventArgs e)
+        {
+            if (e.Handled)
+            {
+                return;
+            }
+            e.Handled = true;
+
+            try
+            {
+                var keysState = e.PressedKeys;
+                var input = e.ConvertToCurrentLanguage();
+                if (Keybinds.Contains(keysState))
+                {
+                    Keybinds[keysState]?.Invoke();
+                    _stateController.PrintState();
+                    return;
+                }
+
+                if (input.Length > 0)
+                {
+                    _stateController.FilterHints(input);
+                }
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Log.Error(ex);
+            }
         }
 
         public override void Reset()
@@ -85,29 +116,6 @@ namespace UIAssistant.Plugin.HitaHint
 
             });
             base.InitializeKeybind();
-        }
-
-        protected override void OnKeyDown(KeyEvent keyEvent, Key key, KeySet keysState, ref bool handled)
-        {
-            var input = keysState.ConvertToCurrentLanguage();
-            if (Keybinds.Contains(keysState))
-            {
-                Task.Run(() =>
-                {
-                    Keybinds[keysState]?.Invoke();
-                    _stateController.PrintState();
-                });
-                return;
-            }
-
-            if (input.Length > 0)
-            {
-                Task.Run(() => _stateController.FilterHints(input));
-            }
-        }
-
-        protected override void OnKeyUp(KeyEvent keyEvent, Key key, KeySet keysState, ref bool handled)
-        {
         }
     }
 }
