@@ -2,7 +2,7 @@ UIAssistant
 https://github.com/u338steven/UIAssistant
 The MIT License (MIT)
 
-Copyright (c) 2016 u338.steven
+Copyright (c) 2016-2017 u338.steven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
