@@ -24,9 +24,24 @@ namespace UIAssistant.Core.Resource
         public virtual string Default => "default";
         protected virtual string DirectoryPath => UIAssistantDirectory.Executable;
         protected IList<T> AvailableDictionaries;
+        private ResourceDictionary _appliedDict;
+
+        public bool IsAlreadyApplied(T dic)
+        {
+            return Current.FileName == dic.FileName;
+        }
 
         public void Switch(T dic)
         {
+            if (Current != null && IsAlreadyApplied(dic))
+            {
+                if (_appliedDict != null)
+                {
+                    Remove(Current.FileName);
+                    Application.Current.Resources.MergedDictionaries.Add(_appliedDict);
+                }
+                return;
+            }
             var path = GetDictionaryPath(dic);
             if (string.IsNullOrEmpty(path))
             {
@@ -95,16 +110,16 @@ namespace UIAssistant.Core.Resource
                     return new ResourceDictionary();
                 }
             }
-            var dic = new ResourceDictionary();
+            _appliedDict = new ResourceDictionary();
             try
             {
-                dic.Source = new Uri(path, UriKind.Absolute);
+                _appliedDict.Source = new Uri(path, UriKind.Absolute);
             }
             catch
             {
                 Notification.NotifyMessage("Load Theme Error", string.Format(TextID.LoadThemeError.GetLocalizedText(), Current.FileName), NotificationIcon.Error);
             }
-            return dic;
+            return _appliedDict;
         }
 
         private string GetDictionaryPath(T item)
