@@ -121,8 +121,6 @@ namespace UIAssistant.ViewModels
             Height = SystemParameters.VirtualScreenHeight;
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
             UIAssistantAPI.TopMost = false;
-
-            Core.Input.KeyboardHook.ForceClosing += (_, __) => MainWindowModel.ExitApplication();
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
@@ -136,7 +134,9 @@ namespace UIAssistant.ViewModels
         protected override void Dispose(bool disposing)
         {
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
+            PluginManager.Instance.Dispose();
             MainWindowModel.HideNotifyIcon();
+            System.Threading.Thread.Sleep(500);
             base.Dispose(disposing);
         }
     }

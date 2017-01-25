@@ -42,11 +42,9 @@ namespace UIAssistant.Models
             _settingsWindow.Show();
         }
 
-        public static void ExitApplication()
+        private static void ExitApplication()
         {
-            PluginManager.Instance.Dispose();
             _settingsWindow?.Close();
-            System.Threading.Thread.Sleep(500);
             System.Windows.Application.Current?.Dispatcher.Invoke(() => System.Windows.Application.Current?.Shutdown());
         }
     }

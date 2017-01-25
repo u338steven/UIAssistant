@@ -58,6 +58,16 @@ namespace UIAssistant
                 message += ex.StackTrace + "\n";
                 ex = ex.InnerException;
             }
+
+            try
+            {
+                Plugin.PluginManager.Instance.Dispose();
+                Models.MainWindowModel.HideNotifyIcon();
+            }
+            catch
+            {
+
+            }
             MessageBox.Show(
                 message,
                 "Fatal error",
