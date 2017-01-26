@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.Themes;
@@ -79,6 +80,7 @@ namespace UIAssistant.Plugin.HitaHint
             // In order to process a next keyup event
             Task.Run(() =>
             {
+                _cancelToken?.Cancel();
                 _enumerator?.Dispose();
                 UIAssistantAPI.RemoveDefaultHUD();
                 UIAssistantAPI.TopMost = false;
@@ -136,12 +138,26 @@ namespace UIAssistant.Plugin.HitaHint
                 _themeSwitcher.Switch(Settings.Theme);
         }
 
+        CancellationTokenSource _cancelToken;
         public void Enumerate()
         {
             _enumeratedResults = UIAssistantAPI.DefaultHUD.Items;
             _enumeratedResults.Clear();
-            var t = Task.Run(() => _enumerator.Enumerate(_enumeratedResults));
-            t.Wait();
+            _cancelToken = new CancellationTokenSource();
+            var t = Task.Run(() => _enumerator.Enumerate(_enumeratedResults), _cancelToken.Token);
+            try
+            {
+                t.Wait(_cancelToken.Token);
+            }
+            catch (OperationCanceledException ex)
+            {
+                System.Diagnostics.Debug.Print($"{ex.Message}");
+                return;
+            }
+            finally
+            {
+                _cancelToken = null;
+            }
             if (_enumeratedResults == null || _enumeratedResults.Count == 0)
             {
                 UIAssistantAPI.NotifyInfoMessage("Hit-a-Hint", TextID.NoOneFound.GetLocalizedText());

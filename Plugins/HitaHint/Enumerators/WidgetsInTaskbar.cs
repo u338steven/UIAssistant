@@ -65,20 +65,20 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
 
             if (TryShowNotifyIconOverflow(targetWindow))
             {
-                enumerator.Retry(container);
                 _isVisibleNotifyIconOverflow = true;
+                enumerator.Retry(container);
             }
         }
 
         public void Dispose()
         {
-            if (!_isVisibleNotifyIconOverflow)
-            {
-                return;
-            }
             Task.Run(() =>
             {
                 System.Threading.Thread.Sleep(300);
+                if (!_isVisibleNotifyIconOverflow)
+                {
+                    return;
+                }
                 var overflowWindow = Win32Window.Find(NotifyIconOverflowClass, "");
                 overflowWindow.ShowWindow(Win32Window.WindowShowStyle.Hide);
             });
