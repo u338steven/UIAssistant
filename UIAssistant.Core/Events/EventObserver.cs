@@ -9,14 +9,14 @@ using System.Windows.Automation;
 
 namespace UIAssistant.Core.Events
 {
-    public abstract class EventObserver
+    public abstract class EventObserver : IDisposable
     {
         public Action<AutomationElement> Callback { get; set; }
         protected virtual AutomationEvent Event { get; }
         private AutomationEventHandler _eventHandler;
-        private AutoResetEvent[] _autoEvents;
+        protected AutoResetEvent[] _autoEvents;
 
-        public void Observe()
+        public virtual void Observe()
         {
             try
             {
@@ -29,7 +29,7 @@ namespace UIAssistant.Core.Events
             }
         }
 
-        private void OnEvent(object src, AutomationEventArgs args)
+        protected void OnEvent(object src, AutomationEventArgs args)
         {
             var element = src as AutomationElement;
             if (element == null)
@@ -50,7 +50,7 @@ namespace UIAssistant.Core.Events
             return WaitHandle.WaitAll(_autoEvents, millisecondsTimeout, true);
         }
 
-        private void RemoveEventHandler()
+        protected virtual void RemoveEventHandler()
         {
             try
             {
@@ -113,6 +113,32 @@ namespace UIAssistant.Core.Events
 
     public class StructureChangedObserver : EventObserver
     {
+        private StructureChangedEventHandler _eventHandler;
+        public override void Observe()
+        {
+            try
+            {
+                _eventHandler = new StructureChangedEventHandler(OnEvent);
+                Automation.AddStructureChangedEventHandler(AutomationElement.RootElement, TreeScope.Descendants, _eventHandler);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print($"{ex.Message}");
+            }
+        }
+
+        protected override void RemoveEventHandler()
+        {
+            try
+            {
+                Automation.RemoveStructureChangedEventHandler(AutomationElement.RootElement, _eventHandler);
+            }
+            finally
+            {
+
+            }
+        }
+
         protected override AutomationEvent Event
         {
             get
@@ -124,6 +150,32 @@ namespace UIAssistant.Core.Events
 
     public class FocusObserver : EventObserver
     {
+        private AutomationFocusChangedEventHandler _eventHandler;
+        public override void Observe()
+        {
+            try
+            {
+                _eventHandler = new AutomationFocusChangedEventHandler(OnEvent);
+                Automation.AddAutomationFocusChangedEventHandler(_eventHandler);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print($"{ex.Message}");
+            }
+        }
+
+        protected override void RemoveEventHandler()
+        {
+            try
+            {
+                Automation.RemoveAutomationFocusChangedEventHandler(_eventHandler);
+            }
+            finally
+            {
+
+            }
+        }
+
         protected override AutomationEvent Event
         {
             get
