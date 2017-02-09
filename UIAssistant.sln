@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpatialNavigation", "Plugin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeybindsManiacs", "Plugins\KeybindsManiacs\KeybindsManiacs.csproj", "{A9F485E8-9B42-47FA-90C3-95C40432DA06}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{3964EA49-963A-4089-B4CB-77E8F45A6FAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -116,6 +118,14 @@ Global
 		{A9F485E8-9B42-47FA-90C3-95C40432DA06}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A9F485E8-9B42-47FA-90C3-95C40432DA06}.Release|x86.ActiveCfg = Release|Any CPU
 		{A9F485E8-9B42-47FA-90C3-95C40432DA06}.Release|x86.Build.0 = Release|Any CPU
+		{3964EA49-963A-4089-B4CB-77E8F45A6FAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3964EA49-963A-4089-B4CB-77E8F45A6FAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3964EA49-963A-4089-B4CB-77E8F45A6FAE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3964EA49-963A-4089-B4CB-77E8F45A6FAE}.Debug|x86.Build.0 = Debug|Any CPU
+		{3964EA49-963A-4089-B4CB-77E8F45A6FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3964EA49-963A-4089-B4CB-77E8F45A6FAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3964EA49-963A-4089-B4CB-77E8F45A6FAE}.Release|x86.ActiveCfg = Release|Any CPU
+		{3964EA49-963A-4089-B4CB-77E8F45A6FAE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
