@@ -22,33 +22,30 @@ namespace UIAssistant.Core.HitaHint
 
             var len = hintKeys.Length;
             int maxLength = 0;
-            while (quantity > Math.Pow(len, maxLength)){
+            while (quantity > Math.Pow(len, maxLength))
+            {
                 ++maxLength;
             }
-            if (maxLength == 1)
+            if (maxLength <= 1)
             {
                 return hintKeys.Substring(0, quantity).Select(x => x.ToString()).ToList();
             }
             var hintSources = GenerateHintSources(hintKeys, maxLength - 1);
 
             var unit = (int)Math.Pow(len, maxLength - 1);
-            var maxLengthQuantity = quantity / unit;
-            if (quantity % unit > len - maxLengthQuantity)
-            {
-                maxLengthQuantity++;
-            }
-            var remainder = quantity - hintSources.Count() + maxLengthQuantity;
-
-            var maxLengthHints = GenerateMaxLengthHints(hintKeys.Substring(0, maxLengthQuantity), hintSources, remainder);
+            var maxLengthQuantity = (int)Math.Ceiling(((double)quantity - unit) / (len - 1));
+            var remainder = quantity - unit + maxLengthQuantity;
+            var maxLengthHints = GenerateMaxLengthHints(hintKeys, hintSources, remainder);
             var results = hintSources.Skip(maxLengthQuantity).ToList();
             results.AddRange(maxLengthHints);
+
             return results;
         }
 
         private static IEnumerable<string> GenerateMaxLengthHints(string partialHintSource, IEnumerable<string> hintSource, int quantity)
         {
             var result = new List<string>();
-            var len = partialHintSource.Length;//6
+            var len = partialHintSource.Length;
             var len2 = hintSource.Count();
 
             for (var i = 0; i < len; ++i)
