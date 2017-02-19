@@ -39,8 +39,8 @@ namespace UIAssistant.Core.Resource
                 {
                     Remove(Current.FileName);
                     Application.Current.Resources.MergedDictionaries.Add(_appliedDict);
+                    return;
                 }
-                return;
             }
             var path = GetDictionaryPath(dic);
             if (string.IsNullOrEmpty(path))
