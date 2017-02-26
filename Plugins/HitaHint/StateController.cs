@@ -287,7 +287,7 @@ namespace UIAssistant.Plugin.HitaHint
         public override void SwitchNextTheme()
         {
             _themeSwitcher.Next();
-            Settings.Theme = _themeSwitcher.CurrentTheme.FileName;
+            Settings.Theme = _themeSwitcher.CurrentTheme.Id;
             UIAssistantAPI.NotifyInfoMessage("Switch Theme", string.Format(TextID.SwitchTheme.GetLocalizedText(), Settings.Theme));
             Settings.Save();
         }

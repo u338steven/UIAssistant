@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UIAssistant.Core.Themes;
 using UIAssistant.Core.HitaHint;
 using UIAssistant.Core.Enumerators;
+using UIAssistant.Infrastructure.Resource.Theme;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;

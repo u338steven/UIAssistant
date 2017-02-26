@@ -134,7 +134,7 @@ namespace UIAssistant.Plugin.SearchByText
         public override void SwitchNextTheme()
         {
             UIAssistantAPI.NextTheme();
-            UIAssistantAPI.UIAssistantSettings.Theme = UIAssistantAPI.CurrentTheme.FileName;
+            UIAssistantAPI.UIAssistantSettings.Theme = UIAssistantAPI.CurrentTheme.Id;
             UIAssistantAPI.NotifyInfoMessage("Switch Theme", string.Format(TextID.SwitchTheme.GetLocalizedText(), UIAssistantAPI.UIAssistantSettings.Theme));
             UIAssistantAPI.UIAssistantSettings.Save();
         }

@@ -6,40 +6,37 @@ using System.Threading.Tasks;
 
 using System.IO;
 using System.Reflection;
+using System.Windows;
+
+using UIAssistant.Infrastructure.Resource;
+using UIAssistant.Infrastructure.Resource.Theme;
 
 namespace UIAssistant.Core.Themes
 {
     public class ThemeSwitcher
     {
-        Themes _themes = new Themes(Directory.GetParent(Assembly.GetCallingAssembly().Location).ToString());
-        public void Switch(string name)
+        private ResourceFinder<Theme> _finder;
+        private ResourceState<Theme> _state;
+
+        public ThemeSwitcher()
         {
-            var theme = _themes.Find(name);
-            if (theme == null)
-            {
-                theme = _themes.Find(_themes.Default);
-            }
-            _themes.Switch(theme);
+            var reader = new CacheableResourceReader<Theme>();
+            var dirPath = Path.Combine(Directory.GetParent(Assembly.GetCallingAssembly().Location).ToString(), "Themes");
+            var resources = new ResourceDirectory<Theme>(new ThemeKeyValueGenerator(), dirPath, "*.xaml");
+            _finder = new ResourceFinder<Theme>(resources);
+            _state = new ResourceState<Theme>(new ResourceUpdater<Theme>(reader, Application.Current.Resources.MergedDictionaries));
         }
 
-        public Theme CurrentTheme => _themes.Current;
-
-        public Theme Find(string name)
+        public void Switch(string id)
         {
-            return _themes.Find(name);
+            _state.Switch(_finder, id);
         }
 
-        public IList<Theme> AvailableThemes
-        {
-            get
-            {
-                return _themes.GetAvailables();
-            }
-        }
+        public Theme CurrentTheme => _state.Current;
 
         public void Next()
         {
-            _themes.Next();
+            _state.SwitchNext(_finder);
         }
     }
 }

@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeybindsManiacs", "Plugins\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{3964EA49-963A-4089-B4CB-77E8F45A6FAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIAssistant.Infrastructure", "UIAssistant.Infrastructure\UIAssistant.Infrastructure.csproj", "{22A954B1-47A0-4081-8AC1-CCACE31AA6AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -126,6 +128,14 @@ Global
 		{3964EA49-963A-4089-B4CB-77E8F45A6FAE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3964EA49-963A-4089-B4CB-77E8F45A6FAE}.Release|x86.ActiveCfg = Release|Any CPU
 		{3964EA49-963A-4089-B4CB-77E8F45A6FAE}.Release|x86.Build.0 = Release|Any CPU
+		{22A954B1-47A0-4081-8AC1-CCACE31AA6AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22A954B1-47A0-4081-8AC1-CCACE31AA6AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22A954B1-47A0-4081-8AC1-CCACE31AA6AB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{22A954B1-47A0-4081-8AC1-CCACE31AA6AB}.Debug|x86.Build.0 = Debug|Any CPU
+		{22A954B1-47A0-4081-8AC1-CCACE31AA6AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22A954B1-47A0-4081-8AC1-CCACE31AA6AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22A954B1-47A0-4081-8AC1-CCACE31AA6AB}.Release|x86.ActiveCfg = Release|Any CPU
+		{22A954B1-47A0-4081-8AC1-CCACE31AA6AB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

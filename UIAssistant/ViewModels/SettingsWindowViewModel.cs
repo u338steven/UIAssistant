@@ -21,6 +21,7 @@ using UIAssistant.Core.I18n;
 using UIAssistant.Core.Settings;
 using UIAssistant.Core.Commands;
 using UIAssistant.Core.Tools;
+using UIAssistant.Infrastructure.Resource.Language;
 using UIAssistant.Plugin;
 using UIAssistant.Utility;
 
@@ -342,7 +343,7 @@ namespace UIAssistant.ViewModels
             {
                 return;
             }
-            Settings.Culture = Language.CultureName;
+            Settings.Culture = Language.Id;
             DefaultLocalizer.SwitchLanguage(Language);
             LocalizeKeybindsText();
             PluginManager.Instance.Localize();

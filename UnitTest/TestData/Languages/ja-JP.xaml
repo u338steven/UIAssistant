@@ -1,0 +1,90 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!--MainWindow-->
+    <system:String x:Key="registerHotkeyFailed">ホットキー登録に失敗しました。\n {0} が重複しています</system:String>
+    <system:String x:Key="trayIconSettings">設定(&amp;S)</system:String>
+    <system:String x:Key="trayIconExit">終了(&amp;X)</system:String>
+
+    <!--Notifications-->
+    <system:String x:Key="noOneFound">検索対象が見つかりませんでした</system:String>
+    <system:String x:Key="commandNotFound">{0} コマンドが見つかりません</system:String>
+    <system:String x:Key="switchTheme">テーマを {0} に変更しました</system:String>
+    <system:String x:Key="switchKeyboardLayout">キーボードレイアウトを {0} に変更しました</system:String>
+    <system:String x:Key="hotkeyDuplication">ホットキーが重複しているため、どちらか片方が無視されます {0}</system:String>
+    <system:String x:Key="disabledPlugin">以下のコマンドで無効化されたプラグインを使用しています {0}</system:String>
+    <system:String x:Key="keybindDuplication">キーバインド {0} が重複しているため、どちらか片方が無視されます</system:String>
+    <system:String x:Key="forcedTermination">3 秒後に、UIAssistant を強制終了します</system:String>
+    <system:String x:Key="settingsLoadError">{0} を読みこめませんでした。デフォルトの設定が使用されます</system:String>
+    <system:String x:Key="pluginCommandDuplication">{0} のコマンドが重複しているため使用できません</system:String>
+    <system:String x:Key="pluginInitializeError">{0} プラグインを読みこめませんでした</system:String>
+    <system:String x:Key="loadThemeError">{0} テーマファイルが破損しており、反映できませんでした</system:String>
+
+    <!--General Validation-->
+    <system:String x:Key="requiredError">この項目は必須入力です</system:String>
+    <system:String x:Key="rangeError">数値を {0} から {1} の間で指定してください</system:String>
+
+    <!--Setting General-->
+    <system:String x:Key="settingsTitle">UIAssistant Settings</system:String>
+    <system:String x:Key="generalHeader">一般(_G)</system:String>
+    <system:String x:Key="runUIAssistantAtLogin">ログイン時にUIAssistantを起動する(_R)</system:String>
+    <system:String x:Key="useMigemo">Migemo を使用する(_M)</system:String>
+    <system:String x:Key="migemoDllPath">migemo.dll へのパス(_D)(空白の場合、付属のものを使用)</system:String>
+    <system:String x:Key="migemoDictionaryPath">Migemo 辞書へのパス(_C)(空白の場合、付属のものを使用)</system:String>
+    <system:String x:Key="language">言語(_L)</system:String>
+    <system:String x:Key="itemsCountPerPage">1ページ当たりの検索結果表示件数(_S)</system:String>
+
+    <!--Setting Plugin-->
+    <system:String x:Key="pluginHeader">プラグイン(_P)</system:String>
+    <system:String x:Key="author">作者</system:String>
+    <system:String x:Key="pluginsKeybinds">プラグイン独自のキーバインド</system:String>
+    <system:String x:Key="enable">有効にする</system:String>
+
+    <!--Setting Hotkey-->
+    <system:String x:Key="hotkeyHeader">ホットキー(_H)</system:String>
+    <system:String x:Key="remove">削除(_R)</system:String>
+    <system:String x:Key="add">追加(_A)</system:String>
+    <system:String x:Key="howToEditKeybinds">Enter または F2 キー：選択したキーバインドの編集 (その際、Escape+Enterでキーを無効にできます)</system:String>
+    <system:String x:Key="onlyKey">単一キーのみ割り当て可能です(修飾キーと一緒には割り当てできません)</system:String>
+    <system:String x:Key="removeHotkeyWarning">{0} プラグインのホットキーを本当に削除しますか?</system:String>
+    <system:String x:Key="invalidCommand">認識できないコマンドです</system:String>
+    <system:String x:Key="lowLevelHotkeyBox_DuplicateError">入力したホットキーは、すでに他のアプリケーションで使用されています&#10;別のホットキーを指定してください</system:String>
+
+    <!--Setting Keybind-->
+    <system:String x:Key="keybindsHeader">基底のキーバインド(_K)</system:String>
+    <system:String x:Key="keybindsUseBase">基底のキーバインドを使用しているもの</system:String>
+    <system:String x:Key="keybindsExecute">選択している要素の実行</system:String>
+    <system:String x:Key="keybindsShowExtraActions">その他の動作の表示/非表示</system:String>
+    <system:String x:Key="keybindsQuit">処理の終了</system:String>
+    <system:String x:Key="keybindsBack">バックスペース/一手戻る</system:String>
+    <system:String x:Key="keybindsClear">クリア</system:String>
+    <system:String x:Key="keybindsDelete">削除</system:String>
+    <system:String x:Key="keybindsLeft">左へ</system:String>
+    <system:String x:Key="keybindsRight">右へ</system:String>
+    <system:String x:Key="keybindsUp">上へ/前の要素へ</system:String>
+    <system:String x:Key="keybindsDown">下へ/次の要素へ</system:String>
+    <system:String x:Key="keybindsPagedown">次のページへ</system:String>
+    <system:String x:Key="keybindsPageup">前のページへ</system:String>
+    <system:String x:Key="keybindsHome">先頭へ</system:String>
+    <system:String x:Key="keybindsEnd">末尾へ</system:String>
+    <system:String x:Key="keybindsTemporarilyHide">一時的に UIAssistant を隠す</system:String>
+    <system:String x:Key="keybindsSwitchKeyboardLayout">キーボードレイアウトの切替</system:String>
+    <system:String x:Key="keybindsSwitchTheme">テーマの切替</system:String>
+    <system:String x:Key="keybindsUsage">キーバインド、使用方法の表示/非表示</system:String>
+    <system:String x:Key="keybindsEmergencySwitch">UIAssistant の強制終了</system:String>
+
+    <!--Setting Theme-->
+    <system:String x:Key="themeHeader">テーマ(_T)</system:String>
+    
+    <!--Setting About-->
+    <system:String x:Key="aboutHeader">UIAssistantについて(_U)</system:String>
+    <system:String x:Key="version">バージョン</system:String>
+    
+    <!--Extra actions-->
+    <system:String x:Key="actionsCopy">文字列をコピー</system:String>
+    <system:String x:Key="actionsCopyAll">表示されている全ての項目の文字列をコピー</system:String>
+    <system:String x:Key="actionsCopyHwnd">ウィンドウハンドルをコピー</system:String>
+    <system:String x:Key="actionsToggleTopMost">ウィンドウを最前面に設定/解除</system:String>
+    <system:String x:Key="actionsCloseWindow">ウィンドウを閉じる</system:String>
+
+</ResourceDictionary>

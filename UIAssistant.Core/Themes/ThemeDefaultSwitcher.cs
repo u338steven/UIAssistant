@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using UIAssistant.Infrastructure.Resource.Theme;
+
 namespace UIAssistant.Core.Themes
 {
     public static class ThemeDefaultSwitcher
@@ -15,19 +17,6 @@ namespace UIAssistant.Core.Themes
         }
 
         public static Theme CurrentTheme => _theme.CurrentTheme;
-
-        public static Theme Find(string name)
-        {
-            return _theme.Find(name);
-        }
-
-        public static IList<Theme> AvailableThemes
-        {
-            get
-            {
-                return _theme.AvailableThemes;
-            }
-        }
 
         public static void Next()
         {

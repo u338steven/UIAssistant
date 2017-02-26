@@ -1,0 +1,18 @@
+﻿<!--
+    Colorscheme: Solarized
+    Author: Ethan Schoonover
+    http://ethanschoonover.com/solarized
+    -->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="ThemeName">Solarized theme</system:String>
+    <SolidColorBrush x:Key="HUDScrollbarForeground" Color="#839496"/>
+    <SolidColorBrush x:Key="HUDScrollbarBackground" Color="Transparent"/>
+    <SolidColorBrush x:Key="HUDDisableItemForeground" Color="#2AA198"/>
+    <SolidColorBrush x:Key="HUDDisableItemBackground" Color="#002B36"/>
+    <SolidColorBrush x:Key="HUDSelectedItemForeground" Color="#839496"/>
+    <SolidColorBrush x:Key="HUDSelectedItemBackground" Color="#073642"/>
+
+</ResourceDictionary>

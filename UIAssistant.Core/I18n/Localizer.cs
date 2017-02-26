@@ -2,40 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Windows;
+using System.Globalization;
+
+using UIAssistant.Infrastructure.Resource;
+using UIAssistant.Infrastructure.Resource.Language;
 
 namespace UIAssistant.Core.I18n
 {
     public class Localizer
     {
-        private Translator _translator = new Translator(Directory.GetParent(Assembly.GetCallingAssembly().Location).ToString());
-
-        public string GetLocalizedText(string id)
-        {
-            return _translator.Translate(id);
-        }
-
-        public void SwitchLanguage(Language language)
-        {
-            _translator.Switch(language);
-        }
-
-        public Language CurrentLanguage => _translator.Current;
-
-        public Language FindLanguage(string culture)
-        {
-            return _translator.Find(culture);
-        }
+        public IList<Language> AvailableLanguages => _finder.Availables.Values.ToList();
+        public Language CurrentLanguage => _state.Current;
 
         public string SuggestedCulture
         {
             get
             {
                 string userCulture = CultureInfo.CurrentUICulture.Name;
-                if (_translator.Find(userCulture) != null)
+                if (_finder.Find(userCulture) != null)
                 {
                     return userCulture;
                 }
@@ -46,11 +35,51 @@ namespace UIAssistant.Core.I18n
             }
         }
 
-        public IList<Language> AvailableLanguages
+        private ResourceFinder<Language> _finder;
+        private ResourceState<Language> _state;
+
+        public Localizer()
         {
-            get
+            var reader = new ResourceReader<Language>();
+            var dirPath = Path.Combine(Directory.GetParent(Assembly.GetCallingAssembly().Location).ToString(), "Languages");
+            var resources = new ResourceDirectory<Language>(new LanguageKeyValueGenerator(), dirPath, "*.xaml");
+            _finder = new ResourceFinder<Language>(resources);
+            _state = new ResourceState<Language>(new ResourceUpdater<Language>(reader, Application.Current.Resources.MergedDictionaries));
+        }
+
+        public string GetLocalizedText(string key)
+        {
+            return _state.GetLocalizedText(key);
+        }
+
+        public void SwitchLanguage(Language language)
+        {
+            _state.Switch(_finder, language.Id);
+        }
+
+        public void SwitchNext()
+        {
+            _state.SwitchNext(_finder);
+        }
+
+        public Language FindLanguage(string culture)
+        {
+            return _finder.Find(culture);
+        }
+    }
+
+    public static partial class ResourceExtensions
+    {
+        public static string GetLocalizedText(this ResourceState<Language> state, string key)
+        {
+            var translatedText = Application.Current.TryFindResource(key);
+            if (translatedText is string)
             {
-                return _translator.GetAvailables();
+                return translatedText as string;
+            }
+            else
+            {
+                return "Laguage files may be broken. Please reinstall.";
             }
         }
     }
