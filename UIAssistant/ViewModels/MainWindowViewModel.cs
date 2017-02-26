@@ -106,13 +106,13 @@ namespace UIAssistant.ViewModels
             IntPtr windowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
             Win32Interop.SetWindowExTransparent(windowHandle);
 
-            SettingsWindowModel.RegisterHotkeys();
             DefaultLocalizer.SwitchLanguage(DefaultLocalizer.FindLanguage(UserSettings.Instance.Culture));
+
+            SettingsWindowModel.RegisterHotkeys();
 
             MainWindowModel.ShowNotifyIcon();
 
             UIAssistantAPI.SwitchTheme("General");
-            PluginManager.Instance.Localize();
             Notification.Initialize();
 
             Left = SystemParameters.VirtualScreenLeft;
