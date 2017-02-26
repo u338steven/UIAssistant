@@ -29,14 +29,14 @@ namespace UIAssistant.Core.Themes
 
         public void Switch(string id)
         {
-            _state.Switch(_finder, id);
+            Application.Current.Dispatcher.Invoke(() => _state.Switch(_finder, id));
         }
 
         public Theme CurrentTheme => _state.Current;
 
         public void Next()
         {
-            _state.SwitchNext(_finder);
+            Application.Current.Dispatcher.Invoke(() => _state.SwitchNext(_finder));
         }
     }
 }

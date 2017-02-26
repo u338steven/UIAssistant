@@ -54,12 +54,12 @@ namespace UIAssistant.Core.I18n
 
         public void SwitchLanguage(Language language)
         {
-            _state.Switch(_finder, language.Id);
+            Application.Current.Dispatcher.Invoke(() => _state.Switch(_finder, language.Id));
         }
 
         public void SwitchNext()
         {
-            _state.SwitchNext(_finder);
+            Application.Current.Dispatcher.Invoke(() => _state.SwitchNext(_finder));
         }
 
         public Language FindLanguage(string culture)
