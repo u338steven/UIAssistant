@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using UIAssistant.Core.Themes;
-using UIAssistant.Core.HitaHint;
-using UIAssistant.Core.Enumerators;
-using UIAssistant.Infrastructure.Resource.Theme;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
-using UIAssistant.Core.Commands;
-using UIAssistant.Utility.Win32;
-using UIAssistant.Core.Settings;
-using UIAssistant.UI.Controls;
 using KeybindHelper.LowLevel;
+using UIAssistant.Core.Commands;
+using UIAssistant.Core.Enumerators;
+using UIAssistant.Core.HitaHint;
+using UIAssistant.Core.Settings;
+using UIAssistant.Core.Themes;
+using UIAssistant.Infrastructure.Logger;
+using UIAssistant.Infrastructure.Resource.Theme;
+using UIAssistant.UI.Controls;
+using UIAssistant.Utility.Win32;
 
 namespace UIAssistant.Plugin
 {
@@ -251,12 +251,12 @@ namespace UIAssistant.Plugin
 #endif
         public static void PrintDebugMessage(string message)
         {
-            Core.Logger.Log.Debug(message);
+            Log.Debug(message);
         }
 
         public static void PrintErrorMessage(Exception ex, string message = null)
         {
-            Core.Logger.Log.Error(ex, message);
+            Log.Error(ex, message);
         }
 
         public static void NotifyWarnMessage(string title, string message)

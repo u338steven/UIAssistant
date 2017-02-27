@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows;
 
 using Livet;
-using UIAssistant.Core.Logger;
+using UIAssistant.Infrastructure.Logger;
 
 using Microsoft.Shell;
 using System.Reflection;

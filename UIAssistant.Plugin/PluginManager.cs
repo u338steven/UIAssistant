@@ -12,7 +12,7 @@ using System.ComponentModel.Composition.Hosting;
 using UIAssistant.Utility.Extensions;
 using UIAssistant.Core.Settings;
 using UIAssistant.Core.I18n;
-using UIAssistant.Core.Logger;
+using UIAssistant.Infrastructure.Logger;
 
 namespace UIAssistant.Plugin
 {

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UIAssistant.Core.Settings;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Enumerators;
+using UIAssistant.Infrastructure.Logger;
 using UIAssistant.Plugin.SearchByText.Items;
 using UIAssistant.Plugin.SearchByText.Enumerators;
 using UIAssistant.Utility.Extensions;
@@ -107,7 +108,7 @@ namespace UIAssistant.Plugin.SearchByText
             }
             catch (Exception ex)
             {
-                Core.Logger.Log.Error(ex);
+                Log.Error(ex);
             }
         }
 

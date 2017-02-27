@@ -45,6 +45,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logger\Log.cs" />
+    <Compile Include="Logger\LogRotator.cs" />
     <Compile Include="Resource\Interfaces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource\Language\Language.cs" />

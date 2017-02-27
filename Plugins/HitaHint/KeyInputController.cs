@@ -9,6 +9,7 @@ using System.Windows.Input;
 using KeybindHelper.LowLevel;
 using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.I18n;
+using UIAssistant.Infrastructure.Logger;
 
 namespace UIAssistant.Plugin.HitaHint
 {
@@ -57,7 +58,7 @@ namespace UIAssistant.Plugin.HitaHint
             }
             catch (Exception ex)
             {
-                Core.Logger.Log.Error(ex);
+                Log.Error(ex);
             }
         }
 
