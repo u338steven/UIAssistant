@@ -8,11 +8,12 @@ using System.Windows.Input;
 using UIAssistant.Core.I18n;
 
 using KeybindHelper;
+using UIAssistant.Infrastructure.Settings;
 using UIAssistant.Utility;
 
 namespace UIAssistant.Core.Settings
 {
-    public class UserSettings : YamlSettings<UserSettings>
+    public class UserSettings : Settings<UserSettings>
     {
         public bool RunAtLogin { get; set; }
         public bool UseMigemo { get; set; }
@@ -49,14 +50,15 @@ namespace UIAssistant.Core.Settings
         public Keybind EmergencySwitch { get; set; } = new Keybind();
         #endregion
 
-        protected override string FileName => "Settings.yml";
+        private IFileIO<UserSettings> _fileIO = new YamlFile<UserSettings>(UIAssistantDirectory.Configurations, "Settings.yml");
+        protected override IFileIO<UserSettings> FileIO { get { return _fileIO; } }
 
         public UserSettings()
         {
             RunAtLogin = AutoRunAtLoginScheduler.Exists();
         }
 
-        protected override UserSettings LoadDefault()
+        protected override void LoadDefault()
         {
             UseMigemo = false;
             Culture = DefaultLocalizer.SuggestedCulture;
@@ -103,7 +105,6 @@ namespace UIAssistant.Core.Settings
             SwitchTheme = new Keybind(Key.S, LRExtendedModifierKeys.LAlt | LRExtendedModifierKeys.LControl);
             Usage = new Keybind(Key.U, LRExtendedModifierKeys.LControl);
             EmergencySwitch = new Keybind(Key.Escape, LRExtendedModifierKeys.LWindows);
-            return this;
         }
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderedTest name="SettingsOrderedTest" storage="C:\Applications\Projects\MyProjects\UIAssistant\UnitTest\SettingsOrderedTest.orderedtest" id="5ebece84-34ae-462f-9495-ca90fd6f0af6" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestLinks>
+    <TestLink id="a5176230-6a11-c795-1cbf-c0638be9a046" name="CreateNew" storage="bin\debug\settingstest.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <TestLink id="056a7b90-0f5c-f93b-ea88-73133c4cd445" name="ElementRemoved" storage="bin\debug\settingstest.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <TestLink id="e388f0d3-2300-821b-b200-966cfae1ae49" name="ElementAdded" storage="bin\debug\settingstest.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <TestLink id="9edb5cb2-0a8a-d574-951e-b7ccb93ee333" name="RaiseException" storage="bin\debug\settingstest.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  </TestLinks>
+</OrderedTest>

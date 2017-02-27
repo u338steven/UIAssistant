@@ -66,9 +66,11 @@
       <DependentUpon>DictionaryData.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HintGeneratorTest.cs" />
+    <Compile Include="Core\HintGeneratorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourceTest.cs" />
+    <Compile Include="Infrastructure\ResourceTest.cs" />
+    <Compile Include="Infrastructure\SettingsOrderedTest.cs" />
+    <Compile Include="Infrastructure\TestSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UIAssistant.Core\UIAssistant.Core.csproj">
@@ -120,9 +122,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Infrastructure\SettingsOrderedTest.orderedtest" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

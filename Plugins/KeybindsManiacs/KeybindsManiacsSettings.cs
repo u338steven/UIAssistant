@@ -7,18 +7,20 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
 using UIAssistant.Core.Settings;
+using UIAssistant.Infrastructure.Settings;
 
 namespace UIAssistant.Plugin.KeybindsManiacs
 {
-    class KeybindsManiacsSettings : YamlSettings<KeybindsManiacsSettings>
+    class KeybindsManiacsSettings : Settings<KeybindsManiacsSettings>
     {
-        protected override string FileName => @"KeybindsManiacs.yml";
+        private IFileIO<KeybindsManiacsSettings> _fileIO = new YamlFile<KeybindsManiacsSettings>(UIAssistantDirectory.Configurations, "KeybindsManiacs.yml");
+        protected override IFileIO<KeybindsManiacsSettings> FileIO { get { return _fileIO; } }
 
         public ObservableDictionary<string, ModeStorage> KeybindsInMode { get; private set; } = new ObservableDictionary<string, ModeStorage>();
         public string Mode { get; set; } = Consts.DefaultMode;
         public bool RunAtStartup { get; set; } = false;
 
-        protected override KeybindsManiacsSettings LoadDefault()
+        protected override void LoadDefault()
         {
             var normalMode = new ModeStorage();
             normalMode.Add(new KeyTranslator(new[] { Key.LeftCtrl, Key.OemOpenBrackets }, CommandType.RunEmbeddedCommand, "Cancel"));
@@ -87,8 +89,6 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             KeybindsInMode.Add("Custom3", userMode3);
             var userMode4 = new ModeStorage(true);
             KeybindsInMode.Add("Custom4", userMode4);
-
-            return this;
         }
 
         private void PrepareEmacsMode()

@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 using System.Windows.Input;
 using UIAssistant.Core.Settings;
+using UIAssistant.Infrastructure.Settings;
 
 using KeybindHelper;
 
 namespace UIAssistant.Plugin.SearchByText
 {
-    public class SearchByTextSettings : YamlSettings<SearchByTextSettings>
+    public class SearchByTextSettings : Settings<SearchByTextSettings>
     {
         public Keybind Left { get; } = UserSettings.Instance.Left;
         public Keybind Right { get; } = UserSettings.Instance.Right;
@@ -35,12 +36,12 @@ namespace UIAssistant.Plugin.SearchByText
 
         public readonly UserSettings _userSettings = UserSettings.Instance;
 
-        protected override string FileName => @"SearchByText.yml";
+        private IFileIO<SearchByTextSettings> _fileIO = new YamlFile<SearchByTextSettings>(UIAssistantDirectory.Configurations, "SearchByText.yml");
+        protected override IFileIO<SearchByTextSettings> FileIO { get { return _fileIO; } }
 
-        protected override SearchByTextSettings LoadDefault()
+        protected override void LoadDefault()
         {
             Expand = new Keybind(Key.Space, LRExtendedModifierKeys.LShift);
-            return this;
         }
     }
 }

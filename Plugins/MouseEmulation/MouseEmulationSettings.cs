@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 using System.Windows.Input;
 using UIAssistant.Core.Settings;
+using UIAssistant.Infrastructure.Settings;
 
 using KeybindHelper;
 
 namespace UIAssistant.Plugin.MouseEmulation
 {
-    public class MouseEmulationSettings : YamlSettings<MouseEmulationSettings>
+    public class MouseEmulationSettings : Settings<MouseEmulationSettings>
     {
         public Keybind Quit { get; } = UserSettings.Instance.Quit;
         public Keybind Back { get; } = UserSettings.Instance.Back;
@@ -33,8 +34,10 @@ namespace UIAssistant.Plugin.MouseEmulation
         public Keybind SpeedUp { get; set; } = new Keybind();
         public Keybind SlowDown { get; set; } = new Keybind();
 
-        protected override string FileName => @"MouseEmulation.yml";
-        protected override MouseEmulationSettings LoadDefault()
+        private IFileIO<MouseEmulationSettings> _fileIO = new YamlFile<MouseEmulationSettings>(UIAssistantDirectory.Configurations, "MouseEmulation.yml");
+        protected override IFileIO<MouseEmulationSettings> FileIO { get { return _fileIO; } }
+
+        protected override void LoadDefault()
         {
             Left = new Keybind(Key.J);
             Right = new Keybind(Key.L);
@@ -52,7 +55,6 @@ namespace UIAssistant.Plugin.MouseEmulation
 
             SpeedUp = new Keybind(Key.F);
             SlowDown = new Keybind(Key.S);
-            return this;
         }
     }
 }

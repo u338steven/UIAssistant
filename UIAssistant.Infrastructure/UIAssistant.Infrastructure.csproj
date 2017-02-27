@@ -39,6 +39,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="YamlDotNet, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.4.1.0\lib\net35\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resource\Interfaces.cs" />
@@ -52,6 +56,16 @@
     <Compile Include="Resource\ResourceUpdater.cs" />
     <Compile Include="Resource\Theme\Theme.cs" />
     <Compile Include="Resource\Theme\ThemeKeyValueGenerator.cs" />
+    <Compile Include="Settings\Interfaces.cs" />
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Settings\YamlFile.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

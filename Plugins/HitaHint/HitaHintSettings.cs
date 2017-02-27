@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 using System.Windows.Input;
 using UIAssistant.Core.Settings;
+using UIAssistant.Infrastructure.Settings;
 
 using KeybindHelper;
 
 namespace UIAssistant.Plugin.HitaHint
 {
-    public class HitaHintSettings : YamlSettings<HitaHintSettings>
+    public class HitaHintSettings : Settings<HitaHintSettings>
     {
         private string _HintKeys;
         public string HintKeys
@@ -70,9 +71,10 @@ namespace UIAssistant.Plugin.HitaHint
 
         public readonly UserSettings _userSettings = UserSettings.Instance;
 
-        protected override string FileName => @"HitaHint.yml";
+        private IFileIO<HitaHintSettings> _fileIO = new YamlFile<HitaHintSettings>(UIAssistantDirectory.Configurations, "HitaHint.yml");
+        protected override IFileIO<HitaHintSettings> FileIO { get { return _fileIO; } }
 
-        protected override HitaHintSettings LoadDefault()
+        protected override void LoadDefault()
         {
             HintKeys = "asdfghjkl";
             ScreenWidthDivisionCount = 9;
@@ -89,7 +91,6 @@ namespace UIAssistant.Plugin.HitaHint
             DragAndDrop = new Keybind(Key.P);
 
             MouseEmulation = new Keybind(Key.O);
-            return this;
         }
     }
 }
