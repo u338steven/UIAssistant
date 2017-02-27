@@ -29,14 +29,13 @@ namespace UIAssistant.Utility
             _menuItems.Add(item);
         }
 
-        const int MAX_RETRY = 5;
         const int REGISTER_TIMEOUT = 4000;
-        public void Show()
+        public void Show(Action onFailed = null, int retryCount = 5)
         {
             _notifyIcon.ContextMenu = new ContextMenu(_menuItems.ToArray());
 
             var stopwatch = new Stopwatch();
-            for (var i = 0; i < MAX_RETRY; ++i)
+            for (var i = 0; i < retryCount; ++i)
             {
                 stopwatch.Start();
                 _notifyIcon.Visible = true;
@@ -48,6 +47,8 @@ namespace UIAssistant.Utility
                 _notifyIcon.Visible = false;
                 stopwatch.Reset();
             }
+
+            onFailed?.Invoke();
         }
 
         public void Hide()
