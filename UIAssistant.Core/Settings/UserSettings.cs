@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Input;
-using UIAssistant.Core.I18n;
 
 using KeybindHelper;
+using UIAssistant.Core.I18n;
 using UIAssistant.Infrastructure.Settings;
+using UIAssistant.UI.Controls;
 using UIAssistant.Utility;
 
 namespace UIAssistant.Core.Settings
@@ -50,12 +51,14 @@ namespace UIAssistant.Core.Settings
         public Keybind EmergencySwitch { get; set; } = new Keybind();
         #endregion
 
-        private IFileIO<UserSettings> _fileIO = new YamlFile<UserSettings>(UIAssistantDirectory.Configurations, "Settings.yml");
+        private const string FileName = "Settings.yml";
+        private IFileIO<UserSettings> _fileIO = new YamlFile<UserSettings>(UIAssistantDirectory.Configurations, FileName);
         protected override IFileIO<UserSettings> FileIO { get { return _fileIO; } }
 
         public UserSettings()
         {
             RunAtLogin = AutoRunAtLoginScheduler.Exists();
+            OnError = ex => Notification.NotifyMessage("Load Settings Error", string.Format(TextID.SettingsLoadError.GetLocalizedText(), FileName), NotificationIcon.Warning);
         }
 
         protected override void LoadDefault()

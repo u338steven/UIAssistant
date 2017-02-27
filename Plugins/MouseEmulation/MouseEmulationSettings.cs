@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Input;
+using UIAssistant.Core.I18n;
 using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Settings;
+using UIAssistant.UI.Controls;
 
 using KeybindHelper;
 
@@ -34,8 +36,14 @@ namespace UIAssistant.Plugin.MouseEmulation
         public Keybind SpeedUp { get; set; } = new Keybind();
         public Keybind SlowDown { get; set; } = new Keybind();
 
-        private IFileIO<MouseEmulationSettings> _fileIO = new YamlFile<MouseEmulationSettings>(UIAssistantDirectory.Configurations, "MouseEmulation.yml");
+        private const string FileName = "MouseEmulation.yml";
+        private IFileIO<MouseEmulationSettings> _fileIO = new YamlFile<MouseEmulationSettings>(UIAssistantDirectory.Configurations, FileName);
         protected override IFileIO<MouseEmulationSettings> FileIO { get { return _fileIO; } }
+
+        public MouseEmulationSettings()
+        {
+            OnError = ex => Notification.NotifyMessage("Load Settings Error", string.Format(TextID.SettingsLoadError.GetLocalizedText(), FileName), NotificationIcon.Warning);
+        }
 
         protected override void LoadDefault()
         {

@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Input;
+using UIAssistant.Core.I18n;
 using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Settings;
+using UIAssistant.UI.Controls;
 
 using KeybindHelper;
 
@@ -71,8 +73,14 @@ namespace UIAssistant.Plugin.HitaHint
 
         public readonly UserSettings _userSettings = UserSettings.Instance;
 
-        private IFileIO<HitaHintSettings> _fileIO = new YamlFile<HitaHintSettings>(UIAssistantDirectory.Configurations, "HitaHint.yml");
+        private const string FileName = "HitaHint.yml";
+        private IFileIO<HitaHintSettings> _fileIO = new YamlFile<HitaHintSettings>(UIAssistantDirectory.Configurations, FileName);
         protected override IFileIO<HitaHintSettings> FileIO { get { return _fileIO; } }
+
+        public HitaHintSettings()
+        {
+            OnError = ex => Notification.NotifyMessage("Load Settings Error", string.Format(TextID.SettingsLoadError.GetLocalizedText(), FileName), NotificationIcon.Warning);
+        }
 
         protected override void LoadDefault()
         {

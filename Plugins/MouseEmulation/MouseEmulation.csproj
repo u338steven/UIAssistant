@@ -76,6 +76,10 @@
       <Name>UIAssistant.Plugin</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\UIAssistant.UI\UIAssistant.UI.csproj">
+      <Project>{7a300bc2-c0b0-4bbf-b689-e86e493bf3a0}</Project>
+      <Name>UIAssistant.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\UIAssistant.Utility\UIAssistant.Utility.csproj">
       <Project>{9c9ebd40-2656-4217-9bd3-3cba29f95dbb}</Project>
       <Name>UIAssistant.Utility</Name>

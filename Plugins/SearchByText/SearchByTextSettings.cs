@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Input;
+using UIAssistant.Core.I18n;
 using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Settings;
+using UIAssistant.UI.Controls;
 
 using KeybindHelper;
 
@@ -36,8 +38,14 @@ namespace UIAssistant.Plugin.SearchByText
 
         public readonly UserSettings _userSettings = UserSettings.Instance;
 
-        private IFileIO<SearchByTextSettings> _fileIO = new YamlFile<SearchByTextSettings>(UIAssistantDirectory.Configurations, "SearchByText.yml");
+        private const string FileName = "SearchByText.yml";
+        private IFileIO<SearchByTextSettings> _fileIO = new YamlFile<SearchByTextSettings>(UIAssistantDirectory.Configurations, FileName);
         protected override IFileIO<SearchByTextSettings> FileIO { get { return _fileIO; } }
+
+        public SearchByTextSettings()
+        {
+            OnError = ex => Notification.NotifyMessage("Load Settings Error", string.Format(TextID.SettingsLoadError.GetLocalizedText(), FileName), NotificationIcon.Warning);
+        }
 
         protected override void LoadDefault()
         {

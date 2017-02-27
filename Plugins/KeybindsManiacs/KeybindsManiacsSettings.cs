@@ -4,21 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using System.Windows.Input;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
+using UIAssistant.Core.I18n;
 using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Settings;
+using UIAssistant.UI.Controls;
 
 namespace UIAssistant.Plugin.KeybindsManiacs
 {
     class KeybindsManiacsSettings : Settings<KeybindsManiacsSettings>
     {
-        private IFileIO<KeybindsManiacsSettings> _fileIO = new YamlFile<KeybindsManiacsSettings>(UIAssistantDirectory.Configurations, "KeybindsManiacs.yml");
+        private const string FileName = "KeybindsManiacs.yml";
+        private IFileIO<KeybindsManiacsSettings> _fileIO = new YamlFile<KeybindsManiacsSettings>(UIAssistantDirectory.Configurations, FileName);
         protected override IFileIO<KeybindsManiacsSettings> FileIO { get { return _fileIO; } }
 
         public ObservableDictionary<string, ModeStorage> KeybindsInMode { get; private set; } = new ObservableDictionary<string, ModeStorage>();
         public string Mode { get; set; } = Consts.DefaultMode;
         public bool RunAtStartup { get; set; } = false;
+
+        public KeybindsManiacsSettings()
+        {
+            OnError = ex => Notification.NotifyMessage("Load Settings Error", string.Format(TextID.SettingsLoadError.GetLocalizedText(), FileName), NotificationIcon.Warning);
+        }
 
         protected override void LoadDefault()
         {
