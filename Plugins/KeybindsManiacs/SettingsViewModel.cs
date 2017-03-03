@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 using System.Collections.ObjectModel;
 
-using UIAssistant.Core.Commands;
-using UIAssistant.UI.Interfaces;
+using UIAssistant.Infrastructure.Commands;
 using System.ComponentModel;
 
 namespace UIAssistant.Plugin.KeybindsManiacs

@@ -8,6 +8,7 @@ namespace UIAssistant.Plugin.HitaHint
 {
     internal static class Consts
     {
+        internal const string PluginName = "Hit-a-Hint";
         internal const string Command = "hah";
 
         internal const string RunningApps = nameof(RunningApps);

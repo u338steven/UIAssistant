@@ -11,9 +11,9 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Reactive.Linq;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+using Data = System.ComponentModel.DataAnnotations;
 
-using UIAssistant.UI.Interfaces;
+using UIAssistant.Infrastructure.Commands;
 
 namespace UIAssistant.UI.Controls
 {
@@ -42,13 +42,13 @@ namespace UIAssistant.UI.Controls
         public static readonly DependencyProperty CandidatesProperty =
             DependencyProperty.Register(
                 nameof(Candidates),
-                typeof(IEnumerable<string>),
+                typeof(IEnumerable<ICandidate>),
                 typeof(AutoCompletableTextBox),
                 new PropertyMetadata(null));
 
-        public IEnumerable<string> Candidates
+        public IEnumerable<ICandidate> Candidates
         {
-            get { return (IEnumerable<string>)GetValue(CandidatesProperty); }
+            get { return (IEnumerable<ICandidate>)GetValue(CandidatesProperty); }
             set { SetValue(CandidatesProperty, value); }
         }
         #endregion
@@ -65,6 +65,21 @@ namespace UIAssistant.UI.Controls
         {
             get { return Dispatcher.Invoke(() => (ICandidatesGenerator)GetValue(CandidatesGeneratorProperty)); }
             set { SetValue(CandidatesGeneratorProperty, value); }
+        }
+        #endregion
+
+        #region ValidatorProperty
+        public static readonly DependencyProperty ValidatorProperty =
+            DependencyProperty.Register(
+                nameof(Validator),
+                typeof(IValidatable<string>),
+                typeof(AutoCompletableTextBox),
+                new PropertyMetadata(null));
+
+        public IValidatable<string> Validator
+        {
+            get { return Dispatcher.Invoke(() => (IValidatable<string>)GetValue(ValidatorProperty)); }
+            set { SetValue(ValidatorProperty, value); }
         }
         #endregion
 
@@ -87,10 +102,10 @@ namespace UIAssistant.UI.Controls
         {
             get
             {
-                var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
-                if (Validator.TryValidateObject(
+                var results = new List<Data.ValidationResult>();
+                if (Data.Validator.TryValidateObject(
                     this,
-                    new ValidationContext(this, null, null),
+                    new Data.ValidationContext(this, null, null),
                     results))
                 {
                     return string.Empty;
@@ -103,13 +118,13 @@ namespace UIAssistant.UI.Controls
         {
             get
             {
-                var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
-                if (Validator.TryValidateProperty(
+                var results = new List<Data.ValidationResult>();
+                if (Data.Validator.TryValidateProperty(
                     GetType().GetProperty(columnName).GetValue(this, null),
-                    new ValidationContext(this, null, null) { MemberName = columnName },
+                    new Data.ValidationContext(this, null, null) { MemberName = columnName },
                     results))
                 {
-                    return CandidatesGenerator?.Validate(textBox.Text)?.ErrorMessage;
+                    return Validator?.Validate(textBox.Text)?.ErrorMessage;
                 }
                 return results.First().ErrorMessage;
             }
@@ -269,7 +284,7 @@ namespace UIAssistant.UI.Controls
             }
             var caretIndex = textBox.CaretIndex;
             var currentWord = GetCurrentWord(textBox);
-            var selectedText = popupListBox.SelectedItem as string;
+            var selectedText = (popupListBox.SelectedItem as ICandidate).Name;
 
             var tmpText = textBox.Text.Remove(caretIndex - currentWord.Length, currentWord.Length);
             textBox.BeginChange();

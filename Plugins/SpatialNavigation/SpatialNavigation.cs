@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using System.ComponentModel.Composition;
 
-using UIAssistant.Core.Commands;
+using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Utility.Extensions;
 
 namespace UIAssistant.Plugin.SpatialNavigation
@@ -30,7 +30,7 @@ namespace UIAssistant.Plugin.SpatialNavigation
     [Export(typeof(IPlugin))]
     [Export(typeof(IDisposable))]
     [ExportMetadata("Guid", "426f2567-b37e-4cf1-8c69-ea27850a67b4")]
-    [ExportMetadata("Name", "Spatial Navigation")]
+    [ExportMetadata("Name", Consts.PluginName)]
     [ExportMetadata("Author", "u338.steven")]
     [ExportMetadata("SupportUri", "https://github.com/u338steven/UIAssistant/")]
     [ExportMetadata("IconUri", "/SpatialNavigation;component/Resources/SpatialNavigation.png")]
@@ -38,43 +38,48 @@ namespace UIAssistant.Plugin.SpatialNavigation
     [ExportMetadata("CommandName", Consts.Command)]
     public class SpatialNavigation : IPlugin, IDisposable
     {
+        private Unit _current { get; set; }
+
         public void Initialize()
         {
-            var args = new[] { new ArgumentNode(Consts.Up), new ArgumentNode(Consts.Down), new ArgumentNode(Consts.Left), new ArgumentNode(Consts.Right) };
-            UIAssistantAPI.RegisterCommand(new CommandNode(Consts.Command, args));
+            var args = new[] {
+                new ArgumentRule(Consts.Up, Up),
+                new ArgumentRule(Consts.Down, Down),
+                new ArgumentRule(Consts.Left, Left),
+                new ArgumentRule(Consts.Right, Right) };
+
+            var group = new ArgumentRule("-g", x => _current = Unit.Group);
+            UIAssistantAPI.RegisterCommand(new CommandRule(Consts.Command, Run, args) { Description = Consts.PluginName });
             Navigation.Initialize();
         }
 
-        public Action GenerateAction(IList<string> args)
+        public void Setup()
         {
-            var unit = ParseArgs(args);
-            if (args.Any(arg => Consts.Up.EqualsWithCaseIgnored(arg)))
-            {
-                return () => Navigation.MoveTo(Direction.Up, unit);
-            }
-            else if (args.Any(arg => Consts.Down.EqualsWithCaseIgnored(arg)))
-            {
-                return () => Navigation.MoveTo(Direction.Down, unit);
-            }
-            else if (args.Any(arg => Consts.Left.EqualsWithCaseIgnored(arg)))
-            {
-                return () => Navigation.MoveTo(Direction.Left, unit);
-            }
-            else if (args.Any(arg => Consts.Right.EqualsWithCaseIgnored(arg)))
-            {
-                return () => Navigation.MoveTo(Direction.Right, unit);
-            }
-            return () => Navigation.MoveTo(Direction.Down, unit);
+            _current = Unit.Item;
         }
 
-        private Unit ParseArgs(IList<string> args)
+        private void Run(ICommand command)
         {
-            var unit = args.SkipWhile(x => !x.StartsWith("-g", StringComparison.CurrentCultureIgnoreCase));
-            if (unit.Count() > 0)
-            {
-                return Unit.Group;
-            }
-            return Unit.Item;
+        }
+
+        private void Up(ICommand command)
+        {
+            Navigation.MoveTo(Direction.Up, _current);
+        }
+
+        private void Down(ICommand command)
+        {
+            Navigation.MoveTo(Direction.Down, _current);
+        }
+
+        private void Left(ICommand command)
+        {
+            Navigation.MoveTo(Direction.Left, _current);
+        }
+
+        private void Right(ICommand command)
+        {
+            Navigation.MoveTo(Direction.Right, _current);
         }
 
         #region IDisposable Support

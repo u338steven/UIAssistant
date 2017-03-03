@@ -19,13 +19,12 @@ using System.Windows.Media.Imaging;
 using UIAssistant.Models;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Settings;
-using UIAssistant.Core.Commands;
 using UIAssistant.Core.Tools;
+using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Infrastructure.Resource.Language;
 using UIAssistant.Plugin;
 using UIAssistant.Utility;
 
-using UIAssistant.UI.Interfaces;
 using UIAssistant.UI.Controls;
 
 using KeybindHelper;

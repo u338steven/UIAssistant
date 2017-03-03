@@ -4,7 +4,7 @@ using System.Windows;
 using System.ComponentModel.Composition;
 
 using UIAssistant.Core.I18n;
-using UIAssistant.Core.Commands;
+using UIAssistant.Infrastructure.Commands;
 
 namespace UIAssistant.Plugin.MouseEmulation
 {
@@ -13,7 +13,7 @@ namespace UIAssistant.Plugin.MouseEmulation
     [Export(typeof(ILocalizablePlugin))]
     [Export(typeof(IDisposable))]
     [ExportMetadata("Guid", "b0744325-4b37-44f4-bb5d-683667f3f3ee")]
-    [ExportMetadata("Name", "Mouse Emulation")]
+    [ExportMetadata("Name", Consts.PluginName)]
     [ExportMetadata("Author", "u338.steven")]
     [ExportMetadata("SupportUri", "https://github.com/u338steven/UIAssistant/")]
     [ExportMetadata("IconUri", "/MouseEmulation;component/Resources/MouseEmulation.png")]
@@ -28,23 +28,26 @@ namespace UIAssistant.Plugin.MouseEmulation
 
         private void RegisterCommand()
         {
-            var command = new CommandNode(Consts.Command);
+            var command = new CommandRule(Consts.Command, Run);
+            command.Description = Consts.PluginName;
             UIAssistantAPI.RegisterCommand(command);
         }
 
-        public Action GenerateAction(IList<string> args)
+        public void Setup()
         {
-            return () =>
+
+        }
+
+        public void Run(ICommand command)
+        {
+            try
             {
-                try
-                {
-                    MouseController.Start();
-                }
-                catch (Exception ex)
-                {
-                    UIAssistantAPI.PrintErrorMessage(ex);
-                }
-            };
+                MouseController.Start();
+            }
+            catch (Exception ex)
+            {
+                UIAssistantAPI.PrintErrorMessage(ex);
+            }
         }
 
         public FrameworkElement GetConfigrationInterface()
@@ -88,6 +91,7 @@ namespace UIAssistant.Plugin.MouseEmulation
 
     class Consts
     {
+        internal const string PluginName = "Mouse Emulation";
         internal const string Command = "me";
     }
 }

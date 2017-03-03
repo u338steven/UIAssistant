@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace UIAssistant.Utility.Extensions
+namespace System
 {
-    public static class StringExtensions
+    public static partial class StringExtensions
     {
         public static bool EqualsWithCaseIgnored(this string strA, string strB)
         {
@@ -16,6 +13,11 @@ namespace UIAssistant.Utility.Extensions
         public static bool StartsWithCaseIgnored(this string strA, string strB)
         {
             return strA.StartsWith(strB, StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        public static IEnumerable<string> Tokenize(this string str, char delimiter = ' ')
+        {
+            return str.Split(delimiter);
         }
     }
 }

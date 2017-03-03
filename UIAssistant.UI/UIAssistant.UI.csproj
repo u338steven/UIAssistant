@@ -103,7 +103,6 @@
     <Compile Include="Controls\AutoResizeListBox.cs" />
     <Compile Include="Controls\KeyVisualizer.cs" />
     <Compile Include="Controls\Notification.cs" />
-    <Compile Include="Interfaces\ICandidatesGenerator.cs" />
     <Compile Include="Controls\PartialColoredTextBlock.cs" />
     <Compile Include="Behaviors\ScrollIntoViewBehavior.cs" />
     <Resource Include="ResourceDictionary.xaml">
@@ -135,6 +134,12 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UIAssistant.Infrastructure\UIAssistant.Infrastructure.csproj">
+      <Project>{22a954b1-47a0-4081-8ac1-ccace31aa6ab}</Project>
+      <Name>UIAssistant.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

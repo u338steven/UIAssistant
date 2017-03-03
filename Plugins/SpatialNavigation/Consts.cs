@@ -8,11 +8,12 @@ namespace UIAssistant.Plugin.SpatialNavigation
 {
     class Consts
     {
-        public const string Command = "sn";
+        internal const string PluginName = "Spatial Navigation";
+        internal const string Command = "sn";
 
-        public const string Up = nameof(Up);
-        public const string Down = nameof(Down);
-        public const string Left = nameof(Left);
-        public const string Right = nameof(Right);
+        internal const string Up = nameof(Up);
+        internal const string Down = nameof(Down);
+        internal const string Left = nameof(Left);
+        internal const string Right = nameof(Right);
     }
 }

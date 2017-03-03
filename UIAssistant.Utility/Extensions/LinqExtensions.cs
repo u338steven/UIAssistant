@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UIAssistant.Utility.Extensions
+namespace System.Linq
 {
     public static class LinqExtensions
     {

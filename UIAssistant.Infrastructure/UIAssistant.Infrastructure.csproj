@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -45,6 +46,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ArgumentRule.cs" />
+    <Compile Include="Commands\BaseRule.cs" />
+    <Compile Include="Commands\CandidatesGenerator.cs" />
+    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\CommandExtensions.cs" />
+    <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="Commands\CommandParser.cs" />
+    <Compile Include="Commands\CommandRule.cs" />
+    <Compile Include="Commands\CommandSyntax.cs" />
+    <Compile Include="Commands\CommandValidator.cs" />
+    <Compile Include="Commands\Interfaces.cs" />
+    <Compile Include="Commands\StringExtensions.cs" />
     <Compile Include="Logger\Log.cs" />
     <Compile Include="Logger\LogRotator.cs" />
     <Compile Include="Resource\Interfaces.cs" />
@@ -62,7 +75,12 @@
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\YamlFile.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\UIAssistant.Utility\UIAssistant.Utility.csproj">
+      <Project>{9c9ebd40-2656-4217-9bd3-3cba29f95dbb}</Project>
+      <Name>UIAssistant.Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

@@ -8,8 +8,9 @@ using System.ComponentModel.Composition;
 
 using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.I18n;
-using UIAssistant.Core.Commands;
-using UIAssistant.Utility.Extensions;
+using UIAssistant.Infrastructure.Commands;
+
+using UIAssistant.Plugin.HitaHint.Operations;
 
 namespace UIAssistant.Plugin.HitaHint
 {
@@ -18,7 +19,7 @@ namespace UIAssistant.Plugin.HitaHint
     [Export(typeof(ILocalizablePlugin))]
     [Export(typeof(IDisposable))]
     [ExportMetadata("Guid", "dd89b0bf-b416-4329-8f9a-31051e810740")]
-    [ExportMetadata("Name", "Hit-a-Hint")]
+    [ExportMetadata("Name", Consts.PluginName)]
     [ExportMetadata("Author", "u338.steven")]
     [ExportMetadata("SupportUri", "https://github.com/u338steven/UIAssistant/")]
     [ExportMetadata("IconUri", "/HitaHint;component/Resources/HitaHint.png")]
@@ -38,59 +39,53 @@ namespace UIAssistant.Plugin.HitaHint
 
         private void RegisterCommand()
         {
-            var argRunningApps = new ArgumentNode(Consts.RunningApps, Consts.Switch);
-            var argWidgetsInWindow = new ArgumentNode(Consts.WidgetsInWindow, Consts.Click, Consts.DoubleClick, Consts.DragAndDrop, Consts.Hover, Consts.MiddleClick, Consts.MouseEmulation, Consts.RightClick);
-            var argWidgetsInTaskbar = new ArgumentNode(Consts.WidgetsInTaskbar, Consts.Click, Consts.DoubleClick, Consts.DragAndDrop, Consts.Hover, Consts.MiddleClick, Consts.MouseEmulation, Consts.RightClick);
-            var argDividedscreen = new ArgumentNode(Consts.DividedScreen, Consts.Click, Consts.DoubleClick, Consts.DragAndDrop, Consts.Hover, Consts.MiddleClick, Consts.MouseEmulation, Consts.RightClick);
-            var optTheme = new OptionNode(Consts.Theme);
-            var optNoReturnCursor = new OptionNode(Consts.NoReturnCursor);
+            var argSwitch = new ArgumentRule(Consts.Switch, x => OperationManager.Change(x.Name));
+            var argClick = new ArgumentRule(Consts.Click, x => OperationManager.Change(x.Name));
+            var argDoubleClick = new ArgumentRule(Consts.DoubleClick, x => OperationManager.Change(x.Name));
+            var argDragAndDrop = new ArgumentRule(Consts.DragAndDrop, x => OperationManager.Change(x.Name));
+            var argHover = new ArgumentRule(Consts.Hover, x => OperationManager.Change(x.Name));
+            var argMiddleClick = new ArgumentRule(Consts.MiddleClick, x => OperationManager.Change(x.Name));
+            var argMouseEmulation = new ArgumentRule(Consts.MouseEmulation, x => OperationManager.Change(x.Name));
+            var argRightClick = new ArgumentRule(Consts.RightClick, x => OperationManager.Change(x.Name));
 
-            var command = new CommandNode(Consts.Command, new[] { argWidgetsInWindow, argRunningApps, argWidgetsInTaskbar, argDividedscreen, }, new[] { optTheme, optNoReturnCursor });
+            var argRunningApps = new ArgumentRule(Consts.RunningApps, x => _stateController.ChangeTarget(EnumerateTarget.RunningApps), new[] { argSwitch });
+            var argWidgetsInWindow = new ArgumentRule(Consts.WidgetsInWindow, x => _stateController.ChangeTarget(EnumerateTarget.WidgetsInWindow),
+                new[] { argClick, argDoubleClick, argDragAndDrop, argHover, argMiddleClick, argMouseEmulation, argRightClick });
+            var argWidgetsInTaskbar = new ArgumentRule(Consts.WidgetsInTaskbar, x => _stateController.ChangeTarget(EnumerateTarget.WidgetsInTaskbar),
+                new[] { argClick, argDoubleClick, argDragAndDrop, argHover, argMiddleClick, argMouseEmulation, argRightClick });
+            var argDividedscreen = new ArgumentRule(Consts.DividedScreen, x => _stateController.ChangeTarget(EnumerateTarget.DividedScreen),
+                new[] { argClick, argDoubleClick, argDragAndDrop, argHover, argMiddleClick, argMouseEmulation, argRightClick });
 
+            var optTheme = new ArgumentRule(Consts.Theme, x => _stateController.SetTheme(x.Value));
+            var optNoReturnCursor = new ArgumentRule(Consts.NoReturnCursor, _ => _stateController.NoReturnCursor = true);
+
+            var command = new CommandRule(Consts.Command, Run,
+                new[] { argWidgetsInWindow, argRunningApps, argWidgetsInTaskbar, argDividedscreen, },
+                new[] { optTheme, optNoReturnCursor });
+            command.Description = Consts.PluginName;
             UIAssistantAPI.RegisterCommand(command);
         }
 
-        private Action Generate(EnumerateTarget target, IList<string> args)
+        public void Setup()
         {
-            return () =>
-            {
-                try
-                {
-                    _keyController.Initialize();
-                    _stateController.Initialize();
-                    _stateController.ChangeTarget(target);
-                    _stateController.ParseArguments(args);
-                    _stateController.PrintState();
-                    UIAssistantAPI.AddDefaultHUD();
-                    UIAssistantAPI.TopMost = true;
-                    _stateController.Enumerate();
-                }
-                catch (Exception ex)
-                {
-                    UIAssistantAPI.PrintErrorMessage(ex);
-                }
-            };
+            _keyController.Initialize();
+            _stateController.Initialize();
         }
 
-        public Action GenerateAction(IList<string> args)
+        private void Run(ICommand command)
         {
-            if (args.Any(arg => Consts.WidgetsInWindow.EqualsWithCaseIgnored(arg)))
+            try
             {
-                return Generate(EnumerateTarget.WidgetsInWindow, args);
+                _stateController.ApplyTheme();
+                _stateController.PrintState();
+                UIAssistantAPI.AddDefaultHUD();
+                UIAssistantAPI.TopMost = true;
+                _stateController.Enumerate();
             }
-            else if (args.Any(arg => Consts.WidgetsInTaskbar.EqualsWithCaseIgnored(arg)))
+            catch (Exception ex)
             {
-                return Generate(EnumerateTarget.WidgetsInTaskbar, args);
+                UIAssistantAPI.PrintErrorMessage(ex);
             }
-            else if (args.Any(arg => Consts.RunningApps.EqualsWithCaseIgnored(arg)))
-            {
-                return Generate(EnumerateTarget.RunningApps, args);
-            }
-            else if (args.Any(arg => Consts.DividedScreen.EqualsWithCaseIgnored(arg)))
-            {
-                return Generate(EnumerateTarget.DividedScreen, args);
-            }
-            return Generate(EnumerateTarget.WidgetsInWindow, args);
         }
 
         public System.Windows.FrameworkElement GetConfigrationInterface()

@@ -8,6 +8,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 {
     class Consts
     {
+        internal const string PluginName = "Keybinds Maniacs";
         internal const string Command = "km";
         internal const string DefaultMode = "Normal";
 

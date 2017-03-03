@@ -53,4 +53,9 @@ namespace UIAssistant.Infrastructure.Resource
             Contract.Requires(newResource != null);
         }
     }
+
+    public interface ILocalizer
+    {
+        string GetLocalizedText(string key);
+    }
 }

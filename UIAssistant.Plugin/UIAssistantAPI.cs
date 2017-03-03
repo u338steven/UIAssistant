@@ -8,11 +8,11 @@ using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
 using KeybindHelper.LowLevel;
-using UIAssistant.Core.Commands;
 using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.HitaHint;
 using UIAssistant.Core.Settings;
 using UIAssistant.Core.Themes;
+using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Infrastructure.Logger;
 using UIAssistant.Infrastructure.Resource.Theme;
 using UIAssistant.UI.Controls;
@@ -237,9 +237,14 @@ namespace UIAssistant.Plugin
             return Core.I18n.DefaultLocalizer.GetLocalizedText(id);
         }
 
-        public static void RegisterCommand(CommandNode command)
+        public static void RegisterCommand(CommandRule rule)
         {
-            CommandManager.Add(command);
+            CommandManager.Add(rule);
+        }
+
+        public static IEnumerable<ICommand> ParseStatement(string statement)
+        {
+            return CommandManager.Parse(statement);
         }
 
         public static UserSettings UIAssistantSettings { get { return UserSettings.Instance; } }

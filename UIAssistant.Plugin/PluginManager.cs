@@ -105,11 +105,12 @@ namespace UIAssistant.Plugin
             {
                 return null;
             }
-            var action = plugins[args[0]].GenerateAction(args);
+            var actions = UIAssistantAPI.ParseStatement(command).Reverse();
             return () =>
             {
                 InitializeBeforePluginCalled();
-                action?.Invoke();
+                plugins[args[0]].Setup();
+                actions.ForEach(x => x.Invoke());
             };
         }
 

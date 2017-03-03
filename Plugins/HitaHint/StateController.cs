@@ -55,14 +55,14 @@ namespace UIAssistant.Plugin.HitaHint
             PreviousWindow?.Activate();
         }
 
-        private static bool _noReturnCursor = false;
+        public bool NoReturnCursor { get; set; } = false;
         private static System.Windows.Point _prevMousePosition;
         private void SubscribeReturnMouseCursor()
         {
             _prevMousePosition = MouseOperation.GetMousePosition();
             Finished += (_, __) =>
             {
-                if (!OperationManager.CurrentCommand.IsReturnCursor || _noReturnCursor)
+                if (!OperationManager.CurrentCommand.IsReturnCursor || NoReturnCursor)
                 {
                     return;
                 }
@@ -121,21 +121,15 @@ namespace UIAssistant.Plugin.HitaHint
             OperationManager.Change(operationName);
         }
 
-        public void ParseArguments(IList<string> args)
+        private string _theme = HitaHintSettings.Instance.Theme;
+        public void SetTheme(string theme)
         {
-            OperationManager.SetDefaultOpration(args);
-            SetTheme(args);
-            _noReturnCursor = args.Any(x => x.StartsWithCaseIgnored(Consts.NoReturnCursor));
+            _theme = theme;
         }
 
-        // TODO: Experimental CommandOption
-        public void SetTheme(IList<string> args)
+        public void ApplyTheme()
         {
-            var theme = args.SkipWhile(x => !x.StartsWithCaseIgnored(Consts.Theme));
-            if (theme.Count() > 0)
-                _themeSwitcher.Switch(theme.ElementAt(0).Split(':')[1]);
-            else
-                _themeSwitcher.Switch(Settings.Theme);
+            _themeSwitcher.Switch(_theme);
         }
 
         CancellationTokenSource _cancelToken;

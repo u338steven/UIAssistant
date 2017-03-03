@@ -78,12 +78,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\ArgumentNode.cs" />
-    <Compile Include="Commands\CommandBaseNode.cs" />
-    <Compile Include="Commands\CommandManager.cs" />
-    <Compile Include="Commands\CommandNode.cs" />
-    <Compile Include="Commands\CommandStorage.cs" />
-    <Compile Include="Commands\OptionNode.cs" />
     <Compile Include="Events\EventHook.cs" />
     <Compile Include="Events\EventObserver.cs" />
     <Compile Include="HitaHint\AlternateHintGenerator.cs" />

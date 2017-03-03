@@ -12,7 +12,7 @@ namespace UIAssistant.Plugin
     public interface IPlugin
     {
         void Initialize();
-        Action GenerateAction(IList<string> args);
+        void Setup();
     }
 
     public interface IConfigurablePlugin

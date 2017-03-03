@@ -16,6 +16,9 @@
                     <Setter.Value>
                         <Style TargetType="{x:Type ListBoxItem}">
                             <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="IsSelected" Value="True"/>
+                                </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter Property="Background" Value="{x:Static SystemColors.HighlightBrush}"/>
                                     <Setter Property="Foreground" Value="{x:Static SystemColors.HighlightTextBrush}"/>
@@ -50,7 +53,30 @@
             <ListBox x:Name="popupListBox"
                      ItemsSource="{Binding Candidates, RelativeSource={RelativeSource AncestorType={x:Type local:AutoCompletableTextBox}}}"
 				     PreviewKeyDown="popupListBox_PreviewKeyDown"
-                     MouseLeftButtonDown="popupListBox_MouseLeftButtonDown"/>
+                     MouseLeftButtonDown="popupListBox_MouseLeftButtonDown">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" Name="name"/>
+                            <Popup IsOpen="false" Name="description" PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}" Placement="Right" HorizontalOffset="5">
+                                <Border BorderBrush="{x:Static SystemColors.ActiveBorderBrush}" BorderThickness="1">
+                                    <TextBlock Text="{Binding Description}" Padding="5, 0"
+                                               Foreground="{x:Static SystemColors.WindowTextBrush}"
+                                               Background="{x:Static SystemColors.WindowBrush}"/>
+                                </Border>
+                            </Popup>
+                        </StackPanel>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}" Value="True">
+                                <Setter TargetName="description" Property="IsOpen" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Description}" Value="{x:Null}">
+                                <Setter TargetName="description" Property="IsOpen" Value="False"/>
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Popup>
     </Grid>
 </UserControl>

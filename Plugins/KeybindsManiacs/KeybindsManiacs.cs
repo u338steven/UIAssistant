@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.ComponentModel.Composition;
-using UIAssistant.Core.Commands;
 using UIAssistant.Core.I18n;
+using UIAssistant.Infrastructure.Commands;
 
 namespace UIAssistant.Plugin.KeybindsManiacs
 {
@@ -15,7 +15,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
     [Export(typeof(ILocalizablePlugin))]
     [Export(typeof(IDisposable))]
     [ExportMetadata("Guid", "a9f485e8-9b42-47fa-90c3-95c40432da06")]
-    [ExportMetadata("Name", "Keybinds Maniacs")]
+    [ExportMetadata("Name", Consts.PluginName)]
     [ExportMetadata("Author", "u338.steven")]
     [ExportMetadata("SupportUri", "https://github.com/u338steven/UIAssistant/")]
     [ExportMetadata("IconUri", "/KeybindsManiacs;component/Resources/KeybindsManiacs.png")]
@@ -40,19 +40,14 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
         private void RegisterCommand()
         {
-            var command = new CommandNode(Consts.Command);
-
+            var command = new CommandRule(Consts.Command, _ => _keyController.Toggle());
+            command.Description = Consts.PluginName;
             UIAssistantAPI.RegisterCommand(command);
         }
 
-        public Action GenerateAction(IList<string> args)
+        public void Setup()
         {
-            return () =>
-            {
-                //_stateController.Initialize();
-                //_keyController.Initialize();
-                _keyController.Toggle();
-            };
+
         }
 
         public System.Windows.FrameworkElement GetConfigrationInterface()

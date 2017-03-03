@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 using System.ComponentModel.Composition;
 using UIAssistant.Core.Enumerators;
-using UIAssistant.Core.Commands;
 using UIAssistant.Core.I18n;
-using UIAssistant.Utility.Extensions;
+using UIAssistant.Infrastructure.Commands;
 
 namespace UIAssistant.Plugin.SearchByText
 {
@@ -17,7 +16,7 @@ namespace UIAssistant.Plugin.SearchByText
     [Export(typeof(ILocalizablePlugin))]
     [Export(typeof(IDisposable))]
     [ExportMetadata("Guid", "cd70037d-4b69-4c5d-8882-5db95fdd5127")]
-    [ExportMetadata("Name", "Search by Text")]
+    [ExportMetadata("Name", Consts.PluginName)]
     [ExportMetadata("Author", "u338.steven")]
     [ExportMetadata("SupportUri", "https://github.com/u338steven/UIAssistant/")]
     [ExportMetadata("IconUri", "/SearchByText;component/Resources/SearchByText.png")]
@@ -37,67 +36,41 @@ namespace UIAssistant.Plugin.SearchByText
 
         private void RegisterCommand()
         {
-            var argCommands = new ArgumentNode(Consts.Commands);
-            var argTextsInWindow = new ArgumentNode(Consts.TextsInWindow);
-            var argTextsInContainer = new ArgumentNode(Consts.TextsInContainer);
-            var argRunningApps = new ArgumentNode(Consts.RunningApps);
-            var argContextMenu = new ArgumentNode(Consts.ContextMenu);
+            var argCommands = new ArgumentRule(Consts.Commands, _ => _stateController.ChangeTarget(EnumerateTarget.Commands));
+            var argTextsInWindow = new ArgumentRule(Consts.TextsInWindow, _ => _stateController.ChangeTarget(EnumerateTarget.TextsInWindow));
+            var argTextsInContainer = new ArgumentRule(Consts.TextsInContainer, _ => _stateController.ChangeTarget(EnumerateTarget.TextsInContainer));
+            var argRunningApps = new ArgumentRule(Consts.RunningApps, _ => _stateController.ChangeTarget(EnumerateTarget.RunningApps));
+            var argContextMenu = new ArgumentRule(Consts.ContextMenu, _ => _stateController.ChangeTarget(EnumerateTarget.ContextMenu));
 
-            var optAutoFire = new OptionNode(Consts.AutoFire);
+            var optAutoFire = new ArgumentRule(Consts.AutoFire, _ => _stateController.AutoFire = true);
 
-            var command = new CommandNode(Consts.Command, 
+            var command = new CommandRule(Consts.Command, Run,
                 new[] { argCommands, argTextsInWindow, argTextsInContainer, argRunningApps, argContextMenu },
                 new[] { optAutoFire });
-
+            command.Description = Consts.PluginName;
             UIAssistantAPI.RegisterCommand(command);
         }
 
-        private Action Generate(EnumerateTarget target, IList<string> args)
+        public void Setup()
         {
-            return () =>
-            {
-                try
-                {
-                    _stateController.Initialize();
-                    _keyController.Initialize();
-                    UIAssistantAPI.SwitchTheme(UIAssistantAPI.UIAssistantSettings.Theme);
-                    _stateController.ParseArguments(args);
-                    _stateController.ChangeTarget(target);
-                    _stateController.Enumerate();
-                    UIAssistantAPI.AddDefaultHUD();
-                    UIAssistantAPI.AddContextHUD();
-                    UIAssistantAPI.TopMost = true;
-                }
-                catch(Exception ex)
-                {
-                    UIAssistantAPI.PrintErrorMessage(ex);
-                }
-            };
+            _stateController.Initialize();
+            _keyController.Initialize();
+            UIAssistantAPI.SwitchTheme(UIAssistantAPI.UIAssistantSettings.Theme);
         }
 
-        public Action GenerateAction(IList<string> args)
+        public void Run(ICommand command)
         {
-            if (args.Any(arg => Consts.Commands.EqualsWithCaseIgnored(arg)))
+            try
             {
-                return Generate(EnumerateTarget.Commands, args);
+                _stateController.Enumerate();
+                UIAssistantAPI.AddDefaultHUD();
+                UIAssistantAPI.AddContextHUD();
+                UIAssistantAPI.TopMost = true;
             }
-            else if (args.Any(arg => Consts.TextsInWindow.EqualsWithCaseIgnored(arg)))
+            catch (Exception ex)
             {
-                return Generate(EnumerateTarget.TextsInWindow, args);
+                UIAssistantAPI.PrintErrorMessage(ex);
             }
-            else if (args.Any(arg => Consts.TextsInContainer.EqualsWithCaseIgnored(arg)))
-            {
-                return Generate(EnumerateTarget.TextsInContainer, args);
-            }
-            else if (args.Any(arg => Consts.RunningApps.EqualsWithCaseIgnored(arg)))
-            {
-                return Generate(EnumerateTarget.RunningApps, args);
-            }
-            else if (args.Any(arg => Consts.ContextMenu.EqualsWithCaseIgnored(arg)))
-            {
-                return Generate(EnumerateTarget.ContextMenu, args);
-            }
-            return Generate(EnumerateTarget.TextsInWindow, args);
         }
 
         public System.Windows.FrameworkElement GetConfigrationInterface()
