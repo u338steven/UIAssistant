@@ -11,7 +11,6 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Reactive.Linq;
 using System.ComponentModel;
-using Data = System.ComponentModel.DataAnnotations;
 
 using UIAssistant.Infrastructure.Commands;
 
@@ -310,7 +309,7 @@ namespace UIAssistant.UI.Controls
 
             var validationResult = Validator.Validate(text);
 
-            if (validationResult != Data.ValidationResult.Success)
+            if (!validationResult.IsSuccess())
             {
                 AddError(nameof(Text), validationResult.ErrorMessage, true);
                 isValid = false;

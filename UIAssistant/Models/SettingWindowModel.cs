@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.ComponentModel.DataAnnotations;
 
 using Livet;
 
@@ -31,7 +30,7 @@ namespace UIAssistant.Models
             foreach (var hotkey in setting.Commands)
             {
                 var validationResult = CommandManager.GetValidator(DefaultLocalizer.Instance).Validate(hotkey.Text);
-                if (validationResult != ValidationResult.Success)
+                if (!validationResult.IsSuccess())
                 {
                     UIAssistantAPI.NotifyWarnMessage("Warning", string.Format(TextID.RegisterHotkeyFailed.GetLocalizedText(), validationResult.ErrorMessage));
                     continue;

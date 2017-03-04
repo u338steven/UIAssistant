@@ -59,5 +59,10 @@ namespace UIAssistant.Infrastructure.Commands
         {
             return rule == null || rule == BaseRule.Empty;
         }
+
+        public static bool IsSuccess(this ValidationResult result)
+        {
+            return result == ValidationResult.Success;
+        }
     }
 }
