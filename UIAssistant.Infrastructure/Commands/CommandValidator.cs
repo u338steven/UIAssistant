@@ -22,6 +22,7 @@ namespace UIAssistant.Infrastructure.Commands
         }
 
         const string InvalidCommand = "invalidCommand";
+        const string LackCommand = "lackCommand";
         public ValidationResult Validate(string command)
         {
             try
@@ -32,7 +33,11 @@ namespace UIAssistant.Infrastructure.Commands
                     return ValidationResult.Success;
                 }
             }
-            catch (Exception ex)
+            catch (ArgumentNotEnoughException ex)
+            {
+                return new ValidationResult(string.Format(_localizer.GetLocalizedText(LackCommand), ex.Message));
+            }
+            catch (ArgumentException ex)
             {
                 return new ValidationResult(string.Format(_localizer.GetLocalizedText(InvalidCommand), ex.Message));
             }

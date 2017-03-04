@@ -31,6 +31,11 @@ namespace UIAssistant.Infrastructure.Commands
             command = _syntax.FindRule(commandWord);
             current = command;
             options.AddRange(command.OptionalArgs);
+
+            if (!IsEnoughArguments(current, commandWord, tokens))
+            {
+                throw new ArgumentNotEnoughException(commandWord);
+            }
             yield return new Command(commandWord, action: command.Action);
 
             foreach(var word in tokens.Skip(1))
@@ -39,6 +44,10 @@ namespace UIAssistant.Infrastructure.Commands
                 {
                     current = current.RequiredArgs.FindRule(word);
                     options.AddRange(current.OptionalArgs);
+                    if (!IsEnoughArguments(current, word, tokens))
+                    {
+                        throw new ArgumentNotEnoughException(word);
+                    }
                     yield return new Command(word, action: current.Action);
                     continue;
                 }
@@ -47,12 +56,21 @@ namespace UIAssistant.Infrastructure.Commands
                 var option = options.FindRule(wordSplited.Key);
                 if (!option.IsNullOrEmpty())
                 {
+                    if (!IsEnoughArguments(current, word, tokens))
+                    {
+                        throw new ArgumentNotEnoughException(current.Name);
+                    }
                     yield return new Command(wordSplited.Key, wordSplited.Value, option.Action);
                     continue;
                 }
 
                 throw new ArgumentException(word);
             }
+        }
+
+        private bool IsEnoughArguments(BaseRule rule, string currentWord, IEnumerable<string> tokens)
+        {
+            return rule.RequiredArgs.Count == 0 || tokens.Last() != currentWord;
         }
     }
 }

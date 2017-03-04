@@ -53,7 +53,6 @@ namespace UIAssistant.Plugin
             container.ComposeParts(this);
 
             LoadAllPlugins();
-            Localize();
 
             RemoveRemovedPlugins();
         }

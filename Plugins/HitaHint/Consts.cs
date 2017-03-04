@@ -15,7 +15,7 @@ namespace UIAssistant.Plugin.HitaHint
         internal const string WidgetsInWindow = nameof(WidgetsInWindow);
         internal const string WidgetsInTaskbar = nameof(WidgetsInTaskbar);
         internal const string DividedScreen = nameof(DividedScreen);
-        internal const string Theme = "-" + nameof(Theme) + ":";
+        internal const string Theme = "-" + nameof(Theme);
         internal const string NoReturnCursor = "-" + nameof(NoReturnCursor);
 
         internal const string Switch = nameof(Switch);

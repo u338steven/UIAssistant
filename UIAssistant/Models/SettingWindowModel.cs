@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 using Livet;
 
 using UIAssistant.Core.Settings;
 using UIAssistant.Core.I18n;
+using UIAssistant.Infrastructure.Commands;
 using UIAssistant.UI.Controls;
 using UIAssistant.Plugin;
 using KeybindHelper;
@@ -28,12 +30,13 @@ namespace UIAssistant.Models
             HotkeyResistrant.UnregisterAll();
             foreach (var hotkey in setting.Commands)
             {
-                var action = PluginManager.Instance.GenerateAction(hotkey.Text);
-                if (action == null)
+                var validationResult = CommandManager.GetValidator(DefaultLocalizer.Instance).Validate(hotkey.Text);
+                if (validationResult != ValidationResult.Success)
                 {
-                    Notification.NotifyMessage("Waring", string.Format(TextID.DisabledPlugin.GetLocalizedText(), hotkey.Text), NotificationIcon.Warning);
+                    UIAssistantAPI.NotifyWarnMessage("Warning", string.Format(TextID.RegisterHotkeyFailed.GetLocalizedText(), validationResult.ErrorMessage));
                     continue;
                 }
+                var action = PluginManager.Instance.GenerateAction(hotkey.Text);
                 try
                 {
                     HotkeyResistrant.Register(hotkey.ModifierKeys, hotkey.Key, action);

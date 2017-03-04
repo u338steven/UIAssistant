@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using UIAssistant.Utility.Extensions;
 
 namespace UIAssistant.Infrastructure.Commands
 {
@@ -61,4 +61,3 @@ namespace UIAssistant.Infrastructure.Commands
         }
     }
 }
-

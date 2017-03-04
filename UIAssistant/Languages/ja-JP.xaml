@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <!--MainWindow-->
-    <system:String x:Key="registerHotkeyFailed">ホットキー登録に失敗しました。\n {0} が重複しています</system:String>
+    <system:String x:Key="registerHotkeyFailed">ホットキー登録に失敗しました。&#10;{0}</system:String>
     <system:String x:Key="trayIconSettings">設定(&amp;S)</system:String>
     <system:String x:Key="trayIconExit">終了(&amp;X)</system:String>
 
@@ -23,6 +23,8 @@
     <!--General Validation-->
     <system:String x:Key="requiredError">この項目は必須入力です</system:String>
     <system:String x:Key="rangeError">数値を {0} から {1} の間で指定してください</system:String>
+    <system:String x:Key="closeConfirmation">設定画面を閉じてよろしいですか？</system:String>
+    <system:String x:Key="hotkeyHasError">ホットキーに認識できないコマンドが登録されています</system:String>
 
     <!--Setting General-->
     <system:String x:Key="settingsTitle">UIAssistant Settings</system:String>
@@ -47,7 +49,8 @@
     <system:String x:Key="howToEditKeybinds">Enter または F2 キー：選択したキーバインドの編集 (その際、Escape+Enterでキーを無効にできます)</system:String>
     <system:String x:Key="onlyKey">単一キーのみ割り当て可能です(修飾キーと一緒には割り当てできません)</system:String>
     <system:String x:Key="removeHotkeyWarning">{0} プラグインのホットキーを本当に削除しますか?</system:String>
-    <system:String x:Key="invalidCommand">認識できないコマンドです</system:String>
+    <system:String x:Key="invalidCommand">"{0}" は認識できないコマンドです</system:String>
+    <system:String x:Key="lackCommand">"{0}" の後に引数が必要です</system:String>
     <system:String x:Key="lowLevelHotkeyBox_DuplicateError">入力したホットキーは、すでに他のアプリケーションで使用されています&#10;別のホットキーを指定してください</system:String>
 
     <!--Setting Keybind-->

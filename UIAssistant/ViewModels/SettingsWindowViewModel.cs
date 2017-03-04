@@ -192,6 +192,23 @@ namespace UIAssistant.ViewModels
         }
         #endregion
 
+        #region Validator変更通知プロパティ
+        private IValidatable<string> _Validator;
+
+        public IValidatable<string> Validator
+        {
+            get
+            { return _Validator; }
+            set
+            { 
+                if (_Validator == value)
+                    return;
+                _Validator = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
         #region Version変更通知プロパティ
         private string _Version;
 
@@ -204,6 +221,21 @@ namespace UIAssistant.ViewModels
                 if (_Version == value)
                     return;
                 _Version = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
+        #region CanClose変更通知プロパティ
+        private bool _CanClose;
+        public bool CanClose
+        {
+            get { return _CanClose; }
+            set
+            {
+                if (_CanClose == value) { return; }
+
+                _CanClose = value;
                 RaisePropertyChanged();
             }
         }
@@ -229,6 +261,7 @@ namespace UIAssistant.ViewModels
             Version = $"UIAssistant {version}";
 
             Generator = CommandManager.GetGenerator();
+            Validator = CommandManager.GetValidator(DefaultLocalizer.Instance);
             LocalizeKeybindsText();
             _isInitialized = true;
         }
@@ -405,6 +438,36 @@ namespace UIAssistant.ViewModels
             {
                 Migemo.Dispose();
             }
+        }
+
+        public void CloseCanceledCallback()
+        {
+            if (!Settings.Commands.Any(x => string.IsNullOrEmpty(x.Text))
+                && !Settings.Commands.Where(x => !string.IsNullOrEmpty(x.Text)).Any(x => Validator.Validate(x.Text) != null))
+            {
+                CanClose = true;
+                DispatcherHelper.UIDispatcher.BeginInvoke((Action)(() =>
+                {
+                    Messenger.Raise(new WindowActionMessage(WindowAction.Close, "WindowAction"));
+                }));
+                return;
+            }
+
+            var message = new ConfirmationMessage(
+                $"{TextID.HotkeyHasError.GetLocalizedText()} \n{TextID.CloseConfirmation.GetLocalizedText()}",
+                "Confirmation",
+                MessageBoxImage.Warning,
+                MessageBoxButton.OKCancel,
+                "Confirm");
+
+            Messenger.Raise(message);
+            if (message.Response != true) { return; }
+
+            CanClose = true;
+            DispatcherHelper.UIDispatcher.BeginInvoke((Action)(() =>
+            {
+                Messenger.Raise(new WindowActionMessage(WindowAction.Close, "WindowAction"));
+            }));
         }
 
         protected override void Dispose(bool disposing)

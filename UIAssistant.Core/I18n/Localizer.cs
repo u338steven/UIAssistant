@@ -14,7 +14,7 @@ using UIAssistant.Infrastructure.Resource.Language;
 
 namespace UIAssistant.Core.I18n
 {
-    public class Localizer
+    public class Localizer : ILocalizer
     {
         public IList<Language> AvailableLanguages => _finder.Availables.Values.ToList();
         public Language CurrentLanguage => _state.Current;

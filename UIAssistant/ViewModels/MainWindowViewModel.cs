@@ -107,6 +107,7 @@ namespace UIAssistant.ViewModels
             Win32Interop.SetWindowExTransparent(windowHandle);
 
             DefaultLocalizer.SwitchLanguage(DefaultLocalizer.FindLanguage(UserSettings.Instance.Culture));
+            PluginManager.Instance.Localize();
 
             SettingsWindowModel.RegisterHotkeys();
 

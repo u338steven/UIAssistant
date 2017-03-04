@@ -38,6 +38,21 @@ namespace UIAssistant.UI.Controls
         }
         #endregion
 
+        #region ValidatorProperty
+        public static readonly DependencyProperty ValidatorProperty =
+            DependencyProperty.Register(
+                nameof(Validator),
+                typeof(IValidatable<string>),
+                typeof(HotkeyWithCommandListBox),
+                new PropertyMetadata(null));
+
+        public IValidatable<string> Validator
+        {
+            get { return Dispatcher.Invoke(() => (IValidatable<string>)GetValue(ValidatorProperty)); }
+            set { SetValue(ValidatorProperty, value); }
+        }
+        #endregion
+
         public HotkeyWithCommandListBox()
         {
             InitializeComponent();

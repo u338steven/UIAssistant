@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ArgumentNotEnoughException.cs" />
     <Compile Include="Commands\ArgumentRule.cs" />
     <Compile Include="Commands\BaseRule.cs" />
     <Compile Include="Commands\CandidatesGenerator.cs" />

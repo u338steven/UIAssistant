@@ -20,7 +20,7 @@ namespace UIAssistant.UI.Controls
     /// <summary>
     /// AutoCompletableTextBox.xaml の相互作用ロジック
     /// </summary>
-    public partial class AutoCompletableTextBox : UserControl, IDataErrorInfo
+    public partial class AutoCompletableTextBox : UserControl, INotifyDataErrorInfo
     {
         #region TextProperty
         public static readonly DependencyProperty TextProperty =
@@ -34,7 +34,7 @@ namespace UIAssistant.UI.Controls
         public string Text
         {
             get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
+            set { if(IsTextValid(value)) SetValue(TextProperty, value); }
         }
         #endregion
 
@@ -98,55 +98,10 @@ namespace UIAssistant.UI.Controls
         }
         #endregion
 
-        public string Error
-        {
-            get
-            {
-                var results = new List<Data.ValidationResult>();
-                if (Data.Validator.TryValidateObject(
-                    this,
-                    new Data.ValidationContext(this, null, null),
-                    results))
-                {
-                    return string.Empty;
-                }
-                return string.Join(Environment.NewLine, results.Select(r => r.ErrorMessage));
-            }
-        }
-
-        public string this[string columnName]
-        {
-            get
-            {
-                var results = new List<Data.ValidationResult>();
-                if (Data.Validator.TryValidateProperty(
-                    GetType().GetProperty(columnName).GetValue(this, null),
-                    new Data.ValidationContext(this, null, null) { MemberName = columnName },
-                    results))
-                {
-                    return Validator?.Validate(textBox.Text)?.ErrorMessage;
-                }
-                return results.First().ErrorMessage;
-            }
-        }
-
         public AutoCompletableTextBox()
         {
             InitializeComponent();
             popupListBox.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(popupListBox_MouseLeftButtonDown), true);
-
-            // GetCandidates
-            Observable.FromEvent<TextChangedEventHandler, TextChangedEventArgs>(
-                action => (s, ev) => action(ev),
-                h => textBox.TextChanged += h,
-                h => textBox.TextChanged -= h)
-                .Where(_ => IsResident)
-                .Select(text => textBox.Text)
-                .Select(text => Task.Run(() => CandidatesGenerator?.GenerateCandidates(text)))
-                .Switch()
-                .ObserveOnDispatcher()
-                .Select(candidates => Candidates = candidates)
-                .Subscribe(_ => MovePopup());
         }
 
         private void textBox_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -320,6 +275,113 @@ namespace UIAssistant.UI.Controls
         {
             Complete();
             textBox.Focus();
+        }
+
+        private void textBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(textBox.Text))
+            {
+                IsTextValid(textBox.Text);
+            }
+
+            // GetCandidates
+            Observable.FromEvent<TextChangedEventHandler, TextChangedEventArgs>(
+                action => (s, ev) => action(ev),
+                h => textBox.TextChanged += h,
+                h => textBox.TextChanged -= h)
+                .Where(_ => IsResident)
+                .Select(text => textBox.Text)
+                .Select(text => Task.Run(() => CandidatesGenerator?.GenerateCandidates(text)))
+                .Switch()
+                .ObserveOnDispatcher()
+                .Select(candidates => Candidates = candidates)
+                .Subscribe(_ => MovePopup());
+        }
+
+        public bool IsTextValid(string text)
+        {
+            bool isValid = true;
+
+            if (Validator == null)
+            {
+                return true;
+            }
+            RemoveError(nameof(Text));
+
+            var validationResult = Validator.Validate(text);
+
+            if (validationResult != Data.ValidationResult.Success)
+            {
+                AddError(nameof(Text), validationResult.ErrorMessage, true);
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        private Dictionary<string, List<string>> errors = new Dictionary<string, List<string>>();
+
+        public void AddError(string propertyName, string error, bool isWarning)
+        {
+            if (!errors.ContainsKey(propertyName))
+                errors[propertyName] = new List<string>();
+
+            if (!errors[propertyName].Contains(error))
+            {
+                if (isWarning) errors[propertyName].Add(error);
+                else errors[propertyName].Insert(0, error);
+                RaiseErrorsChanged(propertyName);
+            }
+        }
+
+        public void RemoveError(string propertyName, string error)
+        {
+            if (errors.ContainsKey(propertyName) &&
+                errors[propertyName].Contains(error))
+            {
+                errors[propertyName].Remove(error);
+                if (errors[propertyName].Count == 0) errors.Remove(propertyName);
+                RaiseErrorsChanged(propertyName);
+            }
+        }
+
+        public void RemoveError(string propertyName)
+        {
+            if (errors.ContainsKey(propertyName))
+            {
+                errors[propertyName].Clear();
+                errors.Remove(propertyName);
+                RaiseErrorsChanged(propertyName);
+            }
+        }
+
+        public void RaiseErrorsChanged(string propertyName)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+
+        #region INotifyDataErrorInfo Members
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        public System.Collections.IEnumerable GetErrors(string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName) ||
+                !errors.ContainsKey(propertyName)) return null;
+            return errors[propertyName];
+        }
+
+        public bool HasErrors
+        {
+            get { return errors.Count > 0; }
+        }
+        #endregion
+
+        private void textBox_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (!IsTextValid(textBox.Text))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

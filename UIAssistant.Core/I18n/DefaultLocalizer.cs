@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using UIAssistant.Infrastructure.Resource;
 using UIAssistant.Infrastructure.Resource.Language;
 
 namespace UIAssistant.Core.I18n
@@ -11,6 +12,8 @@ namespace UIAssistant.Core.I18n
     public static class DefaultLocalizer
     {
         static Localizer _localizer = new Localizer();
+
+        public static ILocalizer Instance { get { return _localizer; } }
 
         public static string GetLocalizedText(this string id)
         {

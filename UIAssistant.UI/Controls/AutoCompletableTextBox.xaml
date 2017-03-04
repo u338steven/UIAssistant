@@ -44,10 +44,12 @@
     </UserControl.Resources>
     <Grid>
         <TextBox x:Name="textBox"
-                 Text="{Binding Text, RelativeSource={RelativeSource AncestorType={x:Type local:AutoCompletableTextBox}}, ValidatesOnDataErrors=True}"
+                 Text="{Binding Text, RelativeSource={RelativeSource AncestorType={x:Type local:AutoCompletableTextBox}}, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                 Loaded="textBox_Loaded"
                  PreviewKeyDown="textBox_PreviewKeyDown"
                  GotFocus="textBox_GotFocus"
                  LostFocus="textBox_LostFocus"
+                 PreviewLostKeyboardFocus="textBox_PreviewLostKeyboardFocus"
                  Validation.ErrorTemplate="{StaticResource ErrorTemplateSilverlightStyle}"/>
         <Popup x:Name="popup" IsOpen="False" StaysOpen="False">
             <ListBox x:Name="popupListBox"

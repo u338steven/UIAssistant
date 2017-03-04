@@ -48,6 +48,7 @@
                     <DataTemplate>
                         <ui:AutoCompletableTextBox Text="{Binding Text}"
                                                    CandidatesGenerator="{Binding CandidatesGenerator, RelativeSource={RelativeSource AncestorType={x:Type key:KeybindListBox}}}"
+                                                   Validator="{Binding Validator, RelativeSource={RelativeSource AncestorType={x:Type key:KeybindListBox}}}"
                                                    IsResident="True"
                                                    MinWidth="300"/>
                     </DataTemplate>

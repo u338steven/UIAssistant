@@ -37,10 +37,10 @@
             </Border>
             <!-- Defines the Popup -->
             <Popup x:Name="placard"
-                 AllowsTransparency="True"
-                 Placement="Top"
-                 PlacementTarget="{Binding ElementName=toolTipCorner}"
-                 PlacementRectangle="10,-1,0,0">
+                   AllowsTransparency="True"
+                   Placement="Right"
+                   PlacementTarget="{Binding ElementName=toolTipCorner}"
+                   PlacementRectangle="10,-1,0,0">
                 <!-- Used to reposition Popup when dialog moves or resizes -->
                 <i:Interaction.Behaviors>
                     <behaviors:RepositionPopupBehavior/>
@@ -49,19 +49,19 @@
                     <Style TargetType="{x:Type Popup}">
                         <Style.Triggers>
                             <!-- Shows Popup when TextBox has focus -->
-                            <DataTrigger Binding="{Binding ElementName=adorner, Path=AdornedElement.IsKeyboardFocused}"
-                           Value="True">
+                            <DataTrigger Binding="{Binding ElementName=adorner, Path=AdornedElement.IsKeyboardFocused}" Value="True">
                                 <Setter Property="IsOpen" Value="True"/>
                             </DataTrigger>
                             <!-- Shows Popup when mouse hovers over ToolTipCorner -->
-                            <DataTrigger Binding="{Binding ElementName=toolTipCorner, Path=IsMouseOver}"
-                           Value="True">
+                            <DataTrigger Binding="{Binding ElementName=toolTipCorner, Path=IsMouseOver}" Value="True">
                                 <Setter Property="IsOpen" Value="True"/>
                             </DataTrigger>
                             <!-- Hides Popup when window is no longer active -->
-                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=IsActive}"
-                               Value="False">
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=IsActive}" Value="False">
                                 <Setter Property="IsOpen" Value="False"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=IsActive}" Value="True">
+                                <Setter Property="IsOpen" Value="True"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

@@ -111,6 +111,13 @@ namespace CommandsTest
         {
             Validate("", new ValidationResult("Invalid command: "));
             Validate("h", new ValidationResult("Invalid command: h"));
+            Validate("hah", new ValidationResult("Required argument of hah"));
+            Validate("hah -hintGenerator", new ValidationResult("Required argument of hah"));
+            Validate("hah -searchTarget:", new ValidationResult("Required argument of hah"));
+            Validate("hah window -searchTarget:", new ValidationResult("Required argument of window"));
+            Validate("hah window -hintGenerator -searchTarget:", new ValidationResult("Required argument of window"));
+            Validate("hah window -hintGenerator -searchTarget: click", ValidationResult.Success);
+            Validate("hah window click -searchTarget:", ValidationResult.Success);
             Validate("hah window click", ValidationResult.Success);
             Validate("hah window clic", new ValidationResult("Invalid command: clic"));
             Validate("hah application switch", ValidationResult.Success);
@@ -118,6 +125,8 @@ namespace CommandsTest
             Validate("hah application click", new ValidationResult("Invalid command: click"));
             Validate("hah apliation click", new ValidationResult("Invalid command: apliation"));
             Validate("hah application Switch", ValidationResult.Success);
+
+            Validate("me", ValidationResult.Success);
         }
 
         [TestMethod]
@@ -252,7 +261,14 @@ namespace CommandsTest
     {
         public string GetLocalizedText(string key)
         {
-            return "Invalid command: {0}";
+            if (key == "invalidCommand")
+            {
+                return "Invalid command: {0}";
+            }
+            else
+            {
+                return "Required argument of {0}";
+            }
         }
     }
 
