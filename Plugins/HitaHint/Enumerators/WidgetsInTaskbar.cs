@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows.Automation;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.HUD;
-using UIAssistant.Core.Input;
 using UIAssistant.Utility.Win32;
 using UIAssistant.Utility.Extensions;
 
@@ -23,7 +22,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
         {
             var targetWindow = Win32Window.Find(TaskbarClass, "");
             targetWindow.Activate();
-            var enumerator = HitaHint.UIAssistantAPI.GetWidgetEnumerator();
+            var enumerator = new WidgetEnumerator();
             enumerator.Enumerate(container, null, _enumerateTargets);
 
             double x = 0, y = 0;
@@ -61,7 +60,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
                 adjuster.X = bounds.Left - rect.Left;
                 adjuster.Y = bounds.Top - rect.Top;
                 container.ForEach(item => item.Bounds.Offset(adjuster.X, adjuster.Y));
-                MouseOperation.DoMouseEvent(x, y);
+                HitaHint.UIAssistantAPI.MouseOperation.DoMouseEvent(x, y);
             }
 
             if (TryShowNotifyIconOverflow(targetWindow))

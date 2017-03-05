@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 using KeybindHelper.LowLevel;
-using UIAssistant.Core.Settings;
 using UIAssistant.Core.I18n;
+using UIAssistant.Core.Settings;
+using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Input;
 using UIAssistant.UI.Controls;
 

@@ -9,7 +9,7 @@ using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility;
 using UIAssistant.Utility.Win32;
 
-namespace UIAssistant.Core.Enumerators
+namespace UIAssistant.Plugin.HitaHint.Enumerators
 {
     internal class UIAutomationEnumerator
     {
@@ -57,7 +57,7 @@ namespace UIAssistant.Core.Enumerators
             }   );
         }
 
-        private void AddHUDItem(HUDItemCollection container, System.Windows.Rect rect)
+        private void AddHUDItem(ICollection<IHUDItem> container, System.Windows.Rect rect)
         {
             var item = new WidgetInfo(rect);
             item.Location = rect.Location;
@@ -76,7 +76,7 @@ namespace UIAssistant.Core.Enumerators
             types.ForEach(item => IgnoreElements.Add(item));
         }
 
-        public void CreateHUDItems(HUDItemCollection container, AutomationElement rootElement)
+        public void CreateHUDItems(ICollection<IHUDItem> container, AutomationElement rootElement)
         {
             var element = rootElement;
             _taskList.Enqueue(rootElement);
@@ -128,7 +128,7 @@ namespace UIAssistant.Core.Enumerators
         }
 
         // for List (except Tree)
-        private void CreateHUDItemsForCollection(HUDItemCollection container, AutomationElement collection)
+        private void CreateHUDItemsForCollection(ICollection<IHUDItem> container, AutomationElement collection)
         {
             var bounds = collection.Current.BoundingRectangle;
 
@@ -168,7 +168,7 @@ namespace UIAssistant.Core.Enumerators
 
         public void Enumerate(ICollection<IHUDItem> container, AutomationElement root)
         {
-            HUDItemCollection results = new HUDItemCollection();
+            var results = new List<IHUDItem>();
             _taskList = new Queue<AutomationElement>();
             CreateHUDItems(results, root);
             results.Distinct(new HUDItemComparer()).Where(x => results.All(y => x.Bounds == y.Bounds || !x.Bounds.Contains(y.Bounds))).ToList().ForEach(x => container.Add(x));

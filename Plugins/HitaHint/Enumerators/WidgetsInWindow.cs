@@ -41,7 +41,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
 
         public void Enumerate(ICollection<IHUDItem> container)
         {
-            HitaHint.UIAssistantAPI.GetWidgetEnumerator().Enumerate(container, null, _enumerateTargets);
+            new WidgetEnumerator().Enumerate(container, null, _enumerateTargets);
         }
 
         public void Dispose()

@@ -5,17 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Threading;
+using UIAssistant.Interfaces.Input;
 using UIAssistant.Utility.Win32;
-using UIAssistant.Utility.Extensions;
 
 namespace UIAssistant.Core.Input
 {
-    public class MouseCursor
+    public class MouseCursor : IMouseCursor
     {
-        public static bool AutoHide { get; set; }
+        public bool AutoHide { get; set; }
 
-        static DispatcherTimer timer = new DispatcherTimer();
-        private static void RunAutoHideTimer()
+        DispatcherTimer timer = new DispatcherTimer();
+        private void RunAutoHideTimer()
         {
             timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
@@ -23,8 +23,8 @@ namespace UIAssistant.Core.Input
             timer.Start();
         }
 
-        static int _timerCounter;
-        private static void Timer_Tick(object sender, EventArgs e)
+        int _timerCounter;
+        private void Timer_Tick(object sender, EventArgs e)
         {
             if (!AutoHide)
             {
@@ -41,15 +41,15 @@ namespace UIAssistant.Core.Input
             }
         }
 
-        private static void AllCursorsForEach(Action<Win32Interop.OCR_SYSTEM_CURSORS> action)
+        private void AllCursorsForEach(Action<Win32Interop.OCR_SYSTEM_CURSORS> action)
         {
             Enum.GetValues(typeof(Win32Interop.OCR_SYSTEM_CURSORS)).Cast<Win32Interop.OCR_SYSTEM_CURSORS>().ForEach(x => action(x));
         }
 
-        static Dictionary<Win32Interop.OCR_SYSTEM_CURSORS, IntPtr> _blanks = new Dictionary<Win32Interop.OCR_SYSTEM_CURSORS, IntPtr>();
-        static Dictionary<Win32Interop.OCR_SYSTEM_CURSORS, IntPtr> _saved = new Dictionary<Win32Interop.OCR_SYSTEM_CURSORS, IntPtr>();
+        Dictionary<Win32Interop.OCR_SYSTEM_CURSORS, IntPtr> _blanks = new Dictionary<Win32Interop.OCR_SYSTEM_CURSORS, IntPtr>();
+        Dictionary<Win32Interop.OCR_SYSTEM_CURSORS, IntPtr> _saved = new Dictionary<Win32Interop.OCR_SYSTEM_CURSORS, IntPtr>();
 
-        public static void InitializeCursor()
+        public void InitializeCursor()
         {
             if (_blanks.Count > 0)
             {
@@ -80,8 +80,8 @@ namespace UIAssistant.Core.Input
             });
         }
 
-        static MouseHook _hook;
-        public static void SetCursorVisibility(bool visible)
+        MouseHook _hook;
+        public void SetCursorVisibility(bool visible)
         {
             InitializeCursor();
 
@@ -102,7 +102,7 @@ namespace UIAssistant.Core.Input
             });
         }
 
-        public static void DestroyCursor()
+        public void DestroyCursor()
         {
             _blanks.ForEach(x => Win32Interop.DestroyCursor(x.Value));
             _saved.Clear();

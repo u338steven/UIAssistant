@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.IO;
 using System.Windows.Input;
-using UIAssistant.Core.I18n;
-using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Settings;
+using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Settings;
-using UIAssistant.UI.Controls;
 
 using KeybindHelper;
 
 namespace UIAssistant.Plugin.HitaHint
 {
-    public class HitaHintSettings : Settings<HitaHintSettings>
+    public class HitaHintSettings : Settings<HitaHintSettings>, ISettings
     {
         private string _HintKeys;
         public string HintKeys
@@ -51,15 +49,15 @@ namespace UIAssistant.Plugin.HitaHint
 
         public string Theme { get; set; } = "General";
 
-        public Keybind SwitchKeyboardLayout { get; } = UserSettings.Instance.SwitchKeyboardLayout;
-        public Keybind SwitchTheme { get; } = UserSettings.Instance.SwitchTheme;
-        public Keybind Up { get; } = UserSettings.Instance.Up;
-        public Keybind Down { get; } = UserSettings.Instance.Down;
-        public Keybind Execute { get; } = UserSettings.Instance.Execute;
-        public Keybind TemporarilyHide { get; } = UserSettings.Instance.TemporarilyHide;
+        public Keybind SwitchKeyboardLayout { get; } = HitaHint.UIAssistantAPI.UIAssistantSettings.SwitchKeyboardLayout;
+        public Keybind SwitchTheme { get; } = HitaHint.UIAssistantAPI.UIAssistantSettings.SwitchTheme;
+        public Keybind Up { get; } = HitaHint.UIAssistantAPI.UIAssistantSettings.Up;
+        public Keybind Down { get; } = HitaHint.UIAssistantAPI.UIAssistantSettings.Down;
+        public Keybind Execute { get; } = HitaHint.UIAssistantAPI.UIAssistantSettings.Execute;
+        public Keybind TemporarilyHide { get; } = HitaHint.UIAssistantAPI.UIAssistantSettings.TemporarilyHide;
 
-        public Keybind Quit { get; } = UserSettings.Instance.Quit;
-        public Keybind Back { get; } = UserSettings.Instance.Back;
+        public Keybind Quit { get; } = HitaHint.UIAssistantAPI.UIAssistantSettings.Quit;
+        public Keybind Back { get; } = HitaHint.UIAssistantAPI.UIAssistantSettings.Back;
         public Keybind Reverse { get; set; } = new Keybind();
         public Keybind Reload { get; set; } = new Keybind();
 
@@ -72,15 +70,15 @@ namespace UIAssistant.Plugin.HitaHint
 
         public Keybind MouseEmulation { get; set; } = new Keybind();
 
-        public readonly UserSettings _userSettings = UserSettings.Instance;
+        //public readonly UserSettings _userSettings = HitaHint.UIAssistantAPI.UIAssistantSettings;
 
         private const string FileName = "HitaHint.yml";
-        private IFileIO<HitaHintSettings> _fileIO = new YamlFile<HitaHintSettings>(UIAssistantDirectory.Configurations, FileName);
+        private IFileIO<HitaHintSettings> _fileIO = new YamlFile<HitaHintSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configurations", FileName));
         protected override IFileIO<HitaHintSettings> FileIO { get { return _fileIO; } }
 
         public HitaHintSettings()
         {
-            OnError = ex => Notification.NotifyMessage("Load Settings Error", string.Format(TextID.SettingsLoadError.GetLocalizedText(), FileName), NotificationIcon.Warning);
+            OnError = ex => HitaHint.UIAssistantAPI.NotifyWarnMessage("Load Settings Error", string.Format(HitaHint.UIAssistantAPI.Localize(TextID.SettingsLoadError), FileName));
         }
 
         protected override void LoadDefault()

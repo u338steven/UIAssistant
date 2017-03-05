@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Data=System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ using System.Windows.Media.Animation;
 using KeybindHelper.LowLevel;
 using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.HitaHint;
+using UIAssistant.Core.I18n;
+using UIAssistant.Core.Input;
 using UIAssistant.Core.Settings;
 using UIAssistant.Core.Themes;
 using UIAssistant.Infrastructure.Commands;
@@ -17,6 +20,7 @@ using UIAssistant.Infrastructure.Logger;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.HUD;
+using UIAssistant.Interfaces.Input;
 using UIAssistant.Interfaces.Plugin;
 using UIAssistant.Interfaces.Resource;
 using UIAssistant.Interfaces.Settings;
@@ -77,11 +81,6 @@ namespace UIAssistant.Core.API
             {
                 return ThemeDefaultSwitcher.CurrentTheme;
             }
-        }
-
-        public IHUDItemEnumerator GetWidgetEnumerator()
-        {
-            return new WidgetEnumerator();
         }
 
         public IEnumerable<string> GenerateHints(string hintKeys, int quantity)
@@ -261,6 +260,11 @@ namespace UIAssistant.Core.API
             return CommandManager.Parse(statement);
         }
 
+        public Data.ValidationResult Validate(string statement)
+        {
+            return CommandManager.GetValidator(DefaultLocalizer.Instance).Validate(statement);
+        }
+
         public IUserSettings UIAssistantSettings { get { return UserSettings.Instance; } }
 #if DEBUG
         public void DisplayKeystroke(LowLevelKeyEventArgs e)
@@ -297,7 +301,7 @@ namespace UIAssistant.Core.API
         public void AddTargetingReticle()
         {
             _reticle = window.FindResource("TargetingReticle") as Control;
-            var pt = Core.Input.MouseOperation.GetMousePosition();
+            var pt = MouseOperation.GetMousePosition();
             window.Dispatcher.Invoke(() =>
             {
                 Canvas.SetLeft(_reticle, pt.X);
@@ -318,7 +322,7 @@ namespace UIAssistant.Core.API
             {
                 return;
             }
-            var pt = Core.Input.MouseOperation.GetMousePosition();
+            var pt = MouseOperation.GetMousePosition();
             window.Dispatcher.Invoke(() =>
             {
                 Canvas.SetLeft(_reticle, pt.X);
@@ -400,5 +404,42 @@ namespace UIAssistant.Core.API
             }, () => { RemoveIndicator(indicator); completed?.Invoke(); }, waitable);
         }
 
+        public ILocalizer GetLocalizer()
+        {
+            return new Localizer(System.IO.Directory.GetParent(System.Reflection.Assembly.GetCallingAssembly().Location).ToString());
+        }
+
+        public ISwitcher GetThemeSwitcher()
+        {
+            return new ThemeSwitcher(System.IO.Directory.GetParent(System.Reflection.Assembly.GetCallingAssembly().Location).ToString());
+        }
+
+        public IResourceItem CurrentLanguage { get { return DefaultLocalizer.CurrentLanguage; } }
+
+        public ICommandRule CreateCommandRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null)
+        {
+            return new CommandRule(name, action, requiredArgs, optionalArgs);
+        }
+
+        public IArgumentRule CreateArgmentRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule>  optionalArgs = null)
+        {
+            return new ArgumentRule(name, action, requiredArgs, optionalArgs);
+        }
+
+        public IKeyboardHook CreateKeyboardHook()
+        {
+            return new KeyboardHook();
+        }
+
+        public IKeybindManager CreateKeybindManager()
+        {
+            return new KeybindManager();
+        }
+
+        public IMouseCursor MouseCursor { get; } = new MouseCursor();
+
+        public IMouseOperation MouseOperation { get; } = new MouseOperation();
+
+        public IKeyboardOperation KeyboardOperation { get; } = new KeyboardOperation();
     }
 }

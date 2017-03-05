@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using UIAssistant.Infrastructure.Resource.Theme;
+using UIAssistant.Interfaces.Resource;
 
 namespace UIAssistant.Core.Themes
 {
@@ -16,7 +16,7 @@ namespace UIAssistant.Core.Themes
             _theme.Switch(name);
         }
 
-        public static Theme CurrentTheme => _theme.CurrentTheme;
+        public static IResourceItem CurrentTheme => _theme.CurrentTheme;
 
         public static void Next()
         {

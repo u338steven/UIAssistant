@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using KeybindHelper.LowLevel;
-using UIAssistant.Core.Enumerators;
-using UIAssistant.Core.I18n;
-using UIAssistant.Core.Input;
+using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Infrastructure.Logger;
 
@@ -18,7 +16,7 @@ namespace UIAssistant.Plugin.HitaHint
         private StateController _stateController;
         private HitaHintSettings _settings;
 
-        public KeyInputController(IUIAssistantAPI api, StateController controller) : base(api, controller, new KeyboardHook(), new KeybindManager())
+        public KeyInputController(IUIAssistantAPI api, StateController controller) : base(api, controller, api.CreateKeyboardHook(), api.CreateKeybindManager())
         {
             _stateController = controller;
             _settings = _stateController.Settings;
@@ -83,7 +81,7 @@ namespace UIAssistant.Plugin.HitaHint
                 _stateController.Enumerate();
                 _stateController.PrintState();
             });
-            Keybinds.Add(_settings.Reverse, () => UIAssistantAPI.DefaultHUD.Items = new HUDItemCollection(UIAssistantAPI.DefaultHUD.Items.Reverse()));
+            Keybinds.Add(_settings.Reverse, () => UIAssistantAPI.DefaultHUD.Items = UIAssistantAPI.DefaultHUD.Items.Reverse().ToList());
 
             Keybinds.Add(_settings.Click, () => _stateController.ChangeOperation(Consts.Click));
             Keybinds.Add(_settings.RightClick, () => _stateController.ChangeOperation(Consts.RightClick));
@@ -97,7 +95,7 @@ namespace UIAssistant.Plugin.HitaHint
             {
                 Hook.LoadAnotherKeyboardLayout();
                 var layoutLanguage = Hook.GetKeyboardLayoutLanguage();
-                UIAssistantAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(TextID.SwitchKeyboardLayout.GetLocalizedText(), layoutLanguage));
+                UIAssistantAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(UIAssistantAPI.Localize(TextID.SwitchKeyboardLayout), layoutLanguage));
                 _stateController.SetKeyboardLayoutName(layoutLanguage);
             });
 

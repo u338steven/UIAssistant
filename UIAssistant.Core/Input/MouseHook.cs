@@ -52,9 +52,11 @@ namespace UIAssistant.Core.Input
         private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
 
         private IntPtr _hookID;
+        private LowLevelMouseProc _proc;
 
         public void SetHook(LowLevelMouseProc proc)
         {
+            _proc = proc;
             _hookID = SetWindowsHookEx(WH_MOUSE_LL, proc, IntPtr.Zero, 0);
         }
 

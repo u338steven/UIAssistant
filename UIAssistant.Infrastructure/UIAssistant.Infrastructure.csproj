@@ -40,6 +40,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="UIAComWrapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\assemblies\UIAComWrapperLite\UIAComWrapper.dll</HintPath>
+    </Reference>
     <Reference Include="YamlDotNet, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\YamlDotNet.4.1.0\lib\net35\YamlDotNet.dll</HintPath>
       <Private>True</Private>
@@ -58,6 +62,8 @@
     <Compile Include="Commands\CommandSyntax.cs" />
     <Compile Include="Commands\CommandValidator.cs" />
     <Compile Include="Commands\StringExtensions.cs" />
+    <Compile Include="Events\EventHook.cs" />
+    <Compile Include="Events\EventObserver.cs" />
     <Compile Include="Logger\Log.cs" />
     <Compile Include="Logger\LogRotator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,6 +92,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

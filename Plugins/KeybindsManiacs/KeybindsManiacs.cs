@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.ComponentModel.Composition;
-using UIAssistant.Core.I18n;
 using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Plugin;
+using UIAssistant.Interfaces.Resource;
 
 namespace UIAssistant.Plugin.KeybindsManiacs
 {
@@ -28,12 +28,14 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         internal static IUIAssistantAPI UIAssistantAPI { get; private set; }
         private StateController _stateController;
         private KeyInputController _keyController;
+        internal static ILocalizer Localizer { get; private set; }
 
         public void Initialize(IUIAssistantAPI api)
         {
+            UIAssistantAPI = api;
             _stateController = new StateController(api);
             _keyController = new KeyInputController(api, _stateController);
-            UIAssistantAPI = api;
+            Localizer = api.GetLocalizer();
             RegisterCommand();
 
             if (_stateController.Settings.RunAtStartup)
@@ -59,10 +61,9 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             return new Settings();
         }
 
-        public static Localizer Localizer = new Localizer();
         public void Localize()
         {
-            Localizer.SwitchLanguage(DefaultLocalizer.CurrentLanguage);
+            Localizer.SwitchLanguage(UIAssistantAPI.CurrentLanguage);
         }
 
         public void Save()

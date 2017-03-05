@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 using System.Windows;
 using System.Windows.Media;
-using UIAssistant.Core.API;
-using UIAssistant.Core.I18n;
+using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.HUD;
 
-namespace UIAssistant.Core.Enumerators
+namespace UIAssistant.Plugin.SearchByText.Items
 {
     public abstract class ContextItemBase : IHUDItem
     {
@@ -30,13 +29,13 @@ namespace UIAssistant.Core.Enumerators
     {
         public Copy()
         {
-            DisplayText = TextID.ActionsCopy.GetLocalizedText();
+            DisplayText = SearchByText.UIAssistantAPI.Localize(TextID.ActionsCopy);
             IsEnabled = true;
         }
 
         public override void Execute()
         {
-            var item = UIAssistantAPI.Instance.DefaultHUD.SelectedItem;
+            var item = SearchByText.UIAssistantAPI.DefaultHUD.SelectedItem;
             if (item == null)
             {
                 return;
@@ -49,13 +48,13 @@ namespace UIAssistant.Core.Enumerators
     {
         public CopyAll()
         {
-            DisplayText = TextID.ActionsCopyAll.GetLocalizedText();
+            DisplayText = SearchByText.UIAssistantAPI.Localize(TextID.ActionsCopyAll);
             IsEnabled = true;
         }
 
         public override void Execute()
         {
-            var result = UIAssistantAPI.Instance.DefaultHUD.Items.Select(x => x.DisplayText).Aggregate((x, y) => $"{x}\r\n{y}");
+            var result = SearchByText.UIAssistantAPI.DefaultHUD.Items.Select(x => x.DisplayText).Aggregate((x, y) => $"{x}\r\n{y}");
             Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(result));
         }
     }
@@ -64,13 +63,13 @@ namespace UIAssistant.Core.Enumerators
     {
         public CopyHwnd()
         {
-            DisplayText = TextID.ActionsCopyHwnd.GetLocalizedText();
+            DisplayText = SearchByText.UIAssistantAPI.Localize(TextID.ActionsCopyHwnd);
             IsEnabled = true;
         }
 
         public override void Execute()
         {
-            var item = UIAssistantAPI.Instance.DefaultHUD.SelectedItem as IWindowItem;
+            var item = SearchByText.UIAssistantAPI.DefaultHUD.SelectedItem as IWindowItem;
             if (item == null)
             {
                 return;
@@ -83,13 +82,13 @@ namespace UIAssistant.Core.Enumerators
     {
         public ToggleTopMost()
         {
-            DisplayText = TextID.ActionsToggleTopMost.GetLocalizedText();
+            DisplayText = SearchByText.UIAssistantAPI.Localize(TextID.ActionsToggleTopMost);
             IsEnabled = true;
         }
 
         public override void Execute()
         {
-            var item = UIAssistantAPI.Instance.DefaultHUD.SelectedItem as IWindowItem;
+            var item = SearchByText.UIAssistantAPI.DefaultHUD.SelectedItem as IWindowItem;
             item?.Window.ToggleTopMost();
         }
     }
@@ -98,13 +97,13 @@ namespace UIAssistant.Core.Enumerators
     {
         public CloseWindow()
         {
-            DisplayText = TextID.ActionsCloseWindow.GetLocalizedText();
+            DisplayText = SearchByText.UIAssistantAPI.Localize(TextID.ActionsCloseWindow);
             IsEnabled = true;
         }
 
         public override void Execute()
         {
-            var item = UIAssistantAPI.Instance.DefaultHUD.SelectedItem as IWindowItem;
+            var item = SearchByText.UIAssistantAPI.DefaultHUD.SelectedItem as IWindowItem;
             item?.Window.Close();
         }
     }

@@ -7,7 +7,7 @@ using System.Windows.Automation;
 
 using UIAssistant.Interfaces.HUD;
 
-namespace UIAssistant.Core.Enumerators
+namespace UIAssistant.Plugin.HitaHint.Enumerators
 {
     public class WidgetEnumerator : IHUDItemEnumerator
     {
@@ -92,12 +92,5 @@ namespace UIAssistant.Core.Enumerators
             var t = Invert(types);
             enumerator.AddIgnore(t);
         }
-
-        //public void Enumerate(HUDItemCollection container, Win32Window root, Condition condition, params ControlType[] types)
-        //{
-        //    SetCondition(condition);
-        //    SetTypes(types);
-        //    enumerator.Enumerate(container, root.Element);
-        //}
     }
 }

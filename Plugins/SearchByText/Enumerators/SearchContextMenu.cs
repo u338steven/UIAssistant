@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-using UIAssistant.Core.Events;
-using UIAssistant.Core.Input;
+using UIAssistant.Infrastructure.Events;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Plugin.SearchByText.Enumerators.ForCommand;
 
@@ -31,8 +30,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
 
             observer.Observe();
 
-            KeyboardOperation.PressedKeyUp();
-            KeyboardOperation.SendKeys(Key.Apps);
+            SearchByText.UIAssistantAPI.KeyboardOperation.PressedKeyUp();
+            SearchByText.UIAssistantAPI.KeyboardOperation.SendKeys(Key.Apps);
             if (!observer.Wait(2000))
             {
                 // timeout

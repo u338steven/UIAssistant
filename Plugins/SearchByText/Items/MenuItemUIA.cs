@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Automation;
 using UIAssistant.Utility.Extensions;
 using UIAssistant.Utility.Win32;
-using UIAssistant.Core.Events;
+using UIAssistant.Infrastructure.Events;
 
 namespace UIAssistant.Plugin.SearchByText.Items
 {

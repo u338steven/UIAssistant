@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 
 using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Interfaces.Commands;
+using UIAssistant.Interfaces.Resource;
 
 namespace CommandsTest
 {
@@ -258,7 +259,7 @@ namespace CommandsTest
         }
     }
 
-    internal class MockLocalizer : UIAssistant.Interfaces.Resource.ILocalizer
+    internal class MockLocalizer : ILocalizer
     {
         public string GetLocalizedText(string key)
         {
@@ -270,6 +271,11 @@ namespace CommandsTest
             {
                 return "Required argument of {0}";
             }
+        }
+
+        public void SwitchLanguage(IResourceItem language)
+        {
+            throw new NotImplementedException();
         }
     }
 

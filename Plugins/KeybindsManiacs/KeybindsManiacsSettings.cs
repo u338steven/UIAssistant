@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using UIAssistant.Core.I18n;
-using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Settings;
+using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Settings;
-using UIAssistant.UI.Controls;
 
 namespace UIAssistant.Plugin.KeybindsManiacs
 {
     class KeybindsManiacsSettings : Settings<KeybindsManiacsSettings>
     {
         private const string FileName = "KeybindsManiacs.yml";
-        private IFileIO<KeybindsManiacsSettings> _fileIO = new YamlFile<KeybindsManiacsSettings>(UIAssistantDirectory.Configurations, FileName);
+        private IFileIO<KeybindsManiacsSettings> _fileIO = new YamlFile<KeybindsManiacsSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configurations", FileName));
         protected override IFileIO<KeybindsManiacsSettings> FileIO { get { return _fileIO; } }
 
         public ObservableDictionary<string, ModeStorage> KeybindsInMode { get; private set; } = new ObservableDictionary<string, ModeStorage>();
@@ -26,7 +25,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
         public KeybindsManiacsSettings()
         {
-            OnError = ex => Notification.NotifyMessage("Load Settings Error", string.Format(TextID.SettingsLoadError.GetLocalizedText(), FileName), NotificationIcon.Warning);
+            OnError = ex => KeybindsManiacs.UIAssistantAPI.NotifyWarnMessage("Load Settings Error", string.Format(KeybindsManiacs.UIAssistantAPI.Localize(TextID.SettingsLoadError), FileName));
         }
 
         protected override void LoadDefault()

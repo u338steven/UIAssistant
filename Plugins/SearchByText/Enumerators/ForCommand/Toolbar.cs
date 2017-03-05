@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using System.Windows.Automation;
 using UIAssistant.Interfaces.HUD;
-using UIAssistant.Core.Input;
 using UIAssistant.Utility.Extensions;
 using UIAssistant.Plugin.SearchByText.Items;
 
@@ -59,7 +58,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
             bool ret = false;
             var toolbarItems = el.FindAll(TreeScope.Descendants, Condition.TrueCondition).Cast<AutomationElement>();
 
-            var pt = MouseOperation.GetMousePosition();
+            var pt = SearchByText.UIAssistantAPI.MouseOperation.GetMousePosition();
             foreach (AutomationElement item in toolbarItems)
             {
                 try
@@ -72,7 +71,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                     }
 
 
-                    MouseOperation.DoMouseEvent(elementInfo.BoundingRectangle);
+                    SearchByText.UIAssistantAPI.MouseOperation.DoMouseEvent(elementInfo.BoundingRectangle);
                     string addName = elementInfo.Name;
                     if (addName == null || addName == "")
                     {
@@ -95,7 +94,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                     System.Diagnostics.Debug.Print("{0}", e.Message);
                 }
             }
-            MouseOperation.Move(pt);
+            SearchByText.UIAssistantAPI.MouseOperation.Move(pt);
             return ret;
         }
     }

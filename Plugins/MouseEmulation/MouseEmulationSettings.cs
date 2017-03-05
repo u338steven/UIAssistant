@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Input;
-using UIAssistant.Core.I18n;
-using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Settings;
+using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Settings;
-using UIAssistant.UI.Controls;
 
 using KeybindHelper;
 
@@ -17,8 +16,8 @@ namespace UIAssistant.Plugin.MouseEmulation
 {
     public class MouseEmulationSettings : Settings<MouseEmulationSettings>
     {
-        public Keybind Quit { get; } = UserSettings.Instance.Quit;
-        public Keybind Back { get; } = UserSettings.Instance.Back;
+        public Keybind Quit { get; } = MouseEmulation.UIAssistantAPI.UIAssistantSettings.Quit;
+        public Keybind Back { get; } = MouseEmulation.UIAssistantAPI.UIAssistantSettings.Back;
 
         public Keybind Left { get; set; } = new Keybind();
         public Keybind Right { get; set; } = new Keybind();
@@ -38,12 +37,12 @@ namespace UIAssistant.Plugin.MouseEmulation
         public Keybind SlowDown { get; set; } = new Keybind();
 
         private const string FileName = "MouseEmulation.yml";
-        private IFileIO<MouseEmulationSettings> _fileIO = new YamlFile<MouseEmulationSettings>(UIAssistantDirectory.Configurations, FileName);
+        private IFileIO<MouseEmulationSettings> _fileIO = new YamlFile<MouseEmulationSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configurations", FileName));
         protected override IFileIO<MouseEmulationSettings> FileIO { get { return _fileIO; } }
 
         public MouseEmulationSettings()
         {
-            OnError = ex => Notification.NotifyMessage("Load Settings Error", string.Format(TextID.SettingsLoadError.GetLocalizedText(), FileName), NotificationIcon.Warning);
+            OnError = ex => MouseEmulation.UIAssistantAPI.NotifyWarnMessage("Load Settings Error", string.Format(MouseEmulation.UIAssistantAPI.Localize(TextID.SettingsLoadError), FileName));
         }
 
         protected override void LoadDefault()

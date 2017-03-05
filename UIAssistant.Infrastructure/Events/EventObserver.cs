@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Automation;
 
-namespace UIAssistant.Core.Events
+namespace UIAssistant.Infrastructure.Events
 {
     public abstract class EventObserver : IDisposable
     {

@@ -49,7 +49,6 @@ namespace UIAssistant.Interfaces.HUD
     public interface IHUDItemEnumerator
     {
         void Enumerate(ICollection<IHUDItem> container, System.Windows.Automation.Condition condition, params ControlType[] types);
-        //void Enumerate(HUDItemCollection container, Win32Window root, System.Windows.Automation.Condition condition, params ControlType[] types);
         void Retry(ICollection<IHUDItem> container);
     }
 }

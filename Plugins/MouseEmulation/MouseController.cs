@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Timers;
-using UIAssistant.Core.Input;
-using UIAssistant.Core.Plugin;
-using UIAssistant.Core.Settings;
+using UIAssistant.Interfaces.Input;
+using UIAssistant.Interfaces.Settings;
 using KeybindHelper.LowLevel;
 
 namespace UIAssistant.Plugin.MouseEmulation
@@ -21,8 +20,8 @@ namespace UIAssistant.Plugin.MouseEmulation
         static bool _isPressedLbutton = false;
         static bool _isPressedRbutton = false;
         static bool _isPressedMbutton = false;
-        static LowLevelKeyHook _keyHook;
-        static UserSettings _userSettings;
+        static IKeyboardHook _keyHook;
+        static IUserSettings _userSettings;
         static MouseEmulationSettings _mouseSettings;
         private static Dictionary<KeySet, Action> _keybinds;
 
@@ -30,18 +29,18 @@ namespace UIAssistant.Plugin.MouseEmulation
 
         public static void Start()
         {
-            _keyHook = new KeyboardHook();
+            _keyHook = MouseEmulation.UIAssistantAPI.CreateKeyboardHook();
             _keyHook.Hook();
             _keyHook.KeyDown += _keyHook_KeyDown;
             _timer = new Timer();
             _timer.Interval = 100d / 6d;
             _timer.Elapsed += Timer_Elapsed;
             _timer.Start();
-            _userSettings = UserSettings.Instance;
+            _userSettings = MouseEmulation.UIAssistantAPI.UIAssistantSettings;
             _mouseSettings = MouseEmulationSettings.Instance;
             _keybinds = new Dictionary<KeySet, Action>();
-            _keybinds.Add(new KeySet(_userSettings.Quit), () => { Stop(); PluginManager.Instance.Exit(); });
-            _keybinds.Add(new KeySet(_userSettings.Back), () => { Stop(); PluginManager.Instance.Undo(); });
+            _keybinds.Add(new KeySet(_userSettings.Quit), () => { Stop(); MouseEmulation.UIAssistantAPI.PluginManager.Exit(); });
+            _keybinds.Add(new KeySet(_userSettings.Back), () => { Stop(); MouseEmulation.UIAssistantAPI.PluginManager.Undo(); });
             _keybinds.Add(new KeySet(_userSettings.Usage), () =>
             {
                 if (_usagePanel == null)
@@ -87,6 +86,7 @@ namespace UIAssistant.Plugin.MouseEmulation
         static void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             var moveDelta = 4;
+            var operation = MouseEmulation.UIAssistantAPI.MouseOperation;
             if (_keyHook.IsPressed(_mouseSettings.SlowDown.Key))
             {
                 moveDelta = 1;
@@ -115,27 +115,27 @@ namespace UIAssistant.Plugin.MouseEmulation
             }
             if (location.X != 0 || location.Y != 0)
             {
-                MouseOperation.DoMouseEventRelative(location.X, location.Y);
+                operation.DoMouseEventRelative(location.X, location.Y);
                 MouseEmulation.UIAssistantAPI.MoveTargetingReticle(location.X, location.Y);
             }
-            Click(_mouseSettings.Click.Key, MouseOperation.LeftDown, MouseOperation.LeftUp, ref _isPressedLbutton);
-            Click(_mouseSettings.RightClick.Key, MouseOperation.RightDown, MouseOperation.RightUp, ref _isPressedRbutton);
-            Click(_mouseSettings.MiddleClick.Key, MouseOperation.MiddleDown, MouseOperation.MiddleUp, ref _isPressedMbutton);
+            Click(_mouseSettings.Click.Key, operation.LeftDown, operation.LeftUp, ref _isPressedLbutton);
+            Click(_mouseSettings.RightClick.Key, operation.RightDown, operation.RightUp, ref _isPressedRbutton);
+            Click(_mouseSettings.MiddleClick.Key, operation.MiddleDown, operation.MiddleUp, ref _isPressedMbutton);
             if (_keyHook.IsPressed(_mouseSettings.WheelUp.Key))
             {
-                MouseOperation.DoWheelEvent(60, MouseOperation.WheelOrientation.Vertical);
+                operation.DoWheelEvent(60, WheelOrientation.Vertical);
             }
             if (_keyHook.IsPressed(_mouseSettings.WheelDown.Key))
             {
-                MouseOperation.DoWheelEvent(-60, MouseOperation.WheelOrientation.Vertical);
+                operation.DoWheelEvent(-60, WheelOrientation.Vertical);
             }
             if (_keyHook.IsPressed(_mouseSettings.HWheelUp.Key))
             {
-                MouseOperation.DoWheelEvent(-180, MouseOperation.WheelOrientation.Horizontal);
+                operation.DoWheelEvent(-180, WheelOrientation.Horizontal);
             }
             if (_keyHook.IsPressed(_mouseSettings.HWheelDown.Key))
             {
-                MouseOperation.DoWheelEvent(180, MouseOperation.WheelOrientation.Horizontal);
+                operation.DoWheelEvent(180, WheelOrientation.Horizontal);
             }
         }
 

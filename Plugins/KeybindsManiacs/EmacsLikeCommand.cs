@@ -5,10 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Input;
-using KeybindHelper;
-using KeybindHelper.LowLevel;
-
-using UIAssistant.Core.Input;
 
 namespace UIAssistant.Plugin.KeybindsManiacs
 {
@@ -16,19 +12,19 @@ namespace UIAssistant.Plugin.KeybindsManiacs
     {
         public static void Yank(StateController stateController, KeybindsManiacsSettings settings)
         {
-            KeyboardOperation.SendKeys(Key.RightCtrl, Key.V);
+            KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(Key.RightCtrl, Key.V);
             stateController.SwitchMode(settings.Mode, true);
         }
 
         public static void KillRegion(StateController stateController, KeybindsManiacsSettings settings)
         {
-            KeyboardOperation.SendKeys(Key.RightCtrl, Key.X);
+            KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(Key.RightCtrl, Key.X);
             stateController.SwitchMode(settings.Mode, true);
         }
 
         public static void KillRingSave(StateController stateController, KeybindsManiacsSettings settings)
         {
-            KeyboardOperation.SendKeys(Key.RightCtrl, Key.C);
+            KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(Key.RightCtrl, Key.C);
             stateController.SwitchMode(settings.Mode, true);
         }
     }

@@ -13,6 +13,7 @@ using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Logger;
+using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Plugin;
 
 namespace UIAssistant.Core.Plugin

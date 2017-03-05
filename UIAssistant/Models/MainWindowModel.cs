@@ -6,8 +6,8 @@ using System.Text;
 using Livet;
 using UIAssistant.Utility;
 using UIAssistant.Core.I18n;
+using UIAssistant.Interfaces;
 using UIAssistant.Views;
-using UIAssistant.Plugin;
 
 namespace UIAssistant.Models
 {

@@ -8,8 +8,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Automation;
 using System.Windows.Automation.Text;
 
-using UIAssistant.Core.Tools;
-
 namespace UIAssistant.Plugin.KeybindsManiacs
 {
     class EmbeddedCommand

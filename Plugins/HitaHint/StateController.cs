@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-using UIAssistant.Core.Themes;
-using UIAssistant.Core.Input;
-using UIAssistant.Core.I18n;
+using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.HUD;
+using UIAssistant.Interfaces.Resource;
 using UIAssistant.Utility.Win32;
 using UIAssistant.Utility.Extensions;
 
@@ -27,6 +27,7 @@ namespace UIAssistant.Plugin.HitaHint
         private History _history = new History();
         private StringBuilder _inputText = new StringBuilder();
         private ICollection<IHUDItem> _enumeratedResults;
+        private ISwitcher _themeSwitcher;
 
         public StateController(IUIAssistantAPI api) : base(api)
         {
@@ -35,12 +36,13 @@ namespace UIAssistant.Plugin.HitaHint
             {
                 Reset();
             }
+            _themeSwitcher = api.GetThemeSwitcher();
         }
 
         public void Reset()
         {
-            MouseCursor.AutoHide = Settings.IsMouseCursorHidden;
-            MouseCursor.SetCursorVisibility(!Settings.IsMouseCursorHidden);
+            HitaHint.UIAssistantAPI.MouseCursor.AutoHide = Settings.IsMouseCursorHidden;
+            HitaHint.UIAssistantAPI.MouseCursor.SetCursorVisibility(!Settings.IsMouseCursorHidden);
         }
 
         public void Initialize()
@@ -60,7 +62,7 @@ namespace UIAssistant.Plugin.HitaHint
         private static System.Windows.Point _prevMousePosition;
         private void SubscribeReturnMouseCursor()
         {
-            _prevMousePosition = MouseOperation.GetMousePosition();
+            _prevMousePosition = HitaHint.UIAssistantAPI.MouseOperation.GetMousePosition();
             Finished += (_, __) =>
             {
                 if (!OperationManager.CurrentCommand.IsReturnCursor || NoReturnCursor)
@@ -70,7 +72,7 @@ namespace UIAssistant.Plugin.HitaHint
                 Task.Run(() =>
                 {
                     System.Threading.Thread.Sleep(300);
-                    MouseOperation.Move(_prevMousePosition);
+                    HitaHint.UIAssistantAPI.MouseOperation.Move(_prevMousePosition);
                 });
             };
         }
@@ -155,7 +157,7 @@ namespace UIAssistant.Plugin.HitaHint
             }
             if (_enumeratedResults == null || _enumeratedResults.Count == 0)
             {
-                UIAssistantAPI.NotifyInfoMessage("Hit-a-Hint", TextID.NoOneFound.GetLocalizedText());
+                UIAssistantAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.Localize(TextID.NoOneFound));
                 Quit();
                 return;
             }
@@ -251,7 +253,7 @@ namespace UIAssistant.Plugin.HitaHint
             {
                 if (WhetherShowWarning(inputChar))
                 {
-                    UIAssistantAPI.NotifyInfoMessage("Hit-a-Hint", TextID.NoOneFound.GetLocalizedText() + $"\nInput:{_notFoundInput.ToString()}\nKeyboard Layout:{_layoutName}");
+                    UIAssistantAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.Localize(TextID.NoOneFound) + $"\nInput:{_notFoundInput.ToString()}\nKeyboard Layout:{_layoutName}");
                     _notFoundInput.Clear();
                 }
                 _inputText.Remove(_inputText.Length - 1, 1);
@@ -265,7 +267,7 @@ namespace UIAssistant.Plugin.HitaHint
 
             if (resultCount == 0)
             {
-                UIAssistantAPI.NotifyInfoMessage("Hit-a-Hint", TextID.NoOneFound.GetLocalizedText() + $"\nInput:{_inputText}");
+                UIAssistantAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.Localize(TextID.NoOneFound) + $"\nInput:{_inputText}");
                 _inputText.Remove(_inputText.Length - 1, 1);
                 return;
             }
@@ -279,12 +281,11 @@ namespace UIAssistant.Plugin.HitaHint
             PrintState();
         }
 
-        ThemeSwitcher _themeSwitcher = new ThemeSwitcher();
         public override void SwitchNextTheme()
         {
             _themeSwitcher.Next();
             Settings.Theme = _themeSwitcher.CurrentTheme.Id;
-            UIAssistantAPI.NotifyInfoMessage("Switch Theme", string.Format(TextID.SwitchTheme.GetLocalizedText(), Settings.Theme));
+            UIAssistantAPI.NotifyInfoMessage("Switch Theme", string.Format(UIAssistantAPI.Localize(TextID.SwitchTheme), Settings.Theme));
             Settings.Save();
         }
 
@@ -316,8 +317,8 @@ namespace UIAssistant.Plugin.HitaHint
         {
             if (Settings.IsMouseCursorHidden)
             {
-                MouseCursor.SetCursorVisibility(true);
-                MouseCursor.DestroyCursor();
+                HitaHint.UIAssistantAPI.MouseCursor.SetCursorVisibility(true);
+                HitaHint.UIAssistantAPI.MouseCursor.DestroyCursor();
             }
             base.Dispose(disposing);
         }

@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 using System.ComponentModel.Composition;
 
-using UIAssistant.Core.I18n;
-using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Plugin;
+using UIAssistant.Interfaces.Resource;
 
 using UIAssistant.Plugin.HitaHint.Enumerators;
 using UIAssistant.Plugin.HitaHint.Operations;
@@ -39,32 +38,33 @@ namespace UIAssistant.Plugin.HitaHint
             UIAssistantAPI = api;
             _stateController = new StateController(api);
             _keyController = new KeyInputController(api, _stateController);
+            _localizer = api.GetLocalizer();
             RegisterCommand();
         }
 
         private void RegisterCommand()
         {
-            var argSwitch = new ArgumentRule(Consts.Switch, x => OperationManager.Change(x.Name));
-            var argClick = new ArgumentRule(Consts.Click, x => OperationManager.Change(x.Name));
-            var argDoubleClick = new ArgumentRule(Consts.DoubleClick, x => OperationManager.Change(x.Name));
-            var argDragAndDrop = new ArgumentRule(Consts.DragAndDrop, x => OperationManager.Change(x.Name));
-            var argHover = new ArgumentRule(Consts.Hover, x => OperationManager.Change(x.Name));
-            var argMiddleClick = new ArgumentRule(Consts.MiddleClick, x => OperationManager.Change(x.Name));
-            var argMouseEmulation = new ArgumentRule(Consts.MouseEmulation, x => OperationManager.Change(x.Name));
-            var argRightClick = new ArgumentRule(Consts.RightClick, x => OperationManager.Change(x.Name));
+            var argSwitch = UIAssistantAPI.CreateArgmentRule(Consts.Switch, x => OperationManager.Change(x.Name));
+            var argClick = UIAssistantAPI.CreateArgmentRule(Consts.Click, x => OperationManager.Change(x.Name));
+            var argDoubleClick = UIAssistantAPI.CreateArgmentRule(Consts.DoubleClick, x => OperationManager.Change(x.Name));
+            var argDragAndDrop = UIAssistantAPI.CreateArgmentRule(Consts.DragAndDrop, x => OperationManager.Change(x.Name));
+            var argHover = UIAssistantAPI.CreateArgmentRule(Consts.Hover, x => OperationManager.Change(x.Name));
+            var argMiddleClick = UIAssistantAPI.CreateArgmentRule(Consts.MiddleClick, x => OperationManager.Change(x.Name));
+            var argMouseEmulation = UIAssistantAPI.CreateArgmentRule(Consts.MouseEmulation, x => OperationManager.Change(x.Name));
+            var argRightClick = UIAssistantAPI.CreateArgmentRule(Consts.RightClick, x => OperationManager.Change(x.Name));
 
-            var argRunningApps = new ArgumentRule(Consts.RunningApps, x => _stateController.ChangeTarget(EnumerateTarget.RunningApps), new[] { argSwitch });
-            var argWidgetsInWindow = new ArgumentRule(Consts.WidgetsInWindow, x => _stateController.ChangeTarget(EnumerateTarget.WidgetsInWindow),
+            var argRunningApps = UIAssistantAPI.CreateArgmentRule(Consts.RunningApps, x => _stateController.ChangeTarget(EnumerateTarget.RunningApps), new[] { argSwitch });
+            var argWidgetsInWindow = UIAssistantAPI.CreateArgmentRule(Consts.WidgetsInWindow, x => _stateController.ChangeTarget(EnumerateTarget.WidgetsInWindow),
                 new[] { argClick, argDoubleClick, argDragAndDrop, argHover, argMiddleClick, argMouseEmulation, argRightClick });
-            var argWidgetsInTaskbar = new ArgumentRule(Consts.WidgetsInTaskbar, x => _stateController.ChangeTarget(EnumerateTarget.WidgetsInTaskbar),
+            var argWidgetsInTaskbar = UIAssistantAPI.CreateArgmentRule(Consts.WidgetsInTaskbar, x => _stateController.ChangeTarget(EnumerateTarget.WidgetsInTaskbar),
                 new[] { argClick, argDoubleClick, argDragAndDrop, argHover, argMiddleClick, argMouseEmulation, argRightClick });
-            var argDividedscreen = new ArgumentRule(Consts.DividedScreen, x => _stateController.ChangeTarget(EnumerateTarget.DividedScreen),
+            var argDividedscreen = UIAssistantAPI.CreateArgmentRule(Consts.DividedScreen, x => _stateController.ChangeTarget(EnumerateTarget.DividedScreen),
                 new[] { argClick, argDoubleClick, argDragAndDrop, argHover, argMiddleClick, argMouseEmulation, argRightClick });
 
-            var optTheme = new ArgumentRule(Consts.Theme, x => _stateController.SetTheme(x.Value));
-            var optNoReturnCursor = new ArgumentRule(Consts.NoReturnCursor, _ => _stateController.NoReturnCursor = true);
+            var optTheme = UIAssistantAPI.CreateArgmentRule(Consts.Theme, x => _stateController.SetTheme(x.Value));
+            var optNoReturnCursor = UIAssistantAPI.CreateArgmentRule(Consts.NoReturnCursor, _ => _stateController.NoReturnCursor = true);
 
-            var command = new CommandRule(Consts.Command, Run,
+            var command = UIAssistantAPI.CreateCommandRule(Consts.Command, Run,
                 new[] { argWidgetsInWindow, argRunningApps, argWidgetsInTaskbar, argDividedscreen, },
                 new[] { optTheme, optNoReturnCursor });
             command.Description = Consts.PluginName;
@@ -105,10 +105,10 @@ namespace UIAssistant.Plugin.HitaHint
             _stateController?.Reset();
         }
 
-        static Localizer _localizer = new Localizer();
+        static ILocalizer _localizer;// = new Localizer();
         public void Localize()
         {
-            _localizer.SwitchLanguage(DefaultLocalizer.CurrentLanguage);
+            _localizer.SwitchLanguage(UIAssistantAPI.CurrentLanguage);
 
             HitaHintSettings.Instance.Click.Text = _localizer.GetLocalizedText("hahClick");
             HitaHintSettings.Instance.DoubleClick.Text = _localizer.GetLocalizedText("hahDoubleClick");

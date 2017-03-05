@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using UIAssistant.Core.Plugin;
 using UIAssistant.Interfaces.API;
 
 namespace UIAssistant.Plugin
@@ -34,16 +33,16 @@ namespace UIAssistant.Plugin
         public void InvokeAnotherPlugin(string command)
         {
             // TODO: Experiment: Another plugin execution
-            if (PluginManager.Instance.Exists(command))
+            if (UIAssistantAPI.PluginManager.Exists(command))
             {
                 Pausing?.Invoke(this, EventArgs.Empty);
                 UIAssistantAPI.DefaultHUD.Initialize();
-                PluginManager.Instance.Execute(command);
-                PluginManager.Instance.Resume += () =>
+                UIAssistantAPI.PluginManager.Execute(command);
+                UIAssistantAPI.PluginManager.Resume += () =>
                 {
                     Resumed?.Invoke(this, EventArgs.Empty);
                 };
-                PluginManager.Instance.Quit += () =>
+                UIAssistantAPI.PluginManager.Quit += () =>
                 {
                     Quit();
                 };

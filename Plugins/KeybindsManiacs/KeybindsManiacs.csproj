@@ -77,11 +77,6 @@
     <Compile Include="StateController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIAssistant.Core\UIAssistant.Core.csproj">
-      <Project>{a1d8d3e3-6075-4c68-8d27-7f113a2c7755}</Project>
-      <Name>UIAssistant.Core</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\UIAssistant.Infrastructure\UIAssistant.Infrastructure.csproj">
       <Project>{22a954b1-47a0-4081-8ac1-ccace31aa6ab}</Project>
       <Name>UIAssistant.Infrastructure</Name>
@@ -98,7 +93,6 @@
     <ProjectReference Include="..\..\UIAssistant.UI\UIAssistant.UI.csproj">
       <Project>{7a300bc2-c0b0-4bbf-b689-e86e493bf3a0}</Project>
       <Name>UIAssistant.UI</Name>
-      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\UIAssistant.Utility\UIAssistant.Utility.csproj">
       <Project>{9c9ebd40-2656-4217-9bd3-3cba29f95dbb}</Project>

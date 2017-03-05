@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Data = System.ComponentModel.DataAnnotations;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using KeybindHelper.LowLevel;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.HUD;
+using UIAssistant.Interfaces.Input;
 using UIAssistant.Interfaces.Plugin;
 using UIAssistant.Interfaces.Resource;
 using UIAssistant.Interfaces.Settings;
@@ -33,7 +35,6 @@ namespace UIAssistant.Interfaces.API
         void DisplayKeystroke(LowLevelKeyEventArgs e);
         void FlashIndicatorAnimation(Rect size, bool waitable = true, double duration = 300, Action completed = null);
         IEnumerable<string> GenerateHints(string hintKeys, int quantity);
-        IHUDItemEnumerator GetWidgetEnumerator();
         void Initialize(Control defaultHUDPanel, Control defaultContextPanel);
         string Localize(string id);
         void MoveTargetingReticle(double x, double y);
@@ -42,6 +43,7 @@ namespace UIAssistant.Interfaces.API
         void NotifyInfoMessage(string title, string message);
         void NotifyWarnMessage(string title, string message);
         IEnumerable<ICommand> ParseStatement(string statement);
+        Data.ValidationResult Validate(string statement);
         IPluginManager PluginManager { get; }
         void PrintDebugMessage(string message);
         void PrintErrorMessage(Exception ex, string message = null);
@@ -54,5 +56,18 @@ namespace UIAssistant.Interfaces.API
         void ScaleIndicatorAnimation(Rect from, Rect to, bool waitable = true, double duration = 300, Action completed = null);
         void SwitchHUD();
         void SwitchTheme(string name);
+
+        ILocalizer GetLocalizer();
+        ISwitcher GetThemeSwitcher();
+        IResourceItem CurrentLanguage { get; }
+        ICommandRule CreateCommandRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null);
+        IArgumentRule CreateArgmentRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null);
+
+        IKeyboardHook CreateKeyboardHook();
+        IKeybindManager CreateKeybindManager();
+
+        IMouseCursor MouseCursor { get; }
+        IMouseOperation MouseOperation { get; }
+        IKeyboardOperation KeyboardOperation { get; }
     }
 }

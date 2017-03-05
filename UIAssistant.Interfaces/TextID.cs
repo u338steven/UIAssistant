@@ -1,4 +1,4 @@
-﻿namespace UIAssistant.Core.I18n
+﻿namespace UIAssistant.Interfaces
 {
     public static class TextID
     {

@@ -7,7 +7,7 @@ using System.Threading;
 
 using System.Runtime.InteropServices;
 
-namespace UIAssistant.Core.Events
+namespace UIAssistant.Infrastructure.Events
 {
     public abstract class EventHook : IDisposable
     {

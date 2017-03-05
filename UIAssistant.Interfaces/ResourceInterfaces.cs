@@ -57,5 +57,13 @@ namespace UIAssistant.Interfaces.Resource
     public interface ILocalizer
     {
         string GetLocalizedText(string key);
+        void SwitchLanguage(IResourceItem language);
+    }
+
+    public interface ISwitcher
+    {
+        IResourceItem CurrentTheme { get; }
+        void Next();
+        void Switch(string id);
     }
 }

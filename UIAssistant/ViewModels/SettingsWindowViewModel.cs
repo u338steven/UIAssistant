@@ -24,6 +24,7 @@ using UIAssistant.Core.Settings;
 using UIAssistant.Core.Tools;
 using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Infrastructure.Resource.Language;
+using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Plugin;
 using UIAssistant.Utility;

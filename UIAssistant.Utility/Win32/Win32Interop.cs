@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Threading;
 
+using UIAssistant.Interfaces.Input;
+
 namespace UIAssistant.Utility.Win32
 {
     public static class Win32Interop
@@ -312,72 +314,6 @@ namespace UIAssistant.Utility.Win32
         #endregion
 
         #region SendInput
-        public const int INPUT_KEYBOARD = 1;
-        public const int INPUT_MOUSE = 0;
-
-        public enum KeyEvent : int
-        {
-            KEYEVENTF_KEYDOWN = 0x0,
-            KEYEVENTF_EXTENDEDKEY = 0x1,
-            KEYEVENTF_KEYUP = 0x2,
-            KEYEVENTF_UNICODE = 0x4,
-            KEYEVENTF_SCANCODE = 0x8,
-        }
-
-        public enum MouseEvent : int
-        {
-            MOUSEEVENTF_MOVED = 0x0001,
-            MOUSEEVENTF_LEFTDOWN = 0x0002,
-            MOUSEEVENTF_LEFTUP = 0x0004,
-            MOUSEEVENTF_RIGHTDOWN = 0x0008,
-            MOUSEEVENTF_RIGHTUP = 0x0010,
-            MOUSEEVENTF_MIDDLEDOWN = 0x0020,
-            MOUSEEVENTF_MIDDLEUP = 0x0040,
-            MOUSEEVENTF_XDOWN = 0x0080,
-            MOUSEEVENTF_XUP = 0x0100,
-            MOUSEEVENTF_WHEEL = 0x0800,
-            MOUSEEVENTF_HWHEEL = 0x1000,
-            MOUSEEVENTF_ABSOLUTE = 0x8000,
-            MOUSEEVENTF_XBUTTON1 = 0x0001,
-            MOUSEEVENTF_XBUTTON2 = 0x0002,
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct INPUT
-        {
-            public int type;
-            public INPUTUNION iu;
-        }
-
-        [StructLayout(LayoutKind.Explicit)]
-        public struct INPUTUNION
-        {
-            [FieldOffset(0)]
-            public MOUSEINPUT mi;
-            [FieldOffset(0)]
-            public KEYBDINPUT ki;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct MOUSEINPUT
-        {
-            public int dx;
-            public int dy;
-            public int mouseData;
-            public MouseEvent dwFlags;
-            public int time;
-            public IntPtr dwExtraInfo;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct KEYBDINPUT
-        {
-            public short wVk;
-            public short wScan;
-            public KeyEvent dwFlags;
-            public int time;
-            public IntPtr dwExtraInfo;
-        }
 
         [DllImport("user32.dll")]
         public static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);

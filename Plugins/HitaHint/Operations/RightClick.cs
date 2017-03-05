@@ -1,5 +1,4 @@
-﻿using UIAssistant.Core.Input;
-using UIAssistant.Interfaces.HUD;
+﻿using UIAssistant.Interfaces.HUD;
 
 namespace UIAssistant.Plugin.HitaHint.Operations
 {
@@ -11,7 +10,7 @@ namespace UIAssistant.Plugin.HitaHint.Operations
         public void Next(StateController controller) { }
         public void Execute(IHUDItem item)
         {
-            MouseOperation.RightClick(item.Bounds);
+            HitaHint.UIAssistantAPI.MouseOperation.RightClick(item.Bounds);
         }
     }
 }

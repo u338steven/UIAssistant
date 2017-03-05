@@ -80,17 +80,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\UIAssistantAPI.cs" />
-    <Compile Include="Enumerators\ContextItem.cs" />
-    <Compile Include="Events\EventHook.cs" />
-    <Compile Include="Events\EventObserver.cs" />
     <Compile Include="HitaHint\AlternateHintGenerator.cs" />
     <Compile Include="HitaHint\HintGenerator.cs" />
-    <Compile Include="Enumerators\HUDItem.cs" />
     <Compile Include="Enumerators\HUDItemCollection.cs" />
-    <Compile Include="Enumerators\UIAutomationEnumerator.cs" />
     <Compile Include="Input\KeyboardOperation.cs" />
     <Compile Include="I18n\DefaultLocalizer.cs" />
-    <Compile Include="I18n\TextID.cs" />
     <Compile Include="I18n\Localizer.cs" />
     <Compile Include="Input\KeybindManager.cs" />
     <Compile Include="Input\KeyboardHook.cs" />
@@ -101,7 +95,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\UIAssistantDirectory.cs" />
     <Compile Include="Themes\ThemeDefaultSwitcher.cs" />
-    <Compile Include="Enumerators\HUDItemEnumerator.cs" />
     <Compile Include="Settings\UserSettings.cs" />
     <Compile Include="Themes\ThemeSwitcher.cs" />
     <Compile Include="Tools\Migemo.cs" />

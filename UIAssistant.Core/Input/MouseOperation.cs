@@ -7,29 +7,30 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Windows;
 
+using UIAssistant.Interfaces.Input;
 using UIAssistant.Utility.Win32;
 using UIAssistant.Utility.Extensions;
 
 namespace UIAssistant.Core.Input
 {
-    public class MouseOperation
+    public class MouseOperation : IMouseOperation
     {
-        public static void Move(double x, double y)
+        public void Move(double x, double y)
         {
             DoMouseEvent(x, y);
         }
 
-        public static void Move(Point pt)
+        public void Move(Point pt)
         {
             Move(pt.X, pt.Y);
         }
 
-        public static void Move(Rect bounds)
+        public void Move(Rect bounds)
         {
             Move(bounds.Center());
         }
 
-        public static void MoveTo(Point from, Point to, int millisecondsInterval = 50, int count = 10)
+        public void MoveTo(Point from, Point to, int millisecondsInterval = 50, int count = 10)
         {
             var deltaX = Math.Max((to.X - from.X) / count, 1);
             var deltaY = Math.Max((to.Y - from.Y) / count, 1);
@@ -40,67 +41,67 @@ namespace UIAssistant.Core.Input
             DoMouseEvent(to);
         }
 
-        public static void LeftDown()
+        public void LeftDown()
         {
-            DoMouseEvent(Win32Interop.MouseEvent.MOUSEEVENTF_LEFTDOWN);
+            DoMouseEvent(MouseEvent.MOUSEEVENTF_LEFTDOWN);
         }
 
-        public static void RightDown()
+        public void RightDown()
         {
-            DoMouseEvent(Win32Interop.MouseEvent.MOUSEEVENTF_RIGHTDOWN);
+            DoMouseEvent(MouseEvent.MOUSEEVENTF_RIGHTDOWN);
         }
 
-        public static void MiddleDown()
+        public void MiddleDown()
         {
-            DoMouseEvent(Win32Interop.MouseEvent.MOUSEEVENTF_MIDDLEDOWN);
+            DoMouseEvent(MouseEvent.MOUSEEVENTF_MIDDLEDOWN);
         }
 
-        public static void LeftUp()
+        public void LeftUp()
         {
-            DoMouseEvent(Win32Interop.MouseEvent.MOUSEEVENTF_LEFTUP);
+            DoMouseEvent(MouseEvent.MOUSEEVENTF_LEFTUP);
         }
 
-        public static void RightUp()
+        public void RightUp()
         {
-            DoMouseEvent(Win32Interop.MouseEvent.MOUSEEVENTF_RIGHTUP);
+            DoMouseEvent(MouseEvent.MOUSEEVENTF_RIGHTUP);
         }
 
-        public static void MiddleUp()
+        public void MiddleUp()
         {
-            DoMouseEvent(Win32Interop.MouseEvent.MOUSEEVENTF_MIDDLEUP);
+            DoMouseEvent(MouseEvent.MOUSEEVENTF_MIDDLEUP);
         }
 
-        public static void Click(Rect bounds)
-        {
-            Move(bounds);
-            DoMouseEvent(Win32Interop.MouseEvent.MOUSEEVENTF_LEFTDOWN, Win32Interop.MouseEvent.MOUSEEVENTF_LEFTUP);
-        }
-
-        public static void RightClick(Rect bounds)
+        public void Click(Rect bounds)
         {
             Move(bounds);
-            DoMouseEvent(Win32Interop.MouseEvent.MOUSEEVENTF_RIGHTDOWN, Win32Interop.MouseEvent.MOUSEEVENTF_RIGHTUP);
+            DoMouseEvent(MouseEvent.MOUSEEVENTF_LEFTDOWN, MouseEvent.MOUSEEVENTF_LEFTUP);
         }
 
-        public static void MiddleClick(Rect bounds)
+        public void RightClick(Rect bounds)
         {
             Move(bounds);
-            DoMouseEvent(Win32Interop.MouseEvent.MOUSEEVENTF_MIDDLEDOWN, Win32Interop.MouseEvent.MOUSEEVENTF_MIDDLEUP);
+            DoMouseEvent(MouseEvent.MOUSEEVENTF_RIGHTDOWN, MouseEvent.MOUSEEVENTF_RIGHTUP);
         }
 
-        public static void DoubleClick(Rect bounds)
+        public void MiddleClick(Rect bounds)
         {
             Move(bounds);
-            DoMouseEvent(Win32Interop.MouseEvent.MOUSEEVENTF_LEFTDOWN, Win32Interop.MouseEvent.MOUSEEVENTF_LEFTUP, Win32Interop.MouseEvent.MOUSEEVENTF_LEFTDOWN, Win32Interop.MouseEvent.MOUSEEVENTF_LEFTUP);
+            DoMouseEvent(MouseEvent.MOUSEEVENTF_MIDDLEDOWN, MouseEvent.MOUSEEVENTF_MIDDLEUP);
         }
 
-        public static void Drag(Rect bounds)
+        public void DoubleClick(Rect bounds)
+        {
+            Move(bounds);
+            DoMouseEvent(MouseEvent.MOUSEEVENTF_LEFTDOWN, MouseEvent.MOUSEEVENTF_LEFTUP, MouseEvent.MOUSEEVENTF_LEFTDOWN, MouseEvent.MOUSEEVENTF_LEFTUP);
+        }
+
+        public void Drag(Rect bounds)
         {
             var center = bounds.Center();
             Task.Run(() =>
             {
                 Move(center);
-                DoMouseEvent(Win32Interop.MouseEvent.MOUSEEVENTF_LEFTDOWN);
+                DoMouseEvent(MouseEvent.MOUSEEVENTF_LEFTDOWN);
                 System.Threading.Thread.Sleep(100);
                 Enumerable.Range(1, 20).ForEach(i =>
                 {
@@ -111,7 +112,7 @@ namespace UIAssistant.Core.Input
             });
         }
 
-        public static void Drop(Rect bounds)
+        public void Drop(Rect bounds)
         {
             var center = bounds.Center();
             center.Offset(20, 20);
@@ -121,17 +122,17 @@ namespace UIAssistant.Core.Input
                 Move(center);
                 System.Threading.Thread.Sleep(10);
             });
-            DoMouseEvent(Win32Interop.MouseEvent.MOUSEEVENTF_LEFTUP);
+            DoMouseEvent(MouseEvent.MOUSEEVENTF_LEFTUP);
         }
 
-        public static void DoMouseEvent(params Win32Interop.MouseEvent[] dwFlags)
+        public void DoMouseEvent(params MouseEvent[] dwFlags)
         {
-            var inputs = new List<Win32Interop.INPUT>();
+            var inputs = new List<INPUT>();
 
             foreach (var operation in dwFlags)
             {
-                var mouse = new Win32Interop.INPUT();
-                mouse.type = Win32Interop.INPUT_MOUSE;
+                var mouse = new INPUT();
+                mouse.type = InputKind.INPUT_MOUSE;
                 mouse.iu.mi.dwFlags = operation;
                 inputs.Add(mouse);
             }
@@ -139,21 +140,21 @@ namespace UIAssistant.Core.Input
             Win32Interop.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
-        public static void DoMouseEventRelative(double x, double y, params Win32Interop.MouseEvent[] dwFlags)
+        public void DoMouseEventRelative(double x, double y, params MouseEvent[] dwFlags)
         {
-            var inputs = new List<Win32Interop.INPUT>();
+            var inputs = new List<INPUT>();
 
-            var input = new Win32Interop.INPUT();
-            input.type = Win32Interop.INPUT_MOUSE;
-            input.iu.mi.dwFlags = Win32Interop.MouseEvent.MOUSEEVENTF_MOVED;
+            var input = new INPUT();
+            input.type = InputKind.INPUT_MOUSE;
+            input.iu.mi.dwFlags = MouseEvent.MOUSEEVENTF_MOVED;
             input.iu.mi.dx = (int)x;
             input.iu.mi.dy = (int)y;
             inputs.Add(input);
 
             foreach (var operation in dwFlags)
             {
-                var mouse = new Win32Interop.INPUT();
-                mouse.type = Win32Interop.INPUT_MOUSE;
+                var mouse = new INPUT();
+                mouse.type = InputKind.INPUT_MOUSE;
                 mouse.iu.mi.dwFlags = operation;
                 inputs.Add(mouse);
             }
@@ -161,31 +162,31 @@ namespace UIAssistant.Core.Input
             Win32Interop.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
-        public static void DoMouseEvent(Point point, params Win32Interop.MouseEvent[] dwFlags)
+        public void DoMouseEvent(Point point, params MouseEvent[] dwFlags)
         {
             DoMouseEvent(point.X, point.Y, dwFlags);
         }
 
-        public static void DoMouseEvent(Rect bounds, params Win32Interop.MouseEvent[] dwFlags)
+        public void DoMouseEvent(Rect bounds, params MouseEvent[] dwFlags)
         {
             DoMouseEvent(bounds.X + bounds.Width / 2, bounds.Y + bounds.Height / 2, dwFlags);
         }
 
-        public static void DoMouseEvent(double x, double y, params Win32Interop.MouseEvent[] dwFlags)
+        public void DoMouseEvent(double x, double y, params MouseEvent[] dwFlags)
         {
-            var inputs = new List<Win32Interop.INPUT>();
+            var inputs = new List<INPUT>();
 
-            var input = new Win32Interop.INPUT();
-            input.type = Win32Interop.INPUT_MOUSE;
-            input.iu.mi.dwFlags = Win32Interop.MouseEvent.MOUSEEVENTF_MOVED | Win32Interop.MouseEvent.MOUSEEVENTF_ABSOLUTE;
+            var input = new INPUT();
+            input.type = InputKind.INPUT_MOUSE;
+            input.iu.mi.dwFlags = MouseEvent.MOUSEEVENTF_MOVED | MouseEvent.MOUSEEVENTF_ABSOLUTE;
             input.iu.mi.dx = (int)((x + SystemParameters.VirtualScreenLeft) * (65536.0 / SystemParameters.PrimaryScreenWidth));
             input.iu.mi.dy = (int)((y + SystemParameters.VirtualScreenTop) * (65536.0 / SystemParameters.PrimaryScreenHeight));
             inputs.Add(input);
 
             foreach (var operation in dwFlags)
             {
-                var mouse = new Win32Interop.INPUT();
-                mouse.type = Win32Interop.INPUT_MOUSE;
+                var mouse = new INPUT();
+                mouse.type = InputKind.INPUT_MOUSE;
                 mouse.iu.mi.dwFlags = operation;
                 inputs.Add(mouse);
             }
@@ -193,27 +194,21 @@ namespace UIAssistant.Core.Input
             Win32Interop.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
-        public enum WheelOrientation
+        public void DoWheelEvent(int amountOfMovement, params WheelOrientation[] orientations)
         {
-            Vertical,
-            Horizontal,
-        }
-
-        public static void DoWheelEvent(int amountOfMovement, params WheelOrientation[] orientations)
-        {
-            var inputs = new List<Win32Interop.INPUT>();
+            var inputs = new List<INPUT>();
 
             foreach (var orientation in orientations)
             {
-                var mouse = new Win32Interop.INPUT();
-                mouse.type = Win32Interop.INPUT_MOUSE;
+                var mouse = new INPUT();
+                mouse.type = InputKind.INPUT_MOUSE;
                 if (orientation == WheelOrientation.Horizontal)
                 {
-                    mouse.iu.mi.dwFlags = Win32Interop.MouseEvent.MOUSEEVENTF_HWHEEL;
+                    mouse.iu.mi.dwFlags = MouseEvent.MOUSEEVENTF_HWHEEL;
                 }
                 else
                 {
-                    mouse.iu.mi.dwFlags = Win32Interop.MouseEvent.MOUSEEVENTF_WHEEL;
+                    mouse.iu.mi.dwFlags = MouseEvent.MOUSEEVENTF_WHEEL;
                 }
                 mouse.iu.mi.mouseData = amountOfMovement;
                 inputs.Add(mouse);
@@ -222,7 +217,7 @@ namespace UIAssistant.Core.Input
             Win32Interop.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
-        public static Point GetMousePosition()
+        public Point GetMousePosition()
         {
             Win32Interop.Point pt = new Win32Interop.Point();
             Win32Interop.GetCursorPos(ref pt);

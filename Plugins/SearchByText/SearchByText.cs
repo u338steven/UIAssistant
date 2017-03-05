@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.ComponentModel.Composition;
-using UIAssistant.Core.I18n;
 using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Plugin;
+using UIAssistant.Interfaces.Resource;
 
 using UIAssistant.Plugin.SearchByText.Enumerators;
 
@@ -31,12 +31,14 @@ namespace UIAssistant.Plugin.SearchByText
         private StateController _stateController;
         private KeyInputController _keyController;
         internal static IUIAssistantAPI UIAssistantAPI { get; private set; }
+        private static ILocalizer _localizer;
 
         public void Initialize(IUIAssistantAPI api)
         {
             UIAssistantAPI = api;
             _stateController = new StateController(api);
             _keyController = new KeyInputController(api, _stateController);
+            _localizer = api.GetLocalizer();
             RegisterCommand();
         }
 
@@ -90,10 +92,9 @@ namespace UIAssistant.Plugin.SearchByText
             _keyController.Reset();
         }
 
-        static Localizer _localizer = new Localizer();
         public void Localize()
         {
-            _localizer.SwitchLanguage(DefaultLocalizer.CurrentLanguage);
+            _localizer.SwitchLanguage(UIAssistantAPI.CurrentLanguage);
 
             SearchByTextSettings.Instance.Expand.Text = _localizer.GetLocalizedText("sbtExpand");
         }

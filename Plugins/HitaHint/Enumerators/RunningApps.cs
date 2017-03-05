@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using UIAssistant.Core.API;
-using UIAssistant.Core.Enumerators;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility;
 using UIAssistant.Utility.Win32;

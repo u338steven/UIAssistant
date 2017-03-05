@@ -2,7 +2,6 @@
 using System.Windows.Automation;
 using System.Threading.Tasks;
 using UIAssistant.Utility.Extensions;
-using UIAssistant.Core.Input;
 
 namespace UIAssistant.Plugin.SearchByText.Items
 {
@@ -29,9 +28,9 @@ namespace UIAssistant.Plugin.SearchByText.Items
                 Element.ScrollIntoView();
                 Element.TrySelectItem();
 
-                var pt = MouseOperation.GetMousePosition();
-                MouseOperation.Click(Element.Current.BoundingRectangle);
-                MouseOperation.Move(pt);
+                var pt = SearchByText.UIAssistantAPI.MouseOperation.GetMousePosition();
+                SearchByText.UIAssistantAPI.MouseOperation.Click(Element.Current.BoundingRectangle);
+                SearchByText.UIAssistantAPI.MouseOperation.Move(pt);
             });
         }
     }

@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
 
+using UIAssistant.Interfaces.Input;
 using UIAssistant.Utility.Win32;
 
 namespace UIAssistant.Core.Input
 {
-    public class KeyboardOperation
+    public class KeyboardOperation : IKeyboardOperation
     {
         [DllImport("user32.dll")]
         private static extern short GetKeyState(int vkkey);
 
-        public static void SendKeys(params Key[] keys)
+        public void SendKeys(params Key[] keys)
         {
             if (keys == null)
             {
@@ -25,14 +26,14 @@ namespace UIAssistant.Core.Input
 
             lock (_forRestore)
             {
-                var inputs = new List<Win32Interop.INPUT>();
+                var inputs = new List<INPUT>();
 
                 foreach (var key in _forRestore)
                 {
                     inputs.Add(GenerateKeyUp(key));
                 }
 
-                List<Win32Interop.INPUT> keyups = new List<Win32Interop.INPUT>();
+                List<INPUT> keyups = new List<INPUT>();
                 foreach (var key in keys)
                 {
                     if (key == Key.None)
@@ -65,7 +66,7 @@ namespace UIAssistant.Core.Input
             }
         }
 
-        private static bool IsExtended(Key key)
+        private bool IsExtended(Key key)
         {
             switch (key)
             {
@@ -92,10 +93,10 @@ namespace UIAssistant.Core.Input
             return false;
         }
 
-        static List<Key> _forRestore = new List<Key>();
-        static bool _cancelAlt = false;
+        List<Key> _forRestore = new List<Key>();
+        bool _cancelAlt = false;
 
-        public static void Initialize(params Key[] keys)
+        public void Initialize(params Key[] keys)
         {
             lock (_forRestore)
             {
@@ -108,22 +109,22 @@ namespace UIAssistant.Core.Input
             }
         }
 
-        static Key _cancelKey = Key.NoName;
-        public static void CancelAltKey()
+        Key _cancelKey = Key.NoName;
+        public void CancelAltKey()
         {
             KeyDown(_cancelKey);
             KeyUp(_cancelKey);
             _cancelAlt = true;
         }
 
-        public static void PressedKeyUp()
+        public void PressedKeyUp()
         {
             var pressedKeys = GetPressedKey().ToArray();
             KeyUp(pressedKeys);
         }
 
-        private static Key[] _modifiers = { Key.LeftAlt, Key.RightAlt, Key.LeftCtrl, Key.RightCtrl, Key.LeftShift, Key.RightShift };
-        private static List<Key> GetPressedKey()
+        private Key[] _modifiers = { Key.LeftAlt, Key.RightAlt, Key.LeftCtrl, Key.RightCtrl, Key.LeftShift, Key.RightShift };
+        private List<Key> GetPressedKey()
         {
             var result = new List<Key>();
             foreach (var x in _modifiers)
@@ -136,7 +137,7 @@ namespace UIAssistant.Core.Input
             return result;
         }
 
-        private static bool IsDown(int vk)
+        private bool IsDown(int vk)
         {
             if (GetKeyState(vk) != 0)
             {
@@ -145,13 +146,13 @@ namespace UIAssistant.Core.Input
             return false;
         }
 
-        public static void KeyUp(params Key[] keys)
+        public void KeyUp(params Key[] keys)
         {
             if (keys == null || keys.Length <= 0)
             {
                 return;
             }
-            var inputs = new List<Win32Interop.INPUT>();
+            var inputs = new List<INPUT>();
             foreach (var key in keys)
             {
                 var keyup = GenerateKeyUp(key);
@@ -160,13 +161,13 @@ namespace UIAssistant.Core.Input
             Win32Interop.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
-        public static void KeyDown(params Key[] keys)
+        public void KeyDown(params Key[] keys)
         {
             if (keys == null || keys.Length <= 0)
             {
                 return;
             }
-            var inputs = new List<Win32Interop.INPUT>();
+            var inputs = new List<INPUT>();
             foreach (var key in keys)
             {
                 var keydown = GenerateKeyDown(key);
@@ -175,25 +176,25 @@ namespace UIAssistant.Core.Input
             Win32Interop.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
-        private static Win32Interop.INPUT GenerateKeyUp(Key key)
+        private INPUT GenerateKeyUp(Key key)
         {
-            var keyup = new Win32Interop.INPUT();
-            keyup.type = Win32Interop.INPUT_KEYBOARD;
+            var keyup = new INPUT();
+            keyup.type = InputKind.INPUT_KEYBOARD;
             keyup.iu.ki.wVk = (short)KeyInterop.VirtualKeyFromKey(key);
             keyup.iu.ki.wScan = (short)MapVirtualKey(keyup.iu.ki.wVk, 0);
-            keyup.iu.ki.dwFlags = Win32Interop.KeyEvent.KEYEVENTF_KEYUP | (IsExtended(key) ? Win32Interop.KeyEvent.KEYEVENTF_EXTENDEDKEY : 0);
+            keyup.iu.ki.dwFlags = KeyEvent.KEYEVENTF_KEYUP | (IsExtended(key) ? KeyEvent.KEYEVENTF_EXTENDEDKEY : 0);
             keyup.iu.ki.dwExtraInfo = GetMessageExtraInfo();
 
             return keyup;
         }
 
-        private static Win32Interop.INPUT GenerateKeyDown(Key key)
+        private INPUT GenerateKeyDown(Key key)
         {
-            var keydown = new Win32Interop.INPUT();
-            keydown.type = Win32Interop.INPUT_KEYBOARD;
+            var keydown = new INPUT();
+            keydown.type = InputKind.INPUT_KEYBOARD;
             keydown.iu.ki.wVk = (short)KeyInterop.VirtualKeyFromKey(key);
             keydown.iu.ki.wScan = (short)MapVirtualKey(keydown.iu.ki.wVk, 0);
-            keydown.iu.ki.dwFlags = Win32Interop.KeyEvent.KEYEVENTF_KEYDOWN | (IsExtended(key) ? Win32Interop.KeyEvent.KEYEVENTF_EXTENDEDKEY : 0);
+            keydown.iu.ki.dwFlags = KeyEvent.KEYEVENTF_KEYDOWN | (IsExtended(key) ? KeyEvent.KEYEVENTF_EXTENDEDKEY : 0);
             keydown.iu.ki.dwExtraInfo = GetMessageExtraInfo();
 
             return keydown;

@@ -8,9 +8,7 @@ using System.Windows.Input;
 using KeybindHelper;
 using KeybindHelper.LowLevel;
 
-using UIAssistant.Core.Input;
-using UIAssistant.Core.I18n;
-using UIAssistant.Core.Plugin;
+using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Input;
 
@@ -49,10 +47,10 @@ namespace UIAssistant.Plugin.KeybindsManiacs
     class KeybindStorage
     {
         public Dictionary<KeySet, bool> OneShotDefined { get; set; } = new Dictionary<KeySet, bool>();
-        public IKeybindManager OneShotKeybinds { get; set; } = new KeybindManager();
-        public IKeybindManager OneShotKeyDown { get; set; } = new KeybindManager();
-        public IKeybindManager OneShotKeyUp { get; set; } = new KeybindManager();
-        public IKeybindManager Keybinds { get; set; } = new KeybindManager();
+        public IKeybindManager OneShotKeybinds { get; set; } = KeybindsManiacs.UIAssistantAPI.CreateKeybindManager();
+        public IKeybindManager OneShotKeyDown { get; set; } = KeybindsManiacs.UIAssistantAPI.CreateKeybindManager();
+        public IKeybindManager OneShotKeyUp { get; set; } = KeybindsManiacs.UIAssistantAPI.CreateKeybindManager();
+        public IKeybindManager Keybinds { get; set; } = KeybindsManiacs.UIAssistantAPI.CreateKeybindManager();
         public bool IsEnabledWindowsKeybinds { get; set; } = false;
         public bool IsPrefix { get; set; } = false;
 
@@ -69,7 +67,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         private Dictionary<string, KeybindStorage> _keybindsDic { get; set; } = new Dictionary<string, KeybindStorage>();
         private KeybindStorage _currentKeybinds { get; set; } = new KeybindStorage();
 
-        public KeyInputController(IUIAssistantAPI api, StateController controller) : base(api, controller, new KeyboardHook(), new KeybindManager())
+        public KeyInputController(IUIAssistantAPI api, StateController controller) : base(api, controller, api.CreateKeyboardHook(), api.CreateKeybindManager())
         {
             _stateController = controller;
             _settings = _stateController.Settings;
@@ -81,7 +79,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             _keybindsDic.Clear();
             foreach (var keybinds in _settings.KeybindsInMode)
             {
-                Keybinds = new KeybindManager();
+                Keybinds = KeybindsManiacs.UIAssistantAPI.CreateKeybindManager();
                 var keybindStorage = new KeybindStorage();
                 var oneShotDefined = new Dictionary<KeySet, bool>();
                 foreach (var keybind in keybinds.Value.Keybinds)
@@ -106,30 +104,30 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                                     var keys = keybind.OneShot;
                                     if (_stateController.Mode == Mode.Visual && ContainsMovingKey(keys))
                                     {
-                                        KeyboardOperation.SendKeys(new[] { Key.RightShift }.Concat(keys).ToArray());
+                                        KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(new[] { Key.RightShift }.Concat(keys).ToArray());
                                         return;
                                     }
-                                    KeyboardOperation.SendKeys(keys);
+                                    KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(keys);
                                 });
                                 keybindStorage.OneShotKeyDown.Add(keyset, () =>
                                 {
                                     var keys = keybind.OutputKeys;
                                     if (_stateController.Mode == Mode.Visual && ContainsMovingKey(keys))
                                     {
-                                        KeyboardOperation.KeyDown(new[] { Key.RightShift }.Concat(keys).ToArray());
+                                        KeybindsManiacs.UIAssistantAPI.KeyboardOperation.KeyDown(new[] { Key.RightShift }.Concat(keys).ToArray());
                                         return;
                                     }
-                                    KeyboardOperation.KeyDown(keys);
+                                    KeybindsManiacs.UIAssistantAPI.KeyboardOperation.KeyDown(keys);
                                 });
                                 keybindStorage.OneShotKeyUp.Add(keyset, () =>
                                 {
                                     var keys = keybind.OutputKeys;
                                     if (_stateController.Mode == Mode.Visual && ContainsMovingKey(keys))
                                     {
-                                        KeyboardOperation.KeyUp(new[] { Key.RightShift }.Concat(keys).ToArray());
+                                        KeybindsManiacs.UIAssistantAPI.KeyboardOperation.KeyUp(new[] { Key.RightShift }.Concat(keys).ToArray());
                                         return;
                                     }
-                                    KeyboardOperation.KeyUp(keys);
+                                    KeybindsManiacs.UIAssistantAPI.KeyboardOperation.KeyUp(keys);
                                 });
                                 break;
                             }
@@ -138,10 +136,10 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                                 var keys = keybind.OutputKeys;
                                 if (_stateController.Mode == Mode.Visual && ContainsMovingKey(keys))
                                 {
-                                    KeyboardOperation.SendKeys(new[] { Key.RightShift }.Concat(keys).ToArray());
+                                    KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(new[] { Key.RightShift }.Concat(keys).ToArray());
                                     return;
                                 }
-                                KeyboardOperation.SendKeys(keys);
+                                KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(keys);
                             });
                             break;
                         case CommandType.RunEmbeddedCommand:
@@ -151,13 +149,13 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                             Keybinds.Add(keyset, () =>
                             {
                                 var command = keybind.CommandText;
-                                if (PluginManager.Instance.Exists(command))
+                                if (KeybindsManiacs.UIAssistantAPI.PluginManager.Exists(command))
                                 {
-                                    PluginManager.Instance.Execute(command);
+                                    KeybindsManiacs.UIAssistantAPI.PluginManager.Execute(command);
                                 }
                                 else
                                 {
-                                    UIAssistantAPI.NotifyWarnMessage("Plugin Error", string.Format(TextID.CommandNotFound.GetLocalizedText(), command));
+                                    UIAssistantAPI.NotifyWarnMessage("Plugin Error", string.Format(KeybindsManiacs.UIAssistantAPI.Localize(TextID.CommandNotFound), command));
                                 }
                             });
                             break;
@@ -322,7 +320,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         {
             if (_stateController.Mode == Mode.Visual)
             {
-                KeyboardOperation.SendKeys(Key.RightCtrl, Key.C);
+                KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(Key.RightCtrl, Key.C);
                 //SwitchMode(Mode.Normal);
                 SwitchMode(_settings.Mode, true);
                 return;
@@ -331,7 +329,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             {
                 if (keysState.Equals(new KeySet(keys)))
                 {
-                    KeyboardOperation.SendKeys(Key.Home, Key.None, Key.RightShift, Key.End, Key.None, Key.RightCtrl, Key.C);
+                    KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(Key.Home, Key.None, Key.RightShift, Key.End, Key.None, Key.RightCtrl, Key.C);
                     _command = null;
                     return;
                 }
@@ -341,7 +339,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                     SwitchMode(Mode.Visual, true);
                     _currentKeybinds.Keybinds[keysState].Invoke();
                 }
-                KeyboardOperation.SendKeys(Key.RightCtrl, Key.C);
+                KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(Key.RightCtrl, Key.C);
                 if (_stateController.Mode == Mode.Visual)
                 {
                     //SwitchMode(Mode.Normal, true);
@@ -400,7 +398,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                 if (_currentKeySet.Keys.Any(x => x.IsModifiersKey()))
                 {
                     var keys = _currentKeySet.Keys.Where(x => x.IsModifiersKey()).ToArray();
-                    KeyboardOperation.KeyUp(keys);
+                    KeybindsManiacs.UIAssistantAPI.KeyboardOperation.KeyUp(keys);
                 }
             }
         }
@@ -546,11 +544,11 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             if (_currentKeybinds.IsEnabledWindowsKeybinds)
             {
                 var pressedKeys = keysState.Keys.Where(x => x.IsModifiersKey()).ToArray();
-                KeyboardOperation.Initialize(pressedKeys);
+                KeybindsManiacs.UIAssistantAPI.KeyboardOperation.Initialize(pressedKeys);
             }
             else
             {
-                KeyboardOperation.Initialize(Key.None);
+                KeybindsManiacs.UIAssistantAPI.KeyboardOperation.Initialize(Key.None);
             }
         }
 

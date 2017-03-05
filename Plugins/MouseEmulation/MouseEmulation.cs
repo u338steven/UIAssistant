@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Windows;
 using System.ComponentModel.Composition;
 
-using UIAssistant.Core.I18n;
-using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Plugin;
+using UIAssistant.Interfaces.Resource;
 
 namespace UIAssistant.Plugin.MouseEmulation
 {
@@ -25,16 +24,18 @@ namespace UIAssistant.Plugin.MouseEmulation
     public class MouseEmulation : IPlugin, IConfigurablePlugin, ILocalizablePlugin, IDisposable
     {
         internal static IUIAssistantAPI UIAssistantAPI { get; private set; }
+        private static ILocalizer _localizer;
 
         public void Initialize(IUIAssistantAPI api)
         {
             UIAssistantAPI = api;
+            _localizer = api.GetLocalizer();
             RegisterCommand();
         }
 
         private void RegisterCommand()
         {
-            var command = new CommandRule(Consts.Command, Run);
+            var command = UIAssistantAPI.CreateCommandRule(Consts.Command, Run);
             command.Description = Consts.PluginName;
             UIAssistantAPI.RegisterCommand(command);
         }
@@ -61,10 +62,9 @@ namespace UIAssistant.Plugin.MouseEmulation
             return new Settings();
         }
 
-        static Localizer _localizer = new Localizer();
         public void Localize()
         {
-            _localizer.SwitchLanguage(DefaultLocalizer.CurrentLanguage);
+            _localizer.SwitchLanguage(UIAssistantAPI.CurrentLanguage);
             var settings = MouseEmulationSettings.Instance;
 
             settings.Click.Text = _localizer.GetLocalizedText("meClick");

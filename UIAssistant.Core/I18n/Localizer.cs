@@ -39,10 +39,11 @@ namespace UIAssistant.Core.I18n
         private ResourceFinder<Language> _finder;
         private ResourceState<Language> _state;
 
-        public Localizer()
+        public Localizer(string assemblyDir = null)
         {
             var reader = new ResourceReader<Language>();
-            var dirPath = Path.Combine(Directory.GetParent(Assembly.GetCallingAssembly().Location).ToString(), "Languages");
+            var rootDir = assemblyDir ?? Directory.GetParent(Assembly.GetCallingAssembly().Location).ToString();
+            var dirPath = Path.Combine(rootDir, "Languages");
             var resources = new ResourceDirectory<Language>(new LanguageKeyValueGenerator(), dirPath, "*.xaml");
             _finder = new ResourceFinder<Language>(resources);
             _state = new ResourceState<Language>(new ResourceUpdater<Language>(reader, Application.Current.Resources.MergedDictionaries));
@@ -53,7 +54,7 @@ namespace UIAssistant.Core.I18n
             return _state.GetLocalizedText(key);
         }
 
-        public void SwitchLanguage(Language language)
+        public void SwitchLanguage(IResourceItem language)
         {
             Application.Current.Dispatcher.Invoke(() => _state.Switch(_finder, language.Id));
         }

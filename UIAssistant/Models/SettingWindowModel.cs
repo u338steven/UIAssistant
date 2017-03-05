@@ -10,6 +10,7 @@ using UIAssistant.Core.Plugin;
 using UIAssistant.Core.Settings;
 using UIAssistant.Core.I18n;
 using UIAssistant.Infrastructure.Commands;
+using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.UI.Controls;
 using KeybindHelper;

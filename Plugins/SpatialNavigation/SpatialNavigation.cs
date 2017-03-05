@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using System.ComponentModel.Composition;
 
-using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Plugin;
@@ -47,13 +46,15 @@ namespace UIAssistant.Plugin.SpatialNavigation
         {
             UIAssistantAPI = api;
             var args = new[] {
-                new ArgumentRule(Consts.Up, Up),
-                new ArgumentRule(Consts.Down, Down),
-                new ArgumentRule(Consts.Left, Left),
-                new ArgumentRule(Consts.Right, Right) };
+                api.CreateArgmentRule(Consts.Up, Up),
+                api.CreateArgmentRule(Consts.Down, Down),
+                api.CreateArgmentRule(Consts.Left, Left),
+                api.CreateArgmentRule(Consts.Right, Right) };
 
-            var group = new ArgumentRule("-g", x => _current = Unit.Group);
-            UIAssistantAPI.RegisterCommand(new CommandRule(Consts.Command, Run, args) { Description = Consts.PluginName });
+            var group = api.CreateArgmentRule("-g", x => _current = Unit.Group);
+            var command = api.CreateCommandRule(Consts.Command, Run, args);
+            command.Description = Consts.PluginName;
+            UIAssistantAPI.RegisterCommand(command);
             Navigation.Initialize();
         }
 

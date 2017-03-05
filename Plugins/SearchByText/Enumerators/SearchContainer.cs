@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Automation;
-using UIAssistant.Core.Enumerators;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility.Extensions;
 using UIAssistant.Plugin.SearchByText.Items;

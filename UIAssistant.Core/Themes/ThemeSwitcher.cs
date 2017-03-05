@@ -10,19 +10,21 @@ using System.Windows;
 
 using UIAssistant.Infrastructure.Resource;
 using UIAssistant.Infrastructure.Resource.Theme;
+using UIAssistant.Interfaces.Resource;
 
 namespace UIAssistant.Core.Themes
 {
-    public class ThemeSwitcher
+    public class ThemeSwitcher : ISwitcher
     {
         private ResourceFinder<Theme> _finder;
         private ResourceState<Theme> _state;
 
-        public ThemeSwitcher()
+        public ThemeSwitcher(string assemblyDir = null)
         {
             var reader = new CacheableResourceReader<Theme>();
-            var dirPath = Path.Combine(Directory.GetParent(Assembly.GetCallingAssembly().Location).ToString(), "Themes");
-            var resources = new ResourceDirectory<Theme>(new ThemeKeyValueGenerator(), dirPath, "*.xaml");
+            var rootDir = assemblyDir ?? Directory.GetParent(Assembly.GetCallingAssembly().Location).ToString();
+            var themeDir = Path.Combine(rootDir, "Themes");
+            var resources = new ResourceDirectory<Theme>(new ThemeKeyValueGenerator(), themeDir, "*.xaml");
             _finder = new ResourceFinder<Theme>(resources);
             _state = new ResourceState<Theme>(new ResourceUpdater<Theme>(reader, Application.Current.Resources.MergedDictionaries));
         }
@@ -32,7 +34,7 @@ namespace UIAssistant.Core.Themes
             Application.Current.Dispatcher.Invoke(() => _state.Switch(_finder, id));
         }
 
-        public Theme CurrentTheme => _state.Current;
+        public IResourceItem CurrentTheme => _state.Current;
 
         public void Next()
         {
