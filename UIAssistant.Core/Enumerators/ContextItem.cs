@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 using System.Windows;
 using System.Windows.Media;
+using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
-using UIAssistant.Core.Enumerators;
 using UIAssistant.Interfaces.HUD;
 
-namespace UIAssistant.Plugin
+namespace UIAssistant.Core.Enumerators
 {
     public abstract class ContextItemBase : IHUDItem
     {
@@ -36,7 +36,7 @@ namespace UIAssistant.Plugin
 
         public override void Execute()
         {
-            var item = UIAssistantAPI.DefaultHUD.SelectedItem;
+            var item = UIAssistantAPI.Instance.DefaultHUD.SelectedItem;
             if (item == null)
             {
                 return;
@@ -55,7 +55,7 @@ namespace UIAssistant.Plugin
 
         public override void Execute()
         {
-            var result = UIAssistantAPI.DefaultHUD.Items.Select(x => x.DisplayText).Aggregate((x, y) => $"{x}\r\n{y}");
+            var result = UIAssistantAPI.Instance.DefaultHUD.Items.Select(x => x.DisplayText).Aggregate((x, y) => $"{x}\r\n{y}");
             Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(result));
         }
     }
@@ -70,7 +70,7 @@ namespace UIAssistant.Plugin
 
         public override void Execute()
         {
-            var item = UIAssistantAPI.DefaultHUD.SelectedItem as IWindowItem;
+            var item = UIAssistantAPI.Instance.DefaultHUD.SelectedItem as IWindowItem;
             if (item == null)
             {
                 return;
@@ -89,7 +89,7 @@ namespace UIAssistant.Plugin
 
         public override void Execute()
         {
-            var item = UIAssistantAPI.DefaultHUD.SelectedItem as IWindowItem;
+            var item = UIAssistantAPI.Instance.DefaultHUD.SelectedItem as IWindowItem;
             item?.Window.ToggleTopMost();
         }
     }
@@ -104,7 +104,7 @@ namespace UIAssistant.Plugin
 
         public override void Execute()
         {
-            var item = UIAssistantAPI.DefaultHUD.SelectedItem as IWindowItem;
+            var item = UIAssistantAPI.Instance.DefaultHUD.SelectedItem as IWindowItem;
             item?.Window.Close();
         }
     }

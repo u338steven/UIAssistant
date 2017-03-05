@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 
 using UIAssistant.Core.I18n;
 using UIAssistant.Infrastructure.Commands;
+using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Plugin;
 
@@ -23,8 +24,11 @@ namespace UIAssistant.Plugin.MouseEmulation
     [ExportMetadata("CommandName", Consts.Command)]
     public class MouseEmulation : IPlugin, IConfigurablePlugin, ILocalizablePlugin, IDisposable
     {
-        public void Initialize()
+        internal static IUIAssistantAPI UIAssistantAPI { get; private set; }
+
+        public void Initialize(IUIAssistantAPI api)
         {
+            UIAssistantAPI = api;
             RegisterCommand();
         }
 

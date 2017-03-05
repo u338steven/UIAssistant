@@ -14,22 +14,33 @@ using UIAssistant.Core.Settings;
 using UIAssistant.Core.Themes;
 using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Infrastructure.Logger;
-using UIAssistant.Infrastructure.Resource.Theme;
-using UIAssistant.Interfaces.HUD;
+using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Commands;
+using UIAssistant.Interfaces.HUD;
+using UIAssistant.Interfaces.Plugin;
+using UIAssistant.Interfaces.Resource;
+using UIAssistant.Interfaces.Settings;
 using UIAssistant.UI.Controls;
 using UIAssistant.Utility.Win32;
 
-namespace UIAssistant.Plugin
+namespace UIAssistant.Core.API
 {
-    public static class UIAssistantAPI
+    public class UIAssistantAPI : IUIAssistantAPI
     {
-        private static Window window { get; set; } = Application.Current.MainWindow;
-        private static Control hudPanel { get; set; }
-        private static Control contextPanel { get; set; }
-        private static Control currentPanel { get; set; }
+        public static IUIAssistantAPI Instance { get; } = new UIAssistantAPI();
+        public IPluginManager PluginManager { get; private set; }
 
-        public static void Initialize(Control defaultHUDPanel, Control defaultContextPanel)
+        private UIAssistantAPI()
+        {
+
+        }
+
+        private Window window { get; set; } = Application.Current.MainWindow;
+        private Control hudPanel { get; set; }
+        private Control contextPanel { get; set; }
+        private Control currentPanel { get; set; }
+
+        public void Initialize(Control defaultHUDPanel, Control defaultContextPanel)
         {
             if (hudPanel != null)
             {
@@ -39,11 +50,12 @@ namespace UIAssistant.Plugin
             hudPanel = defaultHUDPanel;
             contextPanel = defaultContextPanel;
             currentPanel = hudPanel;
+            PluginManager = Plugin.PluginManager.Instance;
         }
 
-        public static System.Windows.Threading.Dispatcher UIDispatcher => window.Dispatcher;
+        public System.Windows.Threading.Dispatcher UIDispatcher => window.Dispatcher;
 
-        public static void SwitchTheme(string name)
+        public void SwitchTheme(string name)
         {
             window.Dispatcher.Invoke(() =>
             {
@@ -51,7 +63,7 @@ namespace UIAssistant.Plugin
             });
         }
 
-        public static void NextTheme()
+        public void NextTheme()
         {
             window.Dispatcher.Invoke(() =>
             {
@@ -59,7 +71,7 @@ namespace UIAssistant.Plugin
             });
         }
 
-        public static Theme CurrentTheme
+        public IResourceItem CurrentTheme
         {
             get
             {
@@ -67,12 +79,12 @@ namespace UIAssistant.Plugin
             }
         }
 
-        public static IHUDItemEnumerator GetWidgetEnumerator()
+        public IHUDItemEnumerator GetWidgetEnumerator()
         {
             return new WidgetEnumerator();
         }
 
-        public static IEnumerable<string> GenerateHints(string hintKeys, int quantity)
+        public IEnumerable<string> GenerateHints(string hintKeys, int quantity)
         {
             if (hintKeys.Contains('|'))
             {
@@ -81,14 +93,14 @@ namespace UIAssistant.Plugin
             return HintGenerator.Generate(hintKeys, quantity);
         }
 
-        public static bool IsContextAvailable { get; private set; }
+        public bool IsContextAvailable { get; private set; }
 
-        public static bool IsContextVisible
+        public bool IsContextVisible
         {
             get { return (currentPanel == contextPanel); }
         }
 
-        public static IHUD CurrentHUD
+        public IHUD CurrentHUD
         {
             get
             {
@@ -99,7 +111,7 @@ namespace UIAssistant.Plugin
             }
         }
 
-        public static IHUD DefaultHUD
+        public IHUD DefaultHUD
         {
             get
             {
@@ -110,12 +122,12 @@ namespace UIAssistant.Plugin
             }
         }
 
-        public static void AddDefaultHUD()
+        public void AddDefaultHUD()
         {
             AddPanel(hudPanel);
         }
 
-        public static IHUD DefaultContextHUD
+        public IHUD DefaultContextHUD
         {
             get
             {
@@ -126,13 +138,13 @@ namespace UIAssistant.Plugin
             }
         }
 
-        public static void AddContextHUD()
+        public void AddContextHUD()
         {
             AddPanel(contextPanel, Visibility.Hidden);
             IsContextAvailable = true;
         }
 
-        public static void AddPanel(UIElement uielement, Visibility visibility = Visibility.Visible)
+        public void AddPanel(UIElement uielement, Visibility visibility = Visibility.Visible)
         {
             window.Dispatcher.Invoke(() =>
             {
@@ -145,7 +157,7 @@ namespace UIAssistant.Plugin
             });
         }
 
-        public static void SwitchHUD()
+        public void SwitchHUD()
         {
             window.Dispatcher.Invoke(() =>
             {
@@ -162,21 +174,21 @@ namespace UIAssistant.Plugin
             });
         }
 
-        public static void RemoveDefaultHUD()
+        public void RemoveDefaultHUD()
         {
             RemovePanel(hudPanel);
             DefaultHUD.Initialize();
             currentPanel = hudPanel;
         }
 
-        public static void RemoveContextHUD()
+        public void RemoveContextHUD()
         {
             RemovePanel(contextPanel);
             DefaultContextHUD.Initialize();
             IsContextAvailable = false;
         }
 
-        public static void RemovePanel(UIElement uielement)
+        public void RemovePanel(UIElement uielement)
         {
             if (uielement == null)
             {
@@ -193,7 +205,7 @@ namespace UIAssistant.Plugin
             });
         }
 
-        public static bool TopMost
+        public bool TopMost
         {
             set
             {
@@ -210,8 +222,8 @@ namespace UIAssistant.Plugin
             }
         }
 
-        private static bool _transparent = false;
-        public static bool Transparent
+        private bool _transparent = false;
+        public bool Transparent
         {
             get
             {
@@ -234,55 +246,55 @@ namespace UIAssistant.Plugin
             }
         }
 
-        public static string Localize(string id)
+        public string Localize(string id)
         {
-            return Core.I18n.DefaultLocalizer.GetLocalizedText(id);
+            return I18n.DefaultLocalizer.GetLocalizedText(id);
         }
 
-        public static void RegisterCommand(CommandRule rule)
+        public void RegisterCommand(ICommandRule rule)
         {
             CommandManager.Add(rule);
         }
 
-        public static IEnumerable<ICommand> ParseStatement(string statement)
+        public IEnumerable<ICommand> ParseStatement(string statement)
         {
             return CommandManager.Parse(statement);
         }
 
-        public static UserSettings UIAssistantSettings { get { return UserSettings.Instance; } }
+        public IUserSettings UIAssistantSettings { get { return UserSettings.Instance; } }
 #if DEBUG
-        public static void DisplayKeystroke(LowLevelKeyEventArgs e)
+        public void DisplayKeystroke(LowLevelKeyEventArgs e)
         {
             KeyVisualizer.Notify(e);
         }
 #endif
-        public static void PrintDebugMessage(string message)
+        public void PrintDebugMessage(string message)
         {
             Log.Debug(message);
         }
 
-        public static void PrintErrorMessage(Exception ex, string message = null)
+        public void PrintErrorMessage(Exception ex, string message = null)
         {
             Log.Error(ex, message);
         }
 
-        public static void NotifyWarnMessage(string title, string message)
+        public void NotifyWarnMessage(string title, string message)
         {
             Notification.NotifyMessage(title, message, NotificationIcon.Warning);
         }
 
-        public static void NotifyInfoMessage(string title, string message)
+        public void NotifyInfoMessage(string title, string message)
         {
             Notification.NotifyMessage(title, message, NotificationIcon.Information);
         }
 
-        public static void NotifyErrorMessage(string title, string message)
+        public void NotifyErrorMessage(string title, string message)
         {
             Notification.NotifyMessage(title, message, NotificationIcon.Error);
         }
 
-        static Control _reticle;
-        public static void AddTargetingReticle()
+        Control _reticle;
+        public void AddTargetingReticle()
         {
             _reticle = window.FindResource("TargetingReticle") as Control;
             var pt = Core.Input.MouseOperation.GetMousePosition();
@@ -294,13 +306,13 @@ namespace UIAssistant.Plugin
             AddPanel(_reticle);
         }
 
-        public static void RemoveTargetingReticle()
+        public void RemoveTargetingReticle()
         {
             RemovePanel(_reticle);
             _reticle = null;
         }
 
-        public static void MoveTargetingReticle(double x, double y)
+        public void MoveTargetingReticle(double x, double y)
         {
             if ((Math.Abs(x) < 1 && Math.Abs(y) < 1) || _reticle == null)
             {
@@ -314,19 +326,19 @@ namespace UIAssistant.Plugin
             });
         }
 
-        public static Control AddIndicator()
+        public Control AddIndicator()
         {
             var Indicator = window.FindResource("Indicator") as Control;
             AddPanel(Indicator);
             return Indicator;
         }
 
-        public static void RemoveIndicator(Control indicator)
+        public void RemoveIndicator(Control indicator)
         {
             RemovePanel(indicator);
         }
 
-        private static AnimationTimeline GenerateAnimation(FrameworkElement element, string propertyName, double from, double to, double duration)
+        private AnimationTimeline GenerateAnimation(FrameworkElement element, string propertyName, double from, double to, double duration)
         {
             var animation = new DoubleAnimation() { From = from, To = to, Duration = new Duration(TimeSpan.FromMilliseconds(duration)) };
 
@@ -335,7 +347,7 @@ namespace UIAssistant.Plugin
             return animation;
         }
 
-        private static void AnimateWaitably(Action<Storyboard> animation, Action completion, bool waitable = true)
+        private void AnimateWaitably(Action<Storyboard> animation, Action completion, bool waitable = true)
         {
             var isCompleted = false;
             window.Dispatcher.BeginInvoke((Action)(() =>
@@ -356,7 +368,7 @@ namespace UIAssistant.Plugin
             }
         }
 
-        public static void ScaleIndicatorAnimation(Rect from, Rect to, bool waitable = true, double duration = 300, Action completed = null)
+        public void ScaleIndicatorAnimation(Rect from, Rect to, bool waitable = true, double duration = 300, Action completed = null)
         {
             Control indicator = null;
             AnimateWaitably(storyboard =>
@@ -370,7 +382,7 @@ namespace UIAssistant.Plugin
             }, () => { RemoveIndicator(indicator); completed?.Invoke(); }, waitable);
         }
 
-        public static void FlashIndicatorAnimation(Rect size, bool waitable = true, double duration = 300, Action completed = null)
+        public void FlashIndicatorAnimation(Rect size, bool waitable = true, double duration = 300, Action completed = null)
         {
             Control indicator = null;
             AnimateWaitably(storyboard =>
@@ -387,5 +399,6 @@ namespace UIAssistant.Plugin
                 storyboard.Children.Add(animation);
             }, () => { RemoveIndicator(indicator); completed?.Invoke(); }, waitable);
         }
+
     }
 }

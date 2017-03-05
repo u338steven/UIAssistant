@@ -9,10 +9,10 @@ using Livet;
 
 using System.Windows;
 using System.Text.RegularExpressions;
+using UIAssistant.Core.API;
 using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.Tools;
 using UIAssistant.Interfaces.HUD;
-using UIAssistant.Plugin;
 using UIAssistant.Utility;
 using KeybindHelper.LowLevel;
 
@@ -113,14 +113,14 @@ namespace UIAssistant.ViewModels
             TextBox = new LowLevelTextBoxViewModel();
             try
             {
-                if (!Migemo.IsEnable() && UIAssistantAPI.UIAssistantSettings.UseMigemo)
+                if (!Migemo.IsEnable() && UIAssistantAPI.Instance.UIAssistantSettings.UseMigemo)
                 {
-                    Migemo.Initialize(UIAssistantAPI.UIAssistantSettings.MigemoDllPath, UIAssistantAPI.UIAssistantSettings.MigemoDictionaryPath);
+                    Migemo.Initialize(UIAssistantAPI.Instance.UIAssistantSettings.MigemoDllPath, UIAssistantAPI.Instance.UIAssistantSettings.MigemoDictionaryPath);
                 }
             }
             catch (Exception ex)
             {
-                UIAssistantAPI.NotifyWarnMessage("Load Migemo Error", $"{ex.Message}");
+                UIAssistantAPI.Instance.NotifyWarnMessage("Load Migemo Error", $"{ex.Message}");
             }
         }
 
@@ -200,7 +200,7 @@ namespace UIAssistant.ViewModels
         private Regex _ascii = new Regex("^[\x20-\x7E]+$");
         private bool UseMigemo(string input)
         {
-            if (input.Length > 1 && Migemo.IsEnable() && UIAssistantAPI.UIAssistantSettings.UseMigemo)
+            if (input.Length > 1 && Migemo.IsEnable() && UIAssistantAPI.Instance.UIAssistantSettings.UseMigemo)
             {
                 return _ascii.IsMatch(input);
             }

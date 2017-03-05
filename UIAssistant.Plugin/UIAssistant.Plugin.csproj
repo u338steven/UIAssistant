@@ -40,7 +40,6 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -53,10 +52,7 @@
   <ItemGroup>
     <Compile Include="AbstractKeyInputController.cs" />
     <Compile Include="AbstractStateController.cs" />
-    <Compile Include="ContextItem.cs" />
-    <Compile Include="PluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UIAssistantAPI.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UIAssistant.Core\UIAssistant.Core.csproj">

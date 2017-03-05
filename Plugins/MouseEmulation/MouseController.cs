@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Timers;
 using UIAssistant.Core.Input;
+using UIAssistant.Core.Plugin;
 using UIAssistant.Core.Settings;
 using KeybindHelper.LowLevel;
 
@@ -45,10 +46,10 @@ namespace UIAssistant.Plugin.MouseEmulation
             {
                 if (_usagePanel == null)
                 {
-                    UIAssistantAPI.UIDispatcher.Invoke(() =>
+                    MouseEmulation.UIAssistantAPI.UIDispatcher.Invoke(() =>
                     {
                         _usagePanel = new Usage();
-                        UIAssistantAPI.AddPanel(_usagePanel);
+                        MouseEmulation.UIAssistantAPI.AddPanel(_usagePanel);
                         Finished += RemoveUsagePanel;
                     });
                 }
@@ -58,7 +59,7 @@ namespace UIAssistant.Plugin.MouseEmulation
                     Finished -= RemoveUsagePanel;
                 }
             });
-            UIAssistantAPI.AddTargetingReticle();
+            MouseEmulation.UIAssistantAPI.AddTargetingReticle();
         }
 
         private static void _keyHook_KeyDown(object sender, LowLevelKeyEventArgs e)
@@ -77,7 +78,7 @@ namespace UIAssistant.Plugin.MouseEmulation
 
         private static void RemoveUsagePanel()
         {
-            UIAssistantAPI.RemovePanel(_usagePanel);
+            MouseEmulation.UIAssistantAPI.RemovePanel(_usagePanel);
             _usagePanel = null;
         }
 
@@ -115,7 +116,7 @@ namespace UIAssistant.Plugin.MouseEmulation
             if (location.X != 0 || location.Y != 0)
             {
                 MouseOperation.DoMouseEventRelative(location.X, location.Y);
-                UIAssistantAPI.MoveTargetingReticle(location.X, location.Y);
+                MouseEmulation.UIAssistantAPI.MoveTargetingReticle(location.X, location.Y);
             }
             Click(_mouseSettings.Click.Key, MouseOperation.LeftDown, MouseOperation.LeftUp, ref _isPressedLbutton);
             Click(_mouseSettings.RightClick.Key, MouseOperation.RightDown, MouseOperation.RightUp, ref _isPressedRbutton);
@@ -165,7 +166,7 @@ namespace UIAssistant.Plugin.MouseEmulation
             Finished = null;
             _userSettings = null;
             _keybinds = null;
-            UIAssistantAPI.RemoveTargetingReticle();
+            MouseEmulation.UIAssistantAPI.RemoveTargetingReticle();
         }
     }
 }

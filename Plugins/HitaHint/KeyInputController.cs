@@ -8,6 +8,7 @@ using KeybindHelper.LowLevel;
 using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Input;
+using UIAssistant.Interfaces.API;
 using UIAssistant.Infrastructure.Logger;
 
 namespace UIAssistant.Plugin.HitaHint
@@ -17,7 +18,7 @@ namespace UIAssistant.Plugin.HitaHint
         private StateController _stateController;
         private HitaHintSettings _settings;
 
-        public KeyInputController(StateController controller) : base(controller, new KeyboardHook(), new KeybindManager())
+        public KeyInputController(IUIAssistantAPI api, StateController controller) : base(api, controller, new KeyboardHook(), new KeybindManager())
         {
             _stateController = controller;
             _settings = _stateController.Settings;

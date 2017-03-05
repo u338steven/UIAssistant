@@ -118,7 +118,7 @@ namespace UIAssistant.Plugin.SpatialNavigation
         private static void InternalMoveTo(Direction direction, Unit unit)
         {
             Initialize();
-            Task.Run(() => UIAssistantAPI.SwitchTheme("General"));
+            Task.Run(() => SpatialNavigation.UIAssistantAPI.SwitchTheme("General"));
             if (unit == Unit.Group)
             {
                 _enumerateTargets = _groupTargets;
@@ -229,8 +229,8 @@ namespace UIAssistant.Plugin.SpatialNavigation
             rect = new Rect(rect.Center(), new Size(1, 1));
             Task.Run(() =>
             {
-                UIAssistantAPI.TopMost = true;
-                UIAssistantAPI.ScaleIndicatorAnimation(sourceBounds, rect, false, 200, () => UIAssistantAPI.TopMost = false);
+                SpatialNavigation.UIAssistantAPI.TopMost = true;
+                SpatialNavigation.UIAssistantAPI.ScaleIndicatorAnimation(sourceBounds, rect, false, 200, () => SpatialNavigation.UIAssistantAPI.TopMost = false);
             });
             destination.SetFocus();
         }

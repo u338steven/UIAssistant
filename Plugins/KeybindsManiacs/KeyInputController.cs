@@ -10,6 +10,8 @@ using KeybindHelper.LowLevel;
 
 using UIAssistant.Core.Input;
 using UIAssistant.Core.I18n;
+using UIAssistant.Core.Plugin;
+using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Input;
 
 namespace UIAssistant.Plugin.KeybindsManiacs
@@ -67,7 +69,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         private Dictionary<string, KeybindStorage> _keybindsDic { get; set; } = new Dictionary<string, KeybindStorage>();
         private KeybindStorage _currentKeybinds { get; set; } = new KeybindStorage();
 
-        public KeyInputController(StateController controller) : base(controller, new KeyboardHook(), new KeybindManager())
+        public KeyInputController(IUIAssistantAPI api, StateController controller) : base(api, controller, new KeyboardHook(), new KeybindManager())
         {
             _stateController = controller;
             _settings = _stateController.Settings;

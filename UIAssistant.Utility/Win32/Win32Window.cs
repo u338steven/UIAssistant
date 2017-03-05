@@ -9,9 +9,11 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Media;
 
+using UIAssistant.Interfaces;
+
 namespace UIAssistant.Utility.Win32
 {
-    public class Win32Window
+    public class Win32Window : IWindow
     {
         public override bool Equals(object obj)
         {
@@ -21,23 +23,6 @@ namespace UIAssistant.Utility.Win32
         public override int GetHashCode()
         {
             return base.GetHashCode();
-        }
-
-        public enum WindowShowStyle : uint
-        {
-            Hide = 0,
-            ShowNormal = 1,
-            ShowMinimized = 2,
-            ShowMaximized = 3,
-            Maximize = 3,
-            ShowNormalNoActivate = 4,
-            Show = 5,
-            Minimize = 6,
-            ShowMinNoActivate = 7,
-            ShowNoActivate = 8,
-            Restore = 9,
-            ShowDefault = 10,
-            ForceMinimized = 11
         }
 
         [Flags]
@@ -105,7 +90,7 @@ namespace UIAssistant.Utility.Win32
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hWnd, WindowShowStyle nCmdShow);
 
-        public IntPtr WindowHandle;
+        public IntPtr WindowHandle { get; private set; }
 
         public Win32Window(IntPtr windowHandle)
         {
@@ -131,13 +116,13 @@ namespace UIAssistant.Utility.Win32
             return new Win32Window(handle);
         }
 
-        public Win32Window FindChild(string className, string caption = null)
+        public IWindow FindChild(string className, string caption = null)
         {
             var handle = FindWindowEx(WindowHandle, IntPtr.Zero, className, caption);
             return new Win32Window(handle);
         }
 
-        public Win32Window FindChild(Win32Window childAfter, string className, string caption = null)
+        public IWindow FindChild(IWindow childAfter, string className, string caption = null)
         {
             var handle = FindWindowEx(WindowHandle, childAfter.WindowHandle, className, caption);
             return new Win32Window(handle);
@@ -285,7 +270,7 @@ namespace UIAssistant.Utility.Win32
             }
         }
 
-        public Win32Window LastActivePopup => new Win32Window(GetLastActivePopup(WindowHandle));
+        public IWindow LastActivePopup => new Win32Window(GetLastActivePopup(WindowHandle));
 
         public void Activate()
         {
@@ -363,7 +348,7 @@ namespace UIAssistant.Utility.Win32
             ForciblyControlWindow(() => SetWindowPos(windowHandle, insertAfterWindow, 0, 0, 0, 0, flag));
         }
 
-        public bool SetWindowPos(Win32Window insertAfterWindow, bool activate, bool hide = false)
+        public bool SetWindowPos(IWindow insertAfterWindow, bool activate, bool hide = false)
         {
             try
             {

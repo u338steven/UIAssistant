@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 
 using KeybindHelper.LowLevel;
+using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Input;
 
 namespace UIAssistant.Plugin
@@ -17,9 +18,11 @@ namespace UIAssistant.Plugin
         protected IKeybindManager Keybinds { get; set; }
         private KeySet _temporarilyHide = new KeySet();
         protected UserControl UsagePanel;
+        protected IUIAssistantAPI UIAssistantAPI { get; private set; }
 
-        public AbstractKeyInputController(AbstractStateController controller, IKeyboardHook hook, IKeybindManager manager)
+        public AbstractKeyInputController(IUIAssistantAPI api, AbstractStateController controller, IKeyboardHook hook, IKeybindManager manager)
         {
+            UIAssistantAPI = api;
             StateController = controller;
             StateController.Pausing += (_, __) => Hook.IsActive = true;
             StateController.Resumed += (_, __) => Hook.IsActive = false;

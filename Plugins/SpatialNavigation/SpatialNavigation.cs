@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.Composition;
 
 using UIAssistant.Infrastructure.Commands;
+using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Plugin;
 
@@ -40,9 +41,11 @@ namespace UIAssistant.Plugin.SpatialNavigation
     public class SpatialNavigation : IPlugin, IDisposable
     {
         private Unit _current { get; set; }
+        internal static IUIAssistantAPI UIAssistantAPI { get; private set; }
 
-        public void Initialize()
+        public void Initialize(IUIAssistantAPI api)
         {
+            UIAssistantAPI = api;
             var args = new[] {
                 new ArgumentRule(Consts.Up, Up),
                 new ArgumentRule(Consts.Down, Down),

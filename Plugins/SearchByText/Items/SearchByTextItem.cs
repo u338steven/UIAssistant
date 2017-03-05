@@ -119,7 +119,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
                             {
                                 element.SetFocus();
                             }
-                            UIAssistantAPI.TopMost = true;
+                            SearchByText.UIAssistantAPI.TopMost = true;
                         }
                         catch
                         {
@@ -131,8 +131,8 @@ namespace UIAssistant.Plugin.SearchByText.Items
                 {
                     to = Bounds;
                 }
-                UIAssistantAPI.ScaleIndicatorAnimation(from, to);
-                UIAssistantAPI.FlashIndicatorAnimation(to);
+                SearchByText.UIAssistantAPI.ScaleIndicatorAnimation(from, to);
+                SearchByText.UIAssistantAPI.FlashIndicatorAnimation(to);
             });
         }
 

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using UIAssistant.Core.Enumerators;
 using UIAssistant.Utility.Win32;
 using UIAssistant.Plugin.HitaHint.Enumerators;
 

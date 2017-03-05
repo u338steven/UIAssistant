@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Media;
 using KeybindHelper.LowLevel;
 
@@ -38,5 +39,17 @@ namespace UIAssistant.Interfaces.HUD
         int ColoredLength { get; set; }
 
         void Execute();
+    }
+
+    public interface IWindowItem
+    {
+        IWindow Window { get; set; }
+    }
+
+    public interface IHUDItemEnumerator
+    {
+        void Enumerate(ICollection<IHUDItem> container, System.Windows.Automation.Condition condition, params ControlType[] types);
+        //void Enumerate(HUDItemCollection container, Win32Window root, System.Windows.Automation.Condition condition, params ControlType[] types);
+        void Retry(ICollection<IHUDItem> container);
     }
 }

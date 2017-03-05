@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Automation;
 using System.Reactive.Linq;
 
+using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility.Win32;
 using UIAssistant.Utility.Extensions;
@@ -26,8 +27,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
             IntPtr ribbonRootHandle = IntPtr.Zero;
             IntPtr ribbonHandle = IntPtr.Zero;
 
-            Win32Window ribbonRoot = null;
-            Win32Window ribbon = null;
+            IWindow ribbonRoot = null;
+            IWindow ribbon = null;
 
             FindRibbonUI(ref ribbonRoot, ref ribbon);
             if (ribbon != null)
@@ -101,7 +102,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                     }
                     if (el.TryDoDefaultAction())
                     {
-                        UIAssistantAPI.TopMost = true;
+                        SearchByText.UIAssistantAPI.TopMost = true;
                         if (!isOffScreen)
                         {
                             GetElements(ribbonBelow, false, null, el, ribbonBelow);
@@ -138,7 +139,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
         }
         bool _isCancel = false;
 
-        private void FindRibbonUI(ref Win32Window ribbonRoot, ref Win32Window ribbon)
+        private void FindRibbonUI(ref IWindow ribbonRoot, ref IWindow ribbon)
         {
             ribbonRoot = Win32Window.ActiveWindow.FindChild("UIRibbonCommandBarDock");
             while (ribbonRoot.WindowHandle != IntPtr.Zero)
@@ -153,7 +154,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
             }
         }
 
-        private bool PrepareUIAutomation(Win32Window ribbon)
+        private bool PrepareUIAutomation(IWindow ribbon)
         {
             PropertyCondition propCondition = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Tab);
             var ribbonRoot = ribbon.Element;

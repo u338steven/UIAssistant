@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Automation;
+using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Core.Input;
 using UIAssistant.Utility.Win32;
@@ -22,7 +23,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
         {
             var targetWindow = Win32Window.Find(TaskbarClass, "");
             targetWindow.Activate();
-            var enumerator = UIAssistantAPI.GetWidgetEnumerator();
+            var enumerator = HitaHint.UIAssistantAPI.GetWidgetEnumerator();
             enumerator.Enumerate(container, null, _enumerateTargets);
 
             double x = 0, y = 0;
@@ -80,7 +81,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
                     return;
                 }
                 var overflowWindow = Win32Window.Find(NotifyIconOverflowClass, "");
-                overflowWindow.ShowWindow(Win32Window.WindowShowStyle.Hide);
+                overflowWindow.ShowWindow(WindowShowStyle.Hide);
             });
         }
 
@@ -96,7 +97,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
             overflowButton.ButtonClick();
             System.Threading.Thread.Sleep(100);
             var overflowWindow = Win32Window.Find(NotifyIconOverflowClass, "");
-            overflowWindow.ShowWindow(Win32Window.WindowShowStyle.Show);
+            overflowWindow.ShowWindow(WindowShowStyle.Show);
             return true;
         }
 

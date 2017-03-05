@@ -9,20 +9,21 @@ using System.Reflection;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 
-using UIAssistant.Core.Settings;
+using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
+using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Logger;
 using UIAssistant.Interfaces.Plugin;
 
-namespace UIAssistant.Plugin
+namespace UIAssistant.Core.Plugin
 {
-    public class PluginManager : IDisposable
+    public class PluginManager : IDisposable, IPluginManager
     {
         public static PluginManager Instance { get; } = new PluginManager();
         private CompositionContainer container;
         private Dictionary<string, IPlugin> plugins = new Dictionary<string, IPlugin>();
 
-        private string directoryPath => UIAssistantDirectory.Plugins;
+        private string directoryPath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
 
         [ImportMany(RequiredCreationPolicy = CreationPolicy.Shared)]
         public IEnumerable<Lazy<IPlugin, IPluginMetadata>> Plugins { get; set; }
@@ -104,7 +105,7 @@ namespace UIAssistant.Plugin
             {
                 return null;
             }
-            var actions = UIAssistantAPI.ParseStatement(command).Reverse();
+            var actions = UIAssistantAPI.Instance.ParseStatement(command).Reverse();
             return () =>
             {
                 InitializeBeforePluginCalled();
@@ -133,12 +134,12 @@ namespace UIAssistant.Plugin
         {
             try
             {
-                plugin.Value.Initialize();
+                plugin.Value.Initialize(UIAssistantAPI.Instance);
             }
             catch (Exception ex)
             {
                 var message = string.Format(TextID.PluginInitializeError.GetLocalizedText(), plugin.Metadata.Name);
-                UIAssistantAPI.NotifyWarnMessage("Warning", message);
+                UIAssistantAPI.Instance.NotifyWarnMessage("Warning", message);
                 Log.Error(ex);
                 Log.Warn(message);
             }
@@ -148,7 +149,7 @@ namespace UIAssistant.Plugin
             }
             else
             {
-                UIAssistantAPI.NotifyWarnMessage("Warning", string.Format(TextID.PluginCommandDuplication.GetLocalizedText(), plugin.Metadata.Name));
+                UIAssistantAPI.Instance.NotifyWarnMessage("Warning", string.Format(TextID.PluginCommandDuplication.GetLocalizedText(), plugin.Metadata.Name));
             }
         }
 

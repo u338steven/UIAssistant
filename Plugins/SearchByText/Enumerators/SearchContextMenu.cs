@@ -26,7 +26,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
             observer.Callback += (element) =>
             {
                 menuEnumerator.ContextRoot = element;
-                UIAssistantAPI.TopMost = true;
+                SearchByText.UIAssistantAPI.TopMost = true;
             };
 
             observer.Observe();

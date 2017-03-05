@@ -1,10 +1,13 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
+using UIAssistant.Interfaces.API;
 
 namespace UIAssistant.Interfaces.Plugin
 {
     public interface IPlugin
     {
-        void Initialize();
+        void Initialize(IUIAssistantAPI api);
         void Setup();
     }
 
@@ -28,5 +31,22 @@ namespace UIAssistant.Interfaces.Plugin
     public interface ILocalizablePlugin
     {
         void Localize();
+    }
+
+    public interface IPluginManager
+    {
+        IEnumerable<Lazy<IPlugin, IPluginMetadata>> Plugins { get; set; }
+
+        event Action Quit;
+        event Action Resume;
+
+        void Dispose();
+        void Execute(string command);
+        bool Exists(string command);
+        void Exit();
+        Action GenerateAction(string command);
+        void Localize();
+        void ResetAllPlugins();
+        void Undo();
     }
 }

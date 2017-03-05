@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using UIAssistant.Core.Plugin;
+using UIAssistant.Interfaces.API;
+
 namespace UIAssistant.Plugin
 {
     public abstract class AbstractStateController : IDisposable
@@ -13,6 +16,13 @@ namespace UIAssistant.Plugin
         public event EventHandler Resumed;
 
         public abstract void SwitchNextTheme();
+        protected IUIAssistantAPI UIAssistantAPI { get; private set; }
+
+        public AbstractStateController(IUIAssistantAPI api)
+        {
+            UIAssistantAPI = api;
+        }
+
         public virtual void Cleanup()
         {
             Finished?.Invoke(this, EventArgs.Empty);

@@ -4,10 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using UIAssistant.Core.Enumerators;
-
 namespace UIAssistant.Plugin.SearchByText.Enumerators
 {
+    public enum EnumerateTarget
+    {
+        RunningApps,
+        Commands,
+        TextsInWindow,
+        TextsInContainer,
+        ContextMenu,
+    }
+
     class Enumerator
     {
         public static ISearchByTextEnumerator Factory(EnumerateTarget target)

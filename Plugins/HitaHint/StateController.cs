@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.Themes;
 using UIAssistant.Core.Input;
 using UIAssistant.Core.I18n;
+using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility.Win32;
 using UIAssistant.Utility.Extensions;
@@ -28,7 +28,7 @@ namespace UIAssistant.Plugin.HitaHint
         private StringBuilder _inputText = new StringBuilder();
         private ICollection<IHUDItem> _enumeratedResults;
 
-        public StateController()
+        public StateController(IUIAssistantAPI api) : base(api)
         {
             Settings = HitaHintSettings.Instance;
             if (Settings.IsMouseCursorHidden)
@@ -274,7 +274,8 @@ namespace UIAssistant.Plugin.HitaHint
                 Invoke(items[0]);
                 return;
             }
-            UIAssistantAPI.DefaultHUD.Items = new HUDItemCollection(items);
+            UIAssistantAPI.DefaultHUD.Items = items;
+            //UIAssistantAPI.DefaultHUD.Items = new HUDItemCollection(items);
             PrintState();
         }
 

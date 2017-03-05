@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using UIAssistant.Interfaces.API;
+
 namespace UIAssistant.Plugin.KeybindsManiacs
 {
     class StateController : AbstractStateController
@@ -11,7 +13,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         public KeybindsManiacsSettings Settings { get; private set; }
         public Mode Mode { get; private set; }
 
-        public StateController()
+        public StateController(IUIAssistantAPI api) : base(api)
         {
             Settings = KeybindsManiacsSettings.Instance;
             Mode = Mode.Normal;

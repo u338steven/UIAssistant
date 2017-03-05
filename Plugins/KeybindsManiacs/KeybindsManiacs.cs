@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.Composition;
 using UIAssistant.Core.I18n;
 using UIAssistant.Infrastructure.Commands;
-using UIAssistant.Interfaces.Commands;
+using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Plugin;
 
 namespace UIAssistant.Plugin.KeybindsManiacs
@@ -25,13 +25,15 @@ namespace UIAssistant.Plugin.KeybindsManiacs
     [ExportMetadata("CommandName", Consts.Command)]
     public class KeybindsManiacs : IPlugin, IConfigurablePlugin, ILocalizablePlugin, IDisposable
     {
+        internal static IUIAssistantAPI UIAssistantAPI { get; private set; }
         private StateController _stateController;
         private KeyInputController _keyController;
 
-        public void Initialize()
+        public void Initialize(IUIAssistantAPI api)
         {
-            _stateController = new StateController();
-            _keyController = new KeyInputController(_stateController);
+            _stateController = new StateController(api);
+            _keyController = new KeyInputController(api, _stateController);
+            UIAssistantAPI = api;
             RegisterCommand();
 
             if (_stateController.Settings.RunAtStartup)

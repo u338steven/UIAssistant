@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 
 using Livet;
+using UIAssistant.Core.Plugin;
 using UIAssistant.Infrastructure.Logger;
 
 using Microsoft.Shell;
@@ -61,7 +62,7 @@ namespace UIAssistant
 
             try
             {
-                Plugin.PluginManager.Instance.Dispose();
+                PluginManager.Instance.Dispose();
                 Models.MainWindowModel.HideNotifyIcon();
             }
             catch

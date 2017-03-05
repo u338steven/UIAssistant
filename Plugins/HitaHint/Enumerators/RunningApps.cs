@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using UIAssistant.Core.API;
 using UIAssistant.Core.Enumerators;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility;
@@ -29,7 +30,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
                 var rect = window.Bounds.ToClientCoordinate();
                 WidgetInfo item = new WidgetInfo(": " + window.Title, rect);
                 item.Window = window;
-                UIAssistantAPI.UIDispatcher.Invoke(() => AdjustLocation(results, item, desktopBounds));
+                HitaHint.UIAssistantAPI.UIDispatcher.Invoke(() => AdjustLocation(results, item, desktopBounds));
                 results.Add(item);
                 return true;
             });

@@ -18,9 +18,10 @@ using System.Windows.Interop;
 using UIAssistant.Models;
 using UIAssistant.Views;
 using UIAssistant.Utility.Win32;
+using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
+using UIAssistant.Core.Plugin;
 using UIAssistant.UI.Controls;
-using UIAssistant.Plugin;
 
 using UIAssistant.Core.Settings;
 
@@ -101,7 +102,7 @@ namespace UIAssistant.ViewModels
 
         public void Initialize()
         {
-            UIAssistantAPI.Initialize(DefaultHUDPanel, DefaultContextPanel);
+            UIAssistantAPI.Instance.Initialize(DefaultHUDPanel, DefaultContextPanel);
 
             IntPtr windowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
             Win32Interop.SetWindowExTransparent(windowHandle);
@@ -113,7 +114,7 @@ namespace UIAssistant.ViewModels
 
             MainWindowModel.ShowNotifyIcon();
 
-            UIAssistantAPI.SwitchTheme("General");
+            UIAssistantAPI.Instance.SwitchTheme("General");
             Notification.Initialize();
 
             Left = SystemParameters.VirtualScreenLeft;
@@ -121,7 +122,7 @@ namespace UIAssistant.ViewModels
             Width = SystemParameters.VirtualScreenWidth;
             Height = SystemParameters.VirtualScreenHeight;
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
-            UIAssistantAPI.TopMost = false;
+            UIAssistantAPI.Instance.TopMost = false;
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)

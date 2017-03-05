@@ -4,10 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using UIAssistant.Core.Enumerators;
-
 namespace UIAssistant.Plugin.HitaHint.Enumerators
 {
+    public enum EnumerateTarget
+    {
+        WidgetsInWindow,
+        RunningApps,
+        WidgetsInTaskbar,
+        DividedScreen,
+    }
+
     class Enumerator
     {
         public static IWidgetEnumerator Factory(EnumerateTarget target)

@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Enumerators\RunningApps.cs" />
     <Compile Include="Enumerators\IWidgetEnumerator.cs" />
+    <Compile Include="Enumerators\WidgetInfo.cs" />
     <Compile Include="Usage.xaml.cs">
       <DependentUpon>Usage.xaml</DependentUpon>
     </Compile>

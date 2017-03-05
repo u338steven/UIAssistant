@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 using System.ComponentModel.Composition;
 
-using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.I18n;
 using UIAssistant.Infrastructure.Commands;
+using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Plugin;
 
+using UIAssistant.Plugin.HitaHint.Enumerators;
 using UIAssistant.Plugin.HitaHint.Operations;
 
 namespace UIAssistant.Plugin.HitaHint
@@ -31,11 +32,13 @@ namespace UIAssistant.Plugin.HitaHint
     {
         private StateController _stateController;
         private KeyInputController _keyController;
+        internal static IUIAssistantAPI UIAssistantAPI { get; private set; }
 
-        public void Initialize()
+        public void Initialize(IUIAssistantAPI api)
         {
-            _stateController = new StateController();
-            _keyController = new KeyInputController(_stateController);
+            UIAssistantAPI = api;
+            _stateController = new StateController(api);
+            _keyController = new KeyInputController(api, _stateController);
             RegisterCommand();
         }
 

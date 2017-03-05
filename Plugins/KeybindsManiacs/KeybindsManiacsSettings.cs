@@ -59,7 +59,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             normalMode.Add(new KeyTranslator(new[] { Key.T }, CommandType.RunEmbeddedCommand, "VimLike t"));
             normalMode.Add(new KeyTranslator(new[] { Key.F, Key.LeftShift }, CommandType.RunEmbeddedCommand, "VimLike F"));
             normalMode.Add(new KeyTranslator(new[] { Key.T, Key.LeftShift }, CommandType.RunEmbeddedCommand, "VimLike T"));
-            if (UIAssistantAPI.UIAssistantSettings.Culture == "ja-JP")
+            if (KeybindsManiacs.UIAssistantAPI.UIAssistantSettings.Culture == "ja-JP")
             {
                 normalMode.Add(new KeyTranslator(new[] { Key.OemPlus }, CommandType.RunEmbeddedCommand, "VimLike ;"));
             }

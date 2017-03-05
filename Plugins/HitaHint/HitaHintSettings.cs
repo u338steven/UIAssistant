@@ -25,7 +25,7 @@ namespace UIAssistant.Plugin.HitaHint
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    throw new Exception(UIAssistantAPI.Localize("requiredError"));
+                    throw new Exception(HitaHint.UIAssistantAPI.Localize("requiredError"));
                 }
                 _HintKeys = value;
             }
@@ -41,7 +41,7 @@ namespace UIAssistant.Plugin.HitaHint
             {
                 if (value < _minDivisionCount || value > _maxDivisionCount)
                 {
-                    throw new Exception(string.Format(UIAssistantAPI.Localize("rangeError"), _minDivisionCount, _maxDivisionCount));
+                    throw new Exception(string.Format(HitaHint.UIAssistantAPI.Localize("rangeError"), _minDivisionCount, _maxDivisionCount));
                 }
                 _screenWidthDivisionCount = value;
             }

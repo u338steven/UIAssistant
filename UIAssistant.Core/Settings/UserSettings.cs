@@ -15,7 +15,7 @@ using UIAssistant.Utility;
 
 namespace UIAssistant.Core.Settings
 {
-    public class UserSettings : Settings<UserSettings>
+    public class UserSettings : Settings<UserSettings>, IUserSettings
     {
         public bool RunAtLogin { get; set; }
         public bool UseMigemo { get; set; }

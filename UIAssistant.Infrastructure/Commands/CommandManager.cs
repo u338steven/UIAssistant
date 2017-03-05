@@ -10,7 +10,7 @@ namespace UIAssistant.Infrastructure.Commands
         static CommandSyntax _syntax = new CommandSyntax();
         static IParser _parser = new CommandParser(_syntax);
 
-        public static void Add(CommandRule rule)
+        public static void Add(ICommandRule rule)
         {
             _syntax.Add(rule);
         }

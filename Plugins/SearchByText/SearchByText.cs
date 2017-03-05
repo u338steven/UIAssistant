@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.ComponentModel.Composition;
-using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.I18n;
 using UIAssistant.Infrastructure.Commands;
+using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Plugin;
+
+using UIAssistant.Plugin.SearchByText.Enumerators;
 
 namespace UIAssistant.Plugin.SearchByText
 {
@@ -28,11 +30,13 @@ namespace UIAssistant.Plugin.SearchByText
     {
         private StateController _stateController;
         private KeyInputController _keyController;
+        internal static IUIAssistantAPI UIAssistantAPI { get; private set; }
 
-        public void Initialize()
+        public void Initialize(IUIAssistantAPI api)
         {
-            _stateController = new StateController();
-            _keyController = new KeyInputController(_stateController);
+            UIAssistantAPI = api;
+            _stateController = new StateController(api);
+            _keyController = new KeyInputController(api, _stateController);
             RegisterCommand();
         }
 
@@ -50,14 +54,14 @@ namespace UIAssistant.Plugin.SearchByText
                 new[] { argCommands, argTextsInWindow, argTextsInContainer, argRunningApps, argContextMenu },
                 new[] { optAutoFire });
             command.Description = Consts.PluginName;
-            UIAssistantAPI.RegisterCommand(command);
+            SearchByText.UIAssistantAPI.RegisterCommand(command);
         }
 
         public void Setup()
         {
             _stateController.Initialize();
             _keyController.Initialize();
-            UIAssistantAPI.SwitchTheme(UIAssistantAPI.UIAssistantSettings.Theme);
+            SearchByText.UIAssistantAPI.SwitchTheme(SearchByText.UIAssistantAPI.UIAssistantSettings.Theme);
         }
 
         public void Run(ICommand command)
@@ -65,13 +69,13 @@ namespace UIAssistant.Plugin.SearchByText
             try
             {
                 _stateController.Enumerate();
-                UIAssistantAPI.AddDefaultHUD();
-                UIAssistantAPI.AddContextHUD();
-                UIAssistantAPI.TopMost = true;
+                SearchByText.UIAssistantAPI.AddDefaultHUD();
+                SearchByText.UIAssistantAPI.AddContextHUD();
+                SearchByText.UIAssistantAPI.TopMost = true;
             }
             catch (Exception ex)
             {
-                UIAssistantAPI.PrintErrorMessage(ex);
+                SearchByText.UIAssistantAPI.PrintErrorMessage(ex);
             }
         }
 

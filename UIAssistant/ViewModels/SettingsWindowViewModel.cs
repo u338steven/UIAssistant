@@ -17,14 +17,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using UIAssistant.Models;
+using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
+using UIAssistant.Core.Plugin;
 using UIAssistant.Core.Settings;
 using UIAssistant.Core.Tools;
 using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Infrastructure.Resource.Language;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Plugin;
-using UIAssistant.Plugin;
 using UIAssistant.Utility;
 
 using UIAssistant.UI.Controls;
@@ -433,7 +434,7 @@ namespace UIAssistant.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    UIAssistantAPI.NotifyWarnMessage("Load Migemo Error", $"{ex.Message}");
+                    UIAssistantAPI.Instance.NotifyWarnMessage("Load Migemo Error", $"{ex.Message}");
                 }
             }
             else
