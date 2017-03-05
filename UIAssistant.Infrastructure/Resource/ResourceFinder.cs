@@ -2,6 +2,8 @@
 using System.Diagnostics.Contracts;
 using System.Linq;
 
+using UIAssistant.Interfaces.Resource;
+
 namespace UIAssistant.Infrastructure.Resource
 {
     public class ResourceFinder<T> : IResourceFinder<T> where T : IResourceItem

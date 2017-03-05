@@ -9,11 +9,12 @@ using System.Windows.Input;
 using KeybindHelper.LowLevel;
 using UIAssistant.Core.Settings;
 using UIAssistant.Core.I18n;
+using UIAssistant.Interfaces.Input;
 using UIAssistant.UI.Controls;
 
 namespace UIAssistant.Core.Input
 {
-    public class KeyboardHook : LowLevelKeyHook
+    public class KeyboardHook : LowLevelKeyHook, IKeyboardHook
     {
         private KeySet _terminate;
         public KeyboardHook()

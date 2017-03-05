@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using YamlDotNet.Serialization;
 
+using UIAssistant.Interfaces.Settings;
+
 namespace UIAssistant.Infrastructure.Settings
 {
     public class YamlFile<T> : IFileIO<T> where T : ISettings

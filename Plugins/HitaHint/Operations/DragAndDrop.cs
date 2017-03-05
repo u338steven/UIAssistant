@@ -1,5 +1,6 @@
 ﻿using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.Input;
+using UIAssistant.Interfaces.HUD;
 
 namespace UIAssistant.Plugin.HitaHint.Operations
 {

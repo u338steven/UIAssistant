@@ -9,6 +9,7 @@ using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.Themes;
 using UIAssistant.Core.Input;
 using UIAssistant.Core.I18n;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility.Win32;
 using UIAssistant.Utility.Extensions;
 
@@ -25,7 +26,7 @@ namespace UIAssistant.Plugin.HitaHint
         private IWidgetEnumerator _enumerator;
         private History _history = new History();
         private StringBuilder _inputText = new StringBuilder();
-        private HUDItemCollection _enumeratedResults;
+        private ICollection<IHUDItem> _enumeratedResults;
 
         public StateController()
         {
@@ -213,7 +214,7 @@ namespace UIAssistant.Plugin.HitaHint
             base.Cleanup();
         }
 
-        private void AssignHint(HUDItemCollection items)
+        private void AssignHint(ICollection<IHUDItem> items)
         {
             var hints = UIAssistantAPI.GenerateHints(HitaHintSettings.Instance.HintKeys, items.Count);
             foreach (var x in items.Select((v, i) => new { v, i }))

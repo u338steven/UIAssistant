@@ -1,4 +1,4 @@
-﻿namespace UIAssistant.Infrastructure.Settings
+﻿namespace UIAssistant.Interfaces.Settings
 {
     public interface IFileIO<T>
     {

@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.Contracts;
 
+using UIAssistant.Interfaces.Resource;
+
 namespace UIAssistant.Infrastructure.Resource
 {
     public class ResourceState<T> : IResourceState<T> where T : IResourceItem

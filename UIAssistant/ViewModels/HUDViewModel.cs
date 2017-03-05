@@ -11,6 +11,7 @@ using System.Windows;
 using System.Text.RegularExpressions;
 using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.Tools;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Plugin;
 using UIAssistant.Utility;
 using KeybindHelper.LowLevel;
@@ -20,8 +21,8 @@ namespace UIAssistant.ViewModels
     public class HUDViewModel : ViewModel, IHUD
     {
         #region Items変更通知プロパティ
-        private HUDItemCollection _Items;
-        public HUDItemCollection Items
+        private ICollection<IHUDItem> _Items;
+        public ICollection<IHUDItem> Items
         {
             get
             { return _Items; }
@@ -96,7 +97,7 @@ namespace UIAssistant.ViewModels
             {
                 if (Items.Count == 1)
                 {
-                    return Items[0];
+                    return Items.ElementAt(0);
                 }
                 return Items.ElementAtOrDefault(SelectedIndex);
             }
@@ -185,7 +186,7 @@ namespace UIAssistant.ViewModels
         }
 
         public Func<IEnumerable<IHUDItem>, string, IEnumerable<IHUDItem>> CustomFilter { get; set; }
-        public void Filter(HUDItemCollection items, string input)
+        public void Filter(ICollection<IHUDItem> items, string input)
         {
             HUDItemCollection clonedItems = new HUDItemCollection(items);
             if (CustomFilter != null)

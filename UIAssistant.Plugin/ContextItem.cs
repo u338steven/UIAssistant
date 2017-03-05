@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Media;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Enumerators;
+using UIAssistant.Interfaces.HUD;
 
 namespace UIAssistant.Plugin
 {

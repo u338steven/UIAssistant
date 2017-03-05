@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using System.Reactive.Disposables;
 
 using UIAssistant.Core.I18n;
+using UIAssistant.Core.Input;
 using UIAssistant.Core.Settings;
 using UIAssistant.Utility.Extensions;
 using KeybindHelper.LowLevel;
@@ -19,7 +20,7 @@ namespace UIAssistant.Plugin.SearchByText
         private UserSettings _settings;
         private CompositeDisposable _disposables = new CompositeDisposable();
 
-        public KeyInputController(StateController controller) : base(controller)
+        public KeyInputController(StateController controller) : base(controller, new KeyboardHook(), new KeybindManager())
         {
             _stateController = controller;
             _settings = _stateController.Settings;

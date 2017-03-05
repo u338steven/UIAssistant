@@ -1,4 +1,6 @@
-﻿namespace UIAssistant.Infrastructure.Resource.Theme
+﻿using UIAssistant.Interfaces.Resource;
+
+namespace UIAssistant.Infrastructure.Resource.Theme
 {
     public class Theme : IResourceItem
     {

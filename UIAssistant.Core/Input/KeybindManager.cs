@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 using KeybindHelper;
 using KeybindHelper.LowLevel;
 using UIAssistant.Core.I18n;
+using UIAssistant.Interfaces.Input;
 using UIAssistant.UI.Controls;
 
 namespace UIAssistant.Core.Input
 {
-    public class KeybindManager
+    public class KeybindManager : IKeybindManager
     {
         private Dictionary<KeySet, Action> _keybinds = new Dictionary<KeySet, Action>();
 

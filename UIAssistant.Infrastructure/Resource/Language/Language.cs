@@ -1,4 +1,6 @@
-﻿namespace UIAssistant.Infrastructure.Resource.Language
+﻿using UIAssistant.Interfaces.Resource;
+
+namespace UIAssistant.Infrastructure.Resource.Language
 {
     public class Language : IResourceItem
     {

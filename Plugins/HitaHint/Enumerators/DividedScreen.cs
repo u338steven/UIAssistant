@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 using UIAssistant.Core.Enumerators;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility;
 
 namespace UIAssistant.Plugin.HitaHint.Enumerators
 {
     class DividedScreen : IWidgetEnumerator
     {
-        public void Enumerate(HUDItemCollection container)
+        public void Enumerate(ICollection<IHUDItem> container)
         {
             var divisionCount = HitaHintSettings.Instance.ScreenWidthDivisionCount;
             foreach (var screen in Screen.AllScreen)
@@ -21,7 +22,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
         }
 
         const int _divideMinPixel = 16;
-        private static void Divide(HUDItemCollection container, System.Windows.Rect screen, int divisionCount)
+        private static void Divide(ICollection<IHUDItem> container, System.Windows.Rect screen, int divisionCount)
         {
             var desktopBounds = Screen.Bounds;
             var relativeRectangle = new System.Windows.Rect(0, 0, 0, 0);

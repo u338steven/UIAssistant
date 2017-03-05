@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using UIAssistant.Interfaces.Commands;
+
 namespace UIAssistant.Infrastructure.Commands
 {
-    public class CommandRule : BaseRule
+    public class CommandRule : BaseRule, ICommandRule
     {
         public CommandRule(string command, Action<ICommand> action,
-            ICollection<ArgumentRule> requiredArgs = null, ICollection<ArgumentRule> optionalArgs = null)
+            ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null)
             : base(command, action, requiredArgs, optionalArgs)
         {
         }

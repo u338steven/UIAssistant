@@ -9,6 +9,7 @@ using Moq;
 using UIAssistant.Infrastructure.Resource;
 using UIAssistant.Infrastructure.Resource.Language;
 using UIAssistant.Infrastructure.Resource.Theme;
+using UIAssistant.Interfaces.Resource;
 
 namespace ResourceTest
 {

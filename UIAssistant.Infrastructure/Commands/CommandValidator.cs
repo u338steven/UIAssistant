@@ -3,7 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-using UIAssistant.Infrastructure.Resource;
+using UIAssistant.Interfaces.Commands;
+using UIAssistant.Interfaces.Resource;
 
 namespace UIAssistant.Infrastructure.Commands
 {

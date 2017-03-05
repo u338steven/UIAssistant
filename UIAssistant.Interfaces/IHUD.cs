@@ -5,15 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows;
-using UIAssistant.Core.Enumerators;
+using System.Windows.Media;
 using KeybindHelper.LowLevel;
 
-namespace UIAssistant.Plugin
+namespace UIAssistant.Interfaces.HUD
 {
     public interface IHUD
     {
         ITextBox TextBox { get; set; }
-        HUDItemCollection Items { get; set; }
+        ICollection<IHUDItem> Items { get; set; }
         IHUDItem SelectedItem { get; }
         int ItemsCountPerPage { get; set; }
         Func<IEnumerable<IHUDItem>, string, IEnumerable<IHUDItem>> CustomFilter { get; set; }
@@ -23,7 +23,20 @@ namespace UIAssistant.Plugin
         void FocusPreviousItem();
         void PageDown();
         void PageUp();
-        void Filter(HUDItemCollection list, string input);
+        void Filter(ICollection<IHUDItem> list, string input);
+        void Execute();
+    }
+
+    public interface IHUDItem
+    {
+        string InternalText { get; set; }
+        string DisplayText { get; set; }
+        Point Location { get; set; }
+        Rect Bounds { get; set; }
+        ImageSource Image { get; }
+        int ColoredStart { get; set; }
+        int ColoredLength { get; set; }
+
         void Execute();
     }
 }

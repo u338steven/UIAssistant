@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Automation;
-using UIAssistant.Core.Enumerators;
+using UIAssistant.Interfaces.HUD;
 
 namespace UIAssistant.Plugin.HitaHint.Enumerators
 {
@@ -39,7 +39,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
         };
         #endregion
 
-        public void Enumerate(HUDItemCollection container)
+        public void Enumerate(ICollection<IHUDItem> container)
         {
             UIAssistantAPI.GetWidgetEnumerator().Enumerate(container, null, _enumerateTargets);
         }

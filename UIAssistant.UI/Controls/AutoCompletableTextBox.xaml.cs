@@ -12,7 +12,7 @@ using System.Windows.Threading;
 using System.Reactive.Linq;
 using System.ComponentModel;
 
-using UIAssistant.Infrastructure.Commands;
+using UIAssistant.Interfaces.Commands;
 
 namespace UIAssistant.UI.Controls
 {

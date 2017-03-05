@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using UIAssistant.Infrastructure.Resource;
+using UIAssistant.Interfaces.Resource;
 using UIAssistant.Infrastructure.Resource.Language;
 
 namespace UIAssistant.Core.I18n

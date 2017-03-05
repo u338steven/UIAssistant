@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using UIAssistant.Core.Enumerators;
+using UIAssistant.Interfaces.HUD;
 
 namespace UIAssistant.Plugin.SearchByText.Enumerators
 {
     internal interface ISearchByTextEnumerator : IDisposable
     {
-        void Enumerate(HUDItemCollection resultsContainer);
+        void Enumerate(ICollection<IHUDItem> resultsContainer);
         void Cancel();
         event EventHandler Updated;
         event EventHandler Finished;

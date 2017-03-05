@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using UIAssistant.Core.I18n;
-
 namespace UIAssistant.Plugin
 {
     public abstract class AbstractStateController : IDisposable
@@ -42,7 +40,8 @@ namespace UIAssistant.Plugin
             }
             else
             {
-                UIAssistantAPI.NotifyWarnMessage("Plugin Error", string.Format(TextID.CommandNotFound.GetLocalizedText(), command));
+                // TODO:
+                //UIAssistantAPI.NotifyWarnMessage("Plugin Error", string.Format(TextID.CommandNotFound.GetLocalizedText(), command));
                 Quit();
             }
         }

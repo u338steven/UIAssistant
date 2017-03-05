@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIAssistant.Infrastructure", "UIAssistant.Infrastructure\UIAssistant.Infrastructure.csproj", "{22A954B1-47A0-4081-8AC1-CCACE31AA6AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIAssistant.Interfaces", "UIAssistant.Interfaces\UIAssistant.Interfaces.csproj", "{4E99E5E8-38AF-4100-A148-F844B7DA4F16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -136,6 +138,14 @@ Global
 		{22A954B1-47A0-4081-8AC1-CCACE31AA6AB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{22A954B1-47A0-4081-8AC1-CCACE31AA6AB}.Release|x86.ActiveCfg = Release|Any CPU
 		{22A954B1-47A0-4081-8AC1-CCACE31AA6AB}.Release|x86.Build.0 = Release|Any CPU
+		{4E99E5E8-38AF-4100-A148-F844B7DA4F16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E99E5E8-38AF-4100-A148-F844B7DA4F16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E99E5E8-38AF-4100-A148-F844B7DA4F16}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4E99E5E8-38AF-4100-A148-F844B7DA4F16}.Debug|x86.Build.0 = Debug|Any CPU
+		{4E99E5E8-38AF-4100-A148-F844B7DA4F16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E99E5E8-38AF-4100-A148-F844B7DA4F16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E99E5E8-38AF-4100-A148-F844B7DA4F16}.Release|x86.ActiveCfg = Release|Any CPU
+		{4E99E5E8-38AF-4100-A148-F844B7DA4F16}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

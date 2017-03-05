@@ -9,6 +9,7 @@ using System.Windows.Input;
 using KeybindHelper;
 using UIAssistant.Core.I18n;
 using UIAssistant.Infrastructure.Settings;
+using UIAssistant.Interfaces.Settings;
 using UIAssistant.UI.Controls;
 using UIAssistant.Utility;
 

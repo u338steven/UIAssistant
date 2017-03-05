@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Automation;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility;
-using UIAssistant.Utility.Extensions;
 using UIAssistant.Utility.Win32;
 
 namespace UIAssistant.Core.Enumerators
@@ -166,7 +166,7 @@ namespace UIAssistant.Core.Enumerators
             }
         }
 
-        public void Enumerate(HUDItemCollection container, AutomationElement root)
+        public void Enumerate(ICollection<IHUDItem> container, AutomationElement root)
         {
             HUDItemCollection results = new HUDItemCollection();
             _taskList = new Queue<AutomationElement>();
@@ -174,7 +174,7 @@ namespace UIAssistant.Core.Enumerators
             results.Distinct(new HUDItemComparer()).Where(x => results.All(y => x.Bounds == y.Bounds || !x.Bounds.Contains(y.Bounds))).ToList().ForEach(x => container.Add(x));
         }
 
-        public void Enumerate(HUDItemCollection container)
+        public void Enumerate(ICollection<IHUDItem> container)
         {
             Enumerate(container, Win32Window.ActiveWindow?.Element);
         }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Automation;
-using UIAssistant.Core.Enumerators;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Core.Input;
 using UIAssistant.Utility.Win32;
 using UIAssistant.Utility.Extensions;
@@ -18,7 +18,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
         public const string TasktrayClass = "TrayNotifyWnd";
         public const string NotifyIconOverflowClass = "NotifyIconOverflowWindow";
 
-        public void Enumerate(HUDItemCollection container)
+        public void Enumerate(ICollection<IHUDItem> container)
         {
             var targetWindow = Win32Window.Find(TaskbarClass, "");
             targetWindow.Activate();

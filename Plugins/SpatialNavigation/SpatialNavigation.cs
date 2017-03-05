@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using System.ComponentModel.Composition;
 
 using UIAssistant.Infrastructure.Commands;
-using UIAssistant.Utility.Extensions;
+using UIAssistant.Interfaces.Commands;
+using UIAssistant.Interfaces.Plugin;
 
 namespace UIAssistant.Plugin.SpatialNavigation
 {

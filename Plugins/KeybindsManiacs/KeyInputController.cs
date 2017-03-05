@@ -10,6 +10,7 @@ using KeybindHelper.LowLevel;
 
 using UIAssistant.Core.Input;
 using UIAssistant.Core.I18n;
+using UIAssistant.Interfaces.Input;
 
 namespace UIAssistant.Plugin.KeybindsManiacs
 {
@@ -46,10 +47,10 @@ namespace UIAssistant.Plugin.KeybindsManiacs
     class KeybindStorage
     {
         public Dictionary<KeySet, bool> OneShotDefined { get; set; } = new Dictionary<KeySet, bool>();
-        public KeybindManager OneShotKeybinds { get; set; } = new KeybindManager();
-        public KeybindManager OneShotKeyDown { get; set; } = new KeybindManager();
-        public KeybindManager OneShotKeyUp { get; set; } = new KeybindManager();
-        public KeybindManager Keybinds { get; set; } = new KeybindManager();
+        public IKeybindManager OneShotKeybinds { get; set; } = new KeybindManager();
+        public IKeybindManager OneShotKeyDown { get; set; } = new KeybindManager();
+        public IKeybindManager OneShotKeyUp { get; set; } = new KeybindManager();
+        public IKeybindManager Keybinds { get; set; } = new KeybindManager();
         public bool IsEnabledWindowsKeybinds { get; set; } = false;
         public bool IsPrefix { get; set; } = false;
 
@@ -66,7 +67,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         private Dictionary<string, KeybindStorage> _keybindsDic { get; set; } = new Dictionary<string, KeybindStorage>();
         private KeybindStorage _currentKeybinds { get; set; } = new KeybindStorage();
 
-        public KeyInputController(StateController controller) : base(controller)
+        public KeyInputController(StateController controller) : base(controller, new KeyboardHook(), new KeybindManager())
         {
             _stateController = controller;
             _settings = _stateController.Settings;

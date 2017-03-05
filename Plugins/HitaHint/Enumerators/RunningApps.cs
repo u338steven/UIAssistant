@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using UIAssistant.Core.Enumerators;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility;
 using UIAssistant.Utility.Win32;
 using UIAssistant.Utility.Extensions;
@@ -13,7 +14,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
 {
     class RunningApps : IWidgetEnumerator
     {
-        public void Enumerate(HUDItemCollection container)
+        public void Enumerate(ICollection<IHUDItem> container)
         {
             var desktopBounds = Screen.Bounds;
             var results = new List<IHUDItem>();

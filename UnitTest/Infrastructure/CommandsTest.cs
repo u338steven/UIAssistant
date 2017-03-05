@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
 using UIAssistant.Infrastructure.Commands;
+using UIAssistant.Interfaces.Commands;
 
 namespace CommandsTest
 {
@@ -91,9 +92,9 @@ namespace CommandsTest
             Syntax.Add(MouseEmulation);
         }
 
-        private ICollection<ArgumentRule> ArgsFactory(params ArgumentRule[] rules)
+        private ICollection<IArgumentRule> ArgsFactory(params ArgumentRule[] rules)
         {
-            return new List<ArgumentRule>(rules);
+            return new List<IArgumentRule>(rules);
         }
 
         [TestMethod]
@@ -257,7 +258,7 @@ namespace CommandsTest
         }
     }
 
-    internal class MockLocalizer : UIAssistant.Infrastructure.Resource.ILocalizer
+    internal class MockLocalizer : UIAssistant.Interfaces.Resource.ILocalizer
     {
         public string GetLocalizedText(string key)
         {

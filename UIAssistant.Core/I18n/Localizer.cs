@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Windows;
 using System.Globalization;
 
+using UIAssistant.Interfaces.Resource;
 using UIAssistant.Infrastructure.Resource;
 using UIAssistant.Infrastructure.Resource.Language;
 

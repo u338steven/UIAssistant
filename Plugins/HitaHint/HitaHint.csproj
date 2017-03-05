@@ -103,6 +103,10 @@
       <Project>{22a954b1-47a0-4081-8ac1-ccace31aa6ab}</Project>
       <Name>UIAssistant.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\UIAssistant.Interfaces\UIAssistant.Interfaces.csproj">
+      <Project>{4e99e5e8-38af-4100-a148-f844b7da4f16}</Project>
+      <Name>UIAssistant.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\UIAssistant.Plugin\UIAssistant.Plugin.csproj">
       <Project>{f8038b99-5e66-40d3-b8ee-576b1bc34502}</Project>
       <Name>UIAssistant.Plugin</Name>

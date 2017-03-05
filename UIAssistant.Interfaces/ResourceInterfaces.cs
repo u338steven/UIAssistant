@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Windows;
 
-namespace UIAssistant.Infrastructure.Resource
+namespace UIAssistant.Interfaces.Resource
 {
     public interface IResourceItem
     {

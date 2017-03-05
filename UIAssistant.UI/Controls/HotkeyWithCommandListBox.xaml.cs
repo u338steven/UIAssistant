@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using KeybindHelper;
-using UIAssistant.Infrastructure.Commands;
+using UIAssistant.Interfaces.Commands;
 
 namespace UIAssistant.UI.Controls
 {

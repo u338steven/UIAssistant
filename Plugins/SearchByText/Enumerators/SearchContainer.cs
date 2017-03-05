@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using System.Windows.Automation;
 using UIAssistant.Core.Enumerators;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility.Extensions;
 using UIAssistant.Plugin.SearchByText.Items;
 
@@ -27,7 +28,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
             Finished = null;
         }
 
-        public void Enumerate(HUDItemCollection results)
+        public void Enumerate(ICollection<IHUDItem> results)
         {
             EnumerateInternal(results);
             Updated?.Invoke(this, EventArgs.Empty);
@@ -35,7 +36,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
             Finished = null;
         }
 
-        private void EnumerateInternal(HUDItemCollection results)
+        private void EnumerateInternal(ICollection<IHUDItem> results)
         {
             var element = AutomationElement.FocusedElement;
             if (element == null)

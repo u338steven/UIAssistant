@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using System.IO;
 using UIAssistant.Infrastructure.Settings;
+using UIAssistant.Interfaces.Settings;
 
 namespace SettingsTest
 {

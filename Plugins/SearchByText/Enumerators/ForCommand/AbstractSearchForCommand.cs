@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Automation;
 using System.Text.RegularExpressions;
 
-using UIAssistant.Core.Enumerators;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility.Win32;
 using UIAssistant.Utility.Extensions;
 
@@ -18,7 +18,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
         public event EventHandler Updated;
         public event EventHandler Finished;
         protected IntPtr MainWindowHandle { get; private set; } = Win32Window.ActiveWindow.WindowHandle;
-        protected HUDItemCollection _results;
+        protected ICollection<IHUDItem> _results;
 
         public virtual void Dispose()
         {
@@ -26,7 +26,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
             Finished = null;
         }
 
-        public abstract void Enumerate(HUDItemCollection items);
+        public abstract void Enumerate(ICollection<IHUDItem> items);
 
         public void Update()
         {

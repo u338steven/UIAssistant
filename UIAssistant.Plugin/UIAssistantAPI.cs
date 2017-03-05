@@ -15,6 +15,8 @@ using UIAssistant.Core.Themes;
 using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Infrastructure.Logger;
 using UIAssistant.Infrastructure.Resource.Theme;
+using UIAssistant.Interfaces.HUD;
+using UIAssistant.Interfaces.Commands;
 using UIAssistant.UI.Controls;
 using UIAssistant.Utility.Win32;
 

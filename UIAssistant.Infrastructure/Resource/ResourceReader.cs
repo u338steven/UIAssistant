@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Windows;
 
+using UIAssistant.Interfaces.Resource;
+
 namespace UIAssistant.Infrastructure.Resource
 {
     public class ResourceReader<T> : IResourceReader<T> where T : IResourceItem

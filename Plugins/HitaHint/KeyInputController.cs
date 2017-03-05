@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using System.Windows.Input;
-
 using KeybindHelper.LowLevel;
 using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.I18n;
+using UIAssistant.Core.Input;
 using UIAssistant.Infrastructure.Logger;
 
 namespace UIAssistant.Plugin.HitaHint
@@ -18,7 +17,7 @@ namespace UIAssistant.Plugin.HitaHint
         private StateController _stateController;
         private HitaHintSettings _settings;
 
-        public KeyInputController(StateController controller) : base(controller)
+        public KeyInputController(StateController controller) : base(controller, new KeyboardHook(), new KeybindManager())
         {
             _stateController = controller;
             _settings = _stateController.Settings;
@@ -112,7 +111,7 @@ namespace UIAssistant.Plugin.HitaHint
                 }
                 else if (UIAssistantAPI.DefaultHUD.Items.Count == 1)
                 {
-                    _stateController.Invoke(UIAssistantAPI.DefaultHUD.Items[0]);
+                    _stateController.Invoke(UIAssistantAPI.DefaultHUD.Items.ElementAt(0));
                 }
 
             });

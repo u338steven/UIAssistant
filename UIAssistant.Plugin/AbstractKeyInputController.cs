@@ -4,26 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 using KeybindHelper.LowLevel;
-using UIAssistant.Core.Input;
+using UIAssistant.Interfaces.Input;
 
 namespace UIAssistant.Plugin
 {
     public abstract class AbstractKeyInputController : IDisposable
     {
-        protected KeyboardHook Hook { get; set; }
-        protected AbstractStateController StateController { get; set; }
-        protected KeybindManager Keybinds { get; set; } = new KeybindManager();
+        protected IKeyboardHook Hook { get; private set; }
+        protected AbstractStateController StateController { get; private set; }
+        protected IKeybindManager Keybinds { get; set; }
         private KeySet _temporarilyHide = new KeySet();
         protected UserControl UsagePanel;
 
-        public AbstractKeyInputController(AbstractStateController controller)
+        public AbstractKeyInputController(AbstractStateController controller, IKeyboardHook hook, IKeybindManager manager)
         {
             StateController = controller;
             StateController.Pausing += (_, __) => Hook.IsActive = true;
             StateController.Resumed += (_, __) => Hook.IsActive = false;
+
+            Hook = hook;
+            Keybinds = manager;
         }
 
         public virtual void Reset()
@@ -33,14 +35,15 @@ namespace UIAssistant.Plugin
 
         public virtual void Initialize()
         {
-            Hook = new KeyboardHook();
             Hook.Hook();
             Hook.KeyDown += Hook_KeyDown;
             Hook.KeyUp += Hook_KeyUp;
 
             StateController.Finished += (_, __) =>
             {
-                Hook.Dispose();
+                Hook.Unhook();
+                Hook.KeyDown -= Hook_KeyDown;
+                Hook.KeyUp -= Hook_KeyUp;
             };
         }
 

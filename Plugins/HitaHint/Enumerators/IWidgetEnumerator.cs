@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using UIAssistant.Core.Enumerators;
+using UIAssistant.Interfaces.HUD;
 
 namespace UIAssistant.Plugin.HitaHint.Enumerators
 {
     public interface IWidgetEnumerator : IDisposable
     {
-        void Enumerate(HUDItemCollection container);
+        void Enumerate(ICollection<IHUDItem> container);
     }
 }

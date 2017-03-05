@@ -8,10 +8,10 @@ using System.Windows.Automation;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 
+using UIAssistant.Interfaces.HUD;
+using UIAssistant.Plugin.SearchByText.Items;
 using UIAssistant.Utility.Win32;
 using UIAssistant.Utility.Extensions;
-using UIAssistant.Core.Enumerators;
-using UIAssistant.Plugin.SearchByText.Items;
 
 namespace UIAssistant.Plugin.SearchByText.Enumerators
 {
@@ -45,7 +45,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
         public event EventHandler Updated;
         public event EventHandler Finished;
         Queue<AutomationElement> _groups = new Queue<AutomationElement>(100);
-        HUDItemCollection _results;
+        ICollection<IHUDItem> _results;
         List<IDisposable> _disposables = new List<IDisposable>();
         bool _isCanceled = false;
 
@@ -63,7 +63,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
             Finished = null;
         }
 
-        public void Enumerate(HUDItemCollection results)
+        public void Enumerate(ICollection<IHUDItem> results)
         {
             _results = results;
             EnumerateInternal();

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 
+using UIAssistant.Interfaces.Settings;
+
 namespace UIAssistant.Infrastructure.Settings
 {
     public abstract class Settings<T> : ISettings where T : class, ISettings, new()

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using UIAssistant.Core.Enumerators;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Plugin.SearchByText.Enumerators.ForCommand;
 
 namespace UIAssistant.Plugin.SearchByText.Enumerators
@@ -15,7 +15,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
         public event EventHandler Finished;
         AbstarctSearchForCommand _current;
 
-        public void Enumerate(HUDItemCollection results)
+        public void Enumerate(ICollection<IHUDItem> results)
         {
             EnumerateInternal(new RibbonUI(), results);
             if (results.Count > 0)
@@ -34,7 +34,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
             Finished = null;
         }
 
-        private void EnumerateInternal(AbstarctSearchForCommand enumerator, HUDItemCollection results)
+        private void EnumerateInternal(AbstarctSearchForCommand enumerator, ICollection<IHUDItem> results)
         {
             _current = enumerator;
             _current.Updated += Updated;

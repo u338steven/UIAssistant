@@ -10,7 +10,7 @@ using System.Windows.Automation;
 
 using UIAssistant.Utility.Win32;
 using UIAssistant.Utility.Extensions;
-using UIAssistant.Core.Enumerators;
+using UIAssistant.Interfaces.HUD;
 
 namespace UIAssistant.Plugin.SearchByText.Items
 {

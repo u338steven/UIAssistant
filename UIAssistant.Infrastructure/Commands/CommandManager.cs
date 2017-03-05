@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
-using UIAssistant.Infrastructure.Resource;
+
+using UIAssistant.Interfaces.Commands;
+using UIAssistant.Interfaces.Resource;
 
 namespace UIAssistant.Infrastructure.Commands
 {

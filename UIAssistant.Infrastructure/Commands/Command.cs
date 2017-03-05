@@ -1,5 +1,7 @@
 ﻿using System;
 
+using UIAssistant.Interfaces.Commands;
+
 namespace UIAssistant.Infrastructure.Commands
 {
     public class Command : ICommand

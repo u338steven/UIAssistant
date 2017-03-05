@@ -4,6 +4,8 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows;
 
+using UIAssistant.Interfaces.Resource;
+
 namespace UIAssistant.Infrastructure.Resource
 {
     public class ResourceUpdater<T> : IResourceUpdater<T> where T : IResourceItem

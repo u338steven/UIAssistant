@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using System.Windows.Automation;
 
-using UIAssistant.Utility.Win32;
+using UIAssistant.Interfaces.HUD;
 
 namespace UIAssistant.Core.Enumerators
 {
@@ -67,14 +67,14 @@ namespace UIAssistant.Core.Enumerators
             return allControlType.Except(types).ToArray();
         }
 
-        public void Enumerate(HUDItemCollection container, Condition condition = null, params ControlType[] types)
+        public void Enumerate(ICollection<IHUDItem> container, Condition condition = null, params ControlType[] types)
         {
             SetCondition(condition);
             SetTypes(types);
             enumerator.Enumerate(container);
         }
 
-        public void Retry(HUDItemCollection container)
+        public void Retry(ICollection<IHUDItem> container)
         {
             enumerator.Enumerate(container);
         }
@@ -93,11 +93,11 @@ namespace UIAssistant.Core.Enumerators
             enumerator.AddIgnore(t);
         }
 
-        public void Enumerate(HUDItemCollection container, Win32Window root, Condition condition, params ControlType[] types)
-        {
-            SetCondition(condition);
-            SetTypes(types);
-            enumerator.Enumerate(container, root.Element);
-        }
+        //public void Enumerate(HUDItemCollection container, Win32Window root, Condition condition, params ControlType[] types)
+        //{
+        //    SetCondition(condition);
+        //    SetTypes(types);
+        //    enumerator.Enumerate(container, root.Element);
+        //}
     }
 }

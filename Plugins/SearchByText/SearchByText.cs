@@ -8,6 +8,8 @@ using System.ComponentModel.Composition;
 using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.I18n;
 using UIAssistant.Infrastructure.Commands;
+using UIAssistant.Interfaces.Commands;
+using UIAssistant.Interfaces.Plugin;
 
 namespace UIAssistant.Plugin.SearchByText
 {

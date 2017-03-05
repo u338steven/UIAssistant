@@ -1,5 +1,7 @@
 ﻿using System.IO;
 
+using UIAssistant.Interfaces.Resource;
+
 namespace UIAssistant.Infrastructure.Resource.Theme
 {
     public class ThemeKeyValueGenerator : IResourceKeyValueGenerator<Theme>

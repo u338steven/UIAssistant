@@ -9,10 +9,10 @@ using System.Reflection;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 
-using UIAssistant.Utility.Extensions;
 using UIAssistant.Core.Settings;
 using UIAssistant.Core.I18n;
 using UIAssistant.Infrastructure.Logger;
+using UIAssistant.Interfaces.Plugin;
 
 namespace UIAssistant.Plugin
 {

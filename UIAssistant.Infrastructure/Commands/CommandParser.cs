@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
+using UIAssistant.Interfaces.Commands;
+
 namespace UIAssistant.Infrastructure.Commands
 {
     public class CommandParser : IParser
@@ -17,9 +19,9 @@ namespace UIAssistant.Infrastructure.Commands
 
         public IEnumerable<ICommand> Parse(string statement)
         {
-            BaseRule command = null;
-            BaseRule current = null;
-            List<ArgumentRule> options = new List<ArgumentRule>();
+            IRule command = null;
+            IRule current = null;
+            List<IArgumentRule> options = new List<IArgumentRule>();
 
             var tokens = statement.Tokenize();
 
@@ -68,7 +70,7 @@ namespace UIAssistant.Infrastructure.Commands
             }
         }
 
-        private bool IsEnoughArguments(BaseRule rule, string currentWord, IEnumerable<string> tokens)
+        private bool IsEnoughArguments(IRule rule, string currentWord, IEnumerable<string> tokens)
         {
             return rule.RequiredArgs.Count == 0 || tokens.Last() != currentWord;
         }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Automation;
 using System.Reactive.Linq;
 
-using UIAssistant.Core.Enumerators;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility.Win32;
 using UIAssistant.Utility.Extensions;
 using UIAssistant.Plugin.SearchByText.Items;
@@ -20,7 +20,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
         AutomationElement _initialPane = null;
         List<IDisposable> _disposables = new List<IDisposable>();
 
-        public override void Enumerate(HUDItemCollection results)
+        public override void Enumerate(ICollection<IHUDItem> results)
         {
             _results = results;
             IntPtr ribbonRootHandle = IntPtr.Zero;

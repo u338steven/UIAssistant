@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Automation;
-using UIAssistant.Core.Enumerators;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Core.Input;
 using UIAssistant.Utility.Extensions;
 using UIAssistant.Plugin.SearchByText.Items;
@@ -14,7 +14,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
 {
     class Toolbar : AbstarctSearchForCommand
     {
-        public override void Enumerate(HUDItemCollection results)
+        public override void Enumerate(ICollection<IHUDItem> results)
         {
             _results = results;
 

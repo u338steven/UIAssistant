@@ -8,15 +8,16 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Media;
 
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility.Win32;
 
 namespace UIAssistant.Core.Enumerators
 {
     public interface IHUDItemEnumerator
     {
-        void Enumerate(HUDItemCollection container, System.Windows.Automation.Condition condition, params ControlType[] types);
-        void Enumerate(HUDItemCollection container, Win32Window root, System.Windows.Automation.Condition condition, params ControlType[] types);
-        void Retry(HUDItemCollection container);
+        void Enumerate(ICollection<IHUDItem> container, System.Windows.Automation.Condition condition, params ControlType[] types);
+        //void Enumerate(HUDItemCollection container, Win32Window root, System.Windows.Automation.Condition condition, params ControlType[] types);
+        void Retry(ICollection<IHUDItem> container);
     }
 
     public enum EnumerateTarget
@@ -29,19 +30,6 @@ namespace UIAssistant.Core.Enumerators
         TextsInWindow,
         TextsInContainer,
         ContextMenu,
-    }
-
-    public interface IHUDItem
-    {
-        string InternalText { get; set; }
-        string DisplayText { get; set; }
-        Point Location { get; set; }
-        Rect Bounds { get; set; }
-        ImageSource Image { get; }
-        int ColoredStart { get; set; }
-        int ColoredLength { get; set; }
-
-        void Execute();
     }
 
     public interface IWindowItem

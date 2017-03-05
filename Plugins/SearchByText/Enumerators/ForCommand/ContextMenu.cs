@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 using System.Windows.Automation;
 
-using UIAssistant.Core.Enumerators;
 using UIAssistant.Core.Events;
 using UIAssistant.Core.Input;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility.Extensions;
 using UIAssistant.Plugin.SearchByText.Items;
 
@@ -33,7 +33,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
             base.Dispose();
         }
 
-        public override void Enumerate(HUDItemCollection results)
+        public override void Enumerate(ICollection<IHUDItem> results)
         {
             _mouseCurrentPosition = MouseOperation.GetMousePosition();
             MouseOperation.Move(0, 0);

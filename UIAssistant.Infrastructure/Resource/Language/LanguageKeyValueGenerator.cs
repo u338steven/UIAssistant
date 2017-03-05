@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Globalization;
 
+using UIAssistant.Interfaces.Resource;
+
 namespace UIAssistant.Infrastructure.Resource.Language
 {
     public class LanguageKeyValueGenerator : IResourceKeyValueGenerator<Language>

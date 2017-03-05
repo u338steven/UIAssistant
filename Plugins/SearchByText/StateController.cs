@@ -8,6 +8,7 @@ using UIAssistant.Core.Settings;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Enumerators;
 using UIAssistant.Infrastructure.Logger;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Plugin.SearchByText.Items;
 using UIAssistant.Plugin.SearchByText.Enumerators;
 using UIAssistant.Utility.Extensions;
@@ -17,7 +18,7 @@ namespace UIAssistant.Plugin.SearchByText
     internal class StateController : AbstractStateController
     {
         private ISearchByTextEnumerator _enumerator;
-        private HUDItemCollection _sourceForFiltering, _contextSource;
+        private ICollection<IHUDItem> _sourceForFiltering, _contextSource;
         public bool AutoFire { get; set; }
         public UserSettings Settings => UIAssistantAPI.UIAssistantSettings;
 

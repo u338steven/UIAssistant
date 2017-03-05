@@ -9,6 +9,7 @@ using System.Windows.Input;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Settings;
+using UIAssistant.Interfaces.Settings;
 using UIAssistant.UI.Controls;
 
 namespace UIAssistant.Plugin.KeybindsManiacs

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
-using System.Diagnostics.Contracts;
+using UIAssistant.Interfaces.Commands;
 
 namespace UIAssistant.Infrastructure.Commands
 {
@@ -11,7 +12,7 @@ namespace UIAssistant.Infrastructure.Commands
         private ICommandSyntax _syntax;
         private static IReadOnlyCollection<ICandidate> Empty = new List<ICandidate>();
 
-        public CandidatesGenerator(CommandSyntax syntax)
+        public CandidatesGenerator(ICommandSyntax syntax)
         {
             Contract.Requires(syntax != null);
             _syntax = syntax;

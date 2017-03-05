@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Runtime.InteropServices;
+using UIAssistant.Interfaces.HUD;
 using UIAssistant.Plugin.SearchByText.Items;
-using UIAssistant.Core.Enumerators;
 
 namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
 {
@@ -45,7 +45,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
         }
         #endregion
 
-        public override void Enumerate(HUDItemCollection results)
+        public override void Enumerate(ICollection<IHUDItem> results)
         {
             _results = results;
             var hMenu = GetMenu(MainWindowHandle);
