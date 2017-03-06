@@ -107,6 +107,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                                 GetMenuItems(item, ancestor, new List<AutomationElement>());
                                 item.TryCollapse();
                                 _expandableItems.Remove(itemName);
+                                continue;
                             }
                             else
                             {
@@ -124,6 +125,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                                 item.TryExpand();
                                 observer.Wait();
                                 observer.Dispose();
+                                continue;
                             }
                         }
                         var result = new MenuItemUIA(itemName, fullpath, elementInfo.BoundingRectangle, elementInfo.IsEnabled, canExpand, item, ContextRoot, _expandableItems.ToArray().ToList());
