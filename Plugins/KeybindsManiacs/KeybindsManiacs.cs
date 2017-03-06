@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.ComponentModel.Composition;
-using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Plugin;
 using UIAssistant.Interfaces.Resource;
@@ -29,10 +28,13 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         private StateController _stateController;
         private KeyInputController _keyController;
         internal static ILocalizer Localizer { get; private set; }
+        internal static KeybindsManiacsSettings Settings { get; private set; }
 
         public void Initialize(IUIAssistantAPI api)
         {
             UIAssistantAPI = api;
+
+            Settings = KeybindsManiacsSettings.Load();
             _stateController = new StateController(api);
             _keyController = new KeyInputController(api, _stateController);
             Localizer = api.GetLocalizer();
@@ -46,7 +48,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
         private void RegisterCommand()
         {
-            var command = new CommandRule(Consts.Command, _ => _keyController.Toggle());
+            var command = UIAssistantAPI.CreateCommandRule(Consts.Command, _ => _keyController.Toggle());
             command.Description = Consts.PluginName;
             UIAssistantAPI.RegisterCommand(command);
         }
@@ -68,7 +70,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
         public void Save()
         {
-            KeybindsManiacsSettings.Instance.Save();
+            KeybindsManiacs.Settings.Save();
             _keyController?.Reset();
         }
 

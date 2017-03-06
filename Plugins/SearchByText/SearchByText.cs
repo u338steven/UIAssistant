@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.ComponentModel.Composition;
-using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Plugin;
@@ -28,14 +27,17 @@ namespace UIAssistant.Plugin.SearchByText
     [ExportMetadata("CommandName", Consts.Command)]
     public class SearchByText : IPlugin, IConfigurablePlugin, ILocalizablePlugin, IDisposable
     {
+        internal static IUIAssistantAPI UIAssistantAPI { get; private set; }
+        internal static SearchByTextSettings Settings { get; private set; }
+        private static ILocalizer _localizer;
         private StateController _stateController;
         private KeyInputController _keyController;
-        internal static IUIAssistantAPI UIAssistantAPI { get; private set; }
-        private static ILocalizer _localizer;
 
         public void Initialize(IUIAssistantAPI api)
         {
             UIAssistantAPI = api;
+
+            Settings = SearchByTextSettings.Load();
             _stateController = new StateController(api);
             _keyController = new KeyInputController(api, _stateController);
             _localizer = api.GetLocalizer();
@@ -44,26 +46,26 @@ namespace UIAssistant.Plugin.SearchByText
 
         private void RegisterCommand()
         {
-            var argCommands = new ArgumentRule(Consts.Commands, _ => _stateController.ChangeTarget(EnumerateTarget.Commands));
-            var argTextsInWindow = new ArgumentRule(Consts.TextsInWindow, _ => _stateController.ChangeTarget(EnumerateTarget.TextsInWindow));
-            var argTextsInContainer = new ArgumentRule(Consts.TextsInContainer, _ => _stateController.ChangeTarget(EnumerateTarget.TextsInContainer));
-            var argRunningApps = new ArgumentRule(Consts.RunningApps, _ => _stateController.ChangeTarget(EnumerateTarget.RunningApps));
-            var argContextMenu = new ArgumentRule(Consts.ContextMenu, _ => _stateController.ChangeTarget(EnumerateTarget.ContextMenu));
+            var argCommands = UIAssistantAPI.CreateArgmentRule(Consts.Commands, _ => _stateController.ChangeTarget(EnumerateTarget.Commands));
+            var argTextsInWindow = UIAssistantAPI.CreateArgmentRule(Consts.TextsInWindow, _ => _stateController.ChangeTarget(EnumerateTarget.TextsInWindow));
+            var argTextsInContainer = UIAssistantAPI.CreateArgmentRule(Consts.TextsInContainer, _ => _stateController.ChangeTarget(EnumerateTarget.TextsInContainer));
+            var argRunningApps = UIAssistantAPI.CreateArgmentRule(Consts.RunningApps, _ => _stateController.ChangeTarget(EnumerateTarget.RunningApps));
+            var argContextMenu = UIAssistantAPI.CreateArgmentRule(Consts.ContextMenu, _ => _stateController.ChangeTarget(EnumerateTarget.ContextMenu));
 
-            var optAutoFire = new ArgumentRule(Consts.AutoFire, _ => _stateController.AutoFire = true);
+            var optAutoFire = UIAssistantAPI.CreateArgmentRule(Consts.AutoFire, _ => _stateController.AutoFire = true);
 
-            var command = new CommandRule(Consts.Command, Run,
+            var command = UIAssistantAPI.CreateCommandRule(Consts.Command, Run,
                 new[] { argCommands, argTextsInWindow, argTextsInContainer, argRunningApps, argContextMenu },
                 new[] { optAutoFire });
             command.Description = Consts.PluginName;
-            SearchByText.UIAssistantAPI.RegisterCommand(command);
+            UIAssistantAPI.RegisterCommand(command);
         }
 
         public void Setup()
         {
             _stateController.Initialize();
             _keyController.Initialize();
-            SearchByText.UIAssistantAPI.SwitchTheme(SearchByText.UIAssistantAPI.UIAssistantSettings.Theme);
+            UIAssistantAPI.SwitchTheme(UIAssistantAPI.UIAssistantSettings.Theme);
         }
 
         public void Run(ICommand command)
@@ -71,13 +73,13 @@ namespace UIAssistant.Plugin.SearchByText
             try
             {
                 _stateController.Enumerate();
-                SearchByText.UIAssistantAPI.AddDefaultHUD();
-                SearchByText.UIAssistantAPI.AddContextHUD();
-                SearchByText.UIAssistantAPI.TopMost = true;
+                UIAssistantAPI.AddDefaultHUD();
+                UIAssistantAPI.AddContextHUD();
+                UIAssistantAPI.TopMost = true;
             }
             catch (Exception ex)
             {
-                SearchByText.UIAssistantAPI.PrintErrorMessage(ex);
+                UIAssistantAPI.PrintErrorMessage(ex);
             }
         }
 
@@ -88,7 +90,7 @@ namespace UIAssistant.Plugin.SearchByText
 
         public void Save()
         {
-            SearchByTextSettings.Instance.Save();
+            Settings.Save();
             _keyController.Reset();
         }
 
@@ -96,7 +98,7 @@ namespace UIAssistant.Plugin.SearchByText
         {
             _localizer.SwitchLanguage(UIAssistantAPI.CurrentLanguage);
 
-            SearchByTextSettings.Instance.Expand.Text = _localizer.GetLocalizedText("sbtExpand");
+            Settings.Expand.Text = _localizer.GetLocalizedText("sbtExpand");
         }
 
         #region IDisposable Support

@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Automation;
 using UIAssistant.Utility.Extensions;
 using UIAssistant.Utility.Win32;
-using UIAssistant.Infrastructure.Events;
 
 namespace UIAssistant.Plugin.SearchByText.Items
 {
@@ -55,7 +54,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
             {
                 if (Ancestors.Count > 0)
                 {
-                    var observer = new PopupObserver();
+                    var observer = SearchByText.UIAssistantAPI.GetObserver(Interfaces.Events.ObserberKinds.PopupObserver);
                     var shouldBeClosed = false;
                     observer.Callback += x =>
                     {

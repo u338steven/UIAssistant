@@ -29,13 +29,17 @@ namespace UIAssistant.Plugin.HitaHint
     [ExportMetadata("CommandName", Consts.Command)]
     public class HitaHint : IPlugin, IConfigurablePlugin, ILocalizablePlugin, IDisposable
     {
+        internal static IUIAssistantAPI UIAssistantAPI { get; private set; }
+        internal static HitaHintSettings Settings { get; private set; }
+        private static ILocalizer _localizer;
         private StateController _stateController;
         private KeyInputController _keyController;
-        internal static IUIAssistantAPI UIAssistantAPI { get; private set; }
 
         public void Initialize(IUIAssistantAPI api)
         {
             UIAssistantAPI = api;
+
+            Settings = HitaHintSettings.Load();
             _stateController = new StateController(api);
             _keyController = new KeyInputController(api, _stateController);
             _localizer = api.GetLocalizer();
@@ -100,25 +104,24 @@ namespace UIAssistant.Plugin.HitaHint
 
         public void Save()
         {
-            HitaHintSettings.Instance.Save();
+            Settings.Save();
             _keyController?.Reset();
             _stateController?.Reset();
         }
 
-        static ILocalizer _localizer;// = new Localizer();
         public void Localize()
         {
             _localizer.SwitchLanguage(UIAssistantAPI.CurrentLanguage);
 
-            HitaHintSettings.Instance.Click.Text = _localizer.GetLocalizedText("hahClick");
-            HitaHintSettings.Instance.DoubleClick.Text = _localizer.GetLocalizedText("hahDoubleClick");
-            HitaHintSettings.Instance.DragAndDrop.Text = _localizer.GetLocalizedText("hahDragAndDrop");
-            HitaHintSettings.Instance.Hover.Text = _localizer.GetLocalizedText("hahHover");
-            HitaHintSettings.Instance.MiddleClick.Text = _localizer.GetLocalizedText("hahMiddleClick");
-            HitaHintSettings.Instance.MouseEmulation.Text = _localizer.GetLocalizedText("hahMouseEmulation");
-            HitaHintSettings.Instance.Reload.Text = _localizer.GetLocalizedText("hahReload");
-            HitaHintSettings.Instance.Reverse.Text = _localizer.GetLocalizedText("hahReverse");
-            HitaHintSettings.Instance.RightClick.Text = _localizer.GetLocalizedText("hahRightClick");
+            Settings.Click.Text = _localizer.GetLocalizedText("hahClick");
+            Settings.DoubleClick.Text = _localizer.GetLocalizedText("hahDoubleClick");
+            Settings.DragAndDrop.Text = _localizer.GetLocalizedText("hahDragAndDrop");
+            Settings.Hover.Text = _localizer.GetLocalizedText("hahHover");
+            Settings.MiddleClick.Text = _localizer.GetLocalizedText("hahMiddleClick");
+            Settings.MouseEmulation.Text = _localizer.GetLocalizedText("hahMouseEmulation");
+            Settings.Reload.Text = _localizer.GetLocalizedText("hahReload");
+            Settings.Reverse.Text = _localizer.GetLocalizedText("hahReverse");
+            Settings.RightClick.Text = _localizer.GetLocalizedText("hahRightClick");
         }
 
         #region IDisposable Support

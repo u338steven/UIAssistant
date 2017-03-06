@@ -23,12 +23,15 @@ namespace UIAssistant.Plugin.MouseEmulation
     [ExportMetadata("CommandName", Consts.Command)]
     public class MouseEmulation : IPlugin, IConfigurablePlugin, ILocalizablePlugin, IDisposable
     {
+        internal static MouseEmulationSettings Settings { get; private set; }
         internal static IUIAssistantAPI UIAssistantAPI { get; private set; }
         private static ILocalizer _localizer;
 
         public void Initialize(IUIAssistantAPI api)
         {
             UIAssistantAPI = api;
+
+            Settings = MouseEmulationSettings.Load();
             _localizer = api.GetLocalizer();
             RegisterCommand();
         }
@@ -65,7 +68,7 @@ namespace UIAssistant.Plugin.MouseEmulation
         public void Localize()
         {
             _localizer.SwitchLanguage(UIAssistantAPI.CurrentLanguage);
-            var settings = MouseEmulationSettings.Instance;
+            var settings = MouseEmulation.Settings;
 
             settings.Click.Text = _localizer.GetLocalizedText("meClick");
             settings.MiddleClick.Text = _localizer.GetLocalizedText("meMiddleClick");
@@ -86,7 +89,7 @@ namespace UIAssistant.Plugin.MouseEmulation
 
         public void Save()
         {
-            MouseEmulationSettings.Instance.Save();
+            MouseEmulation.Settings.Save();
         }
 
         public void Dispose()

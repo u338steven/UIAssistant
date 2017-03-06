@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Automation;
 
-using UIAssistant.Infrastructure.Events;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility.Extensions;
 using UIAssistant.Plugin.SearchByText.Items;
@@ -112,7 +110,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                             }
                             else
                             {
-                                var observer = new PopupObserver();
+                                var observer = SearchByText.UIAssistantAPI.GetObserver(Interfaces.Events.ObserberKinds.PopupObserver);
                                 observer.Callback += x =>
                                 {
                                     // HACK: デッドロックを避けるために、2箇所で Dispose しているけれど、微妙

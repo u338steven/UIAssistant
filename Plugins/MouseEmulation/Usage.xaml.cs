@@ -23,7 +23,7 @@ namespace UIAssistant.Plugin.MouseEmulation
         public Usage()
         {
             InitializeComponent();
-            DataContext = MouseEmulationSettings.Instance;
+            DataContext = MouseEmulation.Settings;
         }
     }
 }

@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.IO;
 using System.Windows.Input;
-using UIAssistant.Infrastructure.Settings;
-using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Settings;
 
 using KeybindHelper;
 
 namespace UIAssistant.Plugin.SearchByText
 {
-    public class SearchByTextSettings : Settings<SearchByTextSettings>
+    public class SearchByTextSettings : ISettings
     {
         public Keybind Left { get; }
         public Keybind Right { get; }
@@ -39,8 +31,7 @@ namespace UIAssistant.Plugin.SearchByText
         public readonly IUserSettings _userSettings = SearchByText.UIAssistantAPI.UIAssistantSettings;
 
         private const string FileName = "SearchByText.yml";
-        private IFileIO<SearchByTextSettings> _fileIO = new YamlFile<SearchByTextSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configurations", FileName));
-        protected override IFileIO<SearchByTextSettings> FileIO { get { return _fileIO; } }
+        public static readonly string FilePath = Path.Combine(SearchByText.UIAssistantAPI.ConfigurationDirectory, FileName);
 
         public SearchByTextSettings()
         {
@@ -61,13 +52,21 @@ namespace UIAssistant.Plugin.SearchByText
 
             SwitchKeyboardLayout = _userSettings.SwitchKeyboardLayout;
             SwitchTheme = _userSettings.SwitchTheme;
-
-            OnError = ex => SearchByText.UIAssistantAPI.NotifyWarnMessage("Load Settings Error", string.Format(SearchByText.UIAssistantAPI.Localize(TextID.SettingsLoadError), FileName));
         }
 
-        protected override void LoadDefault()
+        public void SetValuesDefault()
         {
             Expand = new Keybind(Key.Space, LRExtendedModifierKeys.LShift);
+        }
+
+        public static SearchByTextSettings Load()
+        {
+            return SearchByText.UIAssistantAPI.DefaultSettingsFileIO.Read(typeof(SearchByTextSettings), FilePath) as SearchByTextSettings;
+        }
+
+        public void Save()
+        {
+            SearchByText.UIAssistantAPI.DefaultSettingsFileIO.Write(typeof(SearchByTextSettings), this, FilePath);
         }
     }
 }

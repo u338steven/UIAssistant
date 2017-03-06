@@ -20,13 +20,13 @@ using UIAssistant.Models;
 using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Plugin;
-using UIAssistant.Core.Settings;
 using UIAssistant.Core.Tools;
 using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Infrastructure.Resource.Language;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Plugin;
+using UIAssistant.Interfaces.Settings;
 using UIAssistant.Utility;
 
 using UIAssistant.UI.Controls;
@@ -37,7 +37,7 @@ namespace UIAssistant.ViewModels
 {
     public class SettingsWindowViewModel : ViewModel
     {
-        public UserSettings Settings { get; set; } = UserSettings.Instance;
+        public IUserSettings Settings { get; private set; } = UIAssistantAPI.Instance.UIAssistantSettings;
 
         #region Language変更通知プロパティ
         private Language _Language;

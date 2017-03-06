@@ -1,23 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.IO;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using UIAssistant.Infrastructure.Settings;
-using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Settings;
 
 namespace UIAssistant.Plugin.KeybindsManiacs
 {
-    class KeybindsManiacsSettings : Settings<KeybindsManiacsSettings>
+    class KeybindsManiacsSettings : ISettings
     {
         private const string FileName = "KeybindsManiacs.yml";
-        private IFileIO<KeybindsManiacsSettings> _fileIO = new YamlFile<KeybindsManiacsSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configurations", FileName));
-        protected override IFileIO<KeybindsManiacsSettings> FileIO { get { return _fileIO; } }
+        public static readonly string FilePath = Path.Combine(KeybindsManiacs.UIAssistantAPI.ConfigurationDirectory, FileName);
 
         public ObservableDictionary<string, ModeStorage> KeybindsInMode { get; private set; } = new ObservableDictionary<string, ModeStorage>();
         public string Mode { get; set; } = Consts.DefaultMode;
@@ -25,10 +16,9 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
         public KeybindsManiacsSettings()
         {
-            OnError = ex => KeybindsManiacs.UIAssistantAPI.NotifyWarnMessage("Load Settings Error", string.Format(KeybindsManiacs.UIAssistantAPI.Localize(TextID.SettingsLoadError), FileName));
         }
 
-        protected override void LoadDefault()
+        public void SetValuesDefault()
         {
             var normalMode = new ModeStorage();
             normalMode.Add(new KeyTranslator(new[] { Key.LeftCtrl, Key.OemOpenBrackets }, CommandType.RunEmbeddedCommand, "Cancel"));
@@ -142,6 +132,16 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
             KeybindsInMode.Add("EmacsC-x", emacsCxMode);
             KeybindsInMode.Add("Emacs", emacsMode);
+        }
+
+        public static KeybindsManiacsSettings Load()
+        {
+            return KeybindsManiacs.UIAssistantAPI.DefaultSettingsFileIO.Read(typeof(KeybindsManiacsSettings), FilePath) as KeybindsManiacsSettings;
+        }
+
+        public void Save()
+        {
+            KeybindsManiacs.UIAssistantAPI.DefaultSettingsFileIO.Write(typeof(KeybindsManiacsSettings), this, FilePath);
         }
     }
 }

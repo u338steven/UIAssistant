@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
 using UIAssistant.Utility.Extensions;
-using UIAssistant.Utility.Win32;
 
 namespace UIAssistant.Plugin.SpatialNavigation
 {
@@ -128,7 +127,7 @@ namespace UIAssistant.Plugin.SpatialNavigation
                 _enumerateTargets = _itemTargets;
             }
 
-            var activeWindow = Win32Window.ActiveWindow;
+            var activeWindow = SpatialNavigation.UIAssistantAPI.ActiveWindow;
             var rootElement = activeWindow.Element;
             var current = AutomationElement.FocusedElement;
             if (current == null || current == rootElement)

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using System.Threading;
 using System.Windows.Automation;
 
+using UIAssistant.Interfaces.Events;
+
 namespace UIAssistant.Infrastructure.Events
 {
-    public abstract class EventObserver : IDisposable
+    public abstract class EventObserver : IDisposable, IEventObserver
     {
         public Action<AutomationElement> Callback { get; set; }
         protected virtual AutomationEvent Event { get; }

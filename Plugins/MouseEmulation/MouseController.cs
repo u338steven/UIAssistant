@@ -37,7 +37,7 @@ namespace UIAssistant.Plugin.MouseEmulation
             _timer.Elapsed += Timer_Elapsed;
             _timer.Start();
             _userSettings = MouseEmulation.UIAssistantAPI.UIAssistantSettings;
-            _mouseSettings = MouseEmulationSettings.Instance;
+            _mouseSettings = MouseEmulation.Settings;
             _keybinds = new Dictionary<KeySet, Action>();
             _keybinds.Add(new KeySet(_userSettings.Quit), () => { Stop(); MouseEmulation.UIAssistantAPI.PluginManager.Exit(); });
             _keybinds.Add(new KeySet(_userSettings.Back), () => { Stop(); MouseEmulation.UIAssistantAPI.PluginManager.Undo(); });

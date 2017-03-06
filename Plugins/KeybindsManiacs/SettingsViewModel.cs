@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using System.Collections.ObjectModel;
 
-using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Interfaces.Commands;
 using System.ComponentModel;
 
@@ -29,7 +28,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public KeybindsManiacsSettings Settings { get; private set; } = KeybindsManiacsSettings.Instance;
+        public KeybindsManiacsSettings Settings { get; private set; } = KeybindsManiacs.Settings;
         public ObservableCollection<string> ModeNames { get; private set; }
         public ObservableCollection<string> EmbeddedCommands { get; private set; }
         public ICandidatesGenerator Generator { get; private set; }
@@ -68,7 +67,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                 "EmacsLike kill-region",
                 //"EmacsLike set-mark-command",
             };
-            Generator = CommandManager.GetGenerator();
+            Generator = KeybindsManiacs.UIAssistantAPI.GetCommandGenerator();
         }
 
         public void SwitchMode(string modeName)

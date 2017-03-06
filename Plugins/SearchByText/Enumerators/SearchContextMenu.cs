@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-using UIAssistant.Infrastructure.Events;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Plugin.SearchByText.Enumerators.ForCommand;
 
@@ -21,7 +20,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
         public void Enumerate(ICollection<IHUDItem> results)
         {
             var menuEnumerator = new ContextMenu();
-            var observer = new PopupObserver();
+            var observer = SearchByText.UIAssistantAPI.GetObserver(Interfaces.Events.ObserberKinds.PopupObserver);
             observer.Callback += (element) =>
             {
                 menuEnumerator.ContextRoot = element;

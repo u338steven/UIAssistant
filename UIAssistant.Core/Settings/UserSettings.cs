@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,16 +8,14 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 using KeybindHelper;
+using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
-using UIAssistant.Infrastructure.Settings;
-using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Settings;
-using UIAssistant.UI.Controls;
 using UIAssistant.Utility;
 
 namespace UIAssistant.Core.Settings
 {
-    public class UserSettings : Settings<UserSettings>, IUserSettings
+    public class UserSettings : IUserSettings
     {
         public bool RunAtLogin { get; set; }
         public bool UseMigemo { get; set; }
@@ -54,16 +53,14 @@ namespace UIAssistant.Core.Settings
         #endregion
 
         private const string FileName = "Settings.yml";
-        private IFileIO<UserSettings> _fileIO = new YamlFile<UserSettings>(UIAssistantDirectory.Configurations, FileName);
-        protected override IFileIO<UserSettings> FileIO { get { return _fileIO; } }
+        public static readonly string FilePath = Path.Combine(@"C:\Applications\Projects\MyProjects\UIAssistant\UIAssistant\bin\Debug\Configurations", FileName);
 
         public UserSettings()
         {
             RunAtLogin = AutoRunAtLoginScheduler.Exists();
-            OnError = ex => Notification.NotifyMessage("Load Settings Error", string.Format(TextID.SettingsLoadError.GetLocalizedText(), FileName), NotificationIcon.Warning);
         }
 
-        protected override void LoadDefault()
+        public void SetValuesDefault()
         {
             UseMigemo = false;
             Culture = DefaultLocalizer.SuggestedCulture;
@@ -110,6 +107,16 @@ namespace UIAssistant.Core.Settings
             SwitchTheme = new Keybind(Key.S, LRExtendedModifierKeys.LAlt | LRExtendedModifierKeys.LControl);
             Usage = new Keybind(Key.U, LRExtendedModifierKeys.LControl);
             EmergencySwitch = new Keybind(Key.Escape, LRExtendedModifierKeys.LWindows);
+        }
+
+        //public static UserSettings Load(IFileIO fileIO)
+        //{
+        //    return fileIO.Read(typeof(UserSettings), FilePath) as UserSettings;
+        //}
+
+        public void Save()
+        {
+            UIAssistantAPI.Instance.DefaultSettingsFileIO.Write(typeof(UserSettings), this, FilePath);
         }
     }
 }

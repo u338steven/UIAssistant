@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using KeybindHelper.LowLevel;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
-using UIAssistant.Infrastructure.Logger;
 
 namespace UIAssistant.Plugin.HitaHint
 {
@@ -56,7 +52,7 @@ namespace UIAssistant.Plugin.HitaHint
             }
             catch (Exception ex)
             {
-                Log.Error(ex);
+                UIAssistantAPI.PrintErrorMessage(ex);
             }
         }
 

@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using KeybindHelper.LowLevel;
 using UIAssistant.Interfaces.Commands;
+using UIAssistant.Interfaces.Events;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Interfaces.Input;
 using UIAssistant.Interfaces.Plugin;
@@ -24,6 +25,8 @@ namespace UIAssistant.Interfaces.API
         bool IsContextVisible { get; }
         bool TopMost { set; }
         bool Transparent { get; set; }
+        string ConfigurationDirectory { get; }
+        IFileIO DefaultSettingsFileIO { get; }
         IUserSettings UIAssistantSettings { get; }
         Dispatcher UIDispatcher { get; }
 
@@ -32,7 +35,9 @@ namespace UIAssistant.Interfaces.API
         Control AddIndicator();
         void AddPanel(UIElement uielement, Visibility visibility = Visibility.Visible);
         void AddTargetingReticle();
+#if DEBUG
         void DisplayKeystroke(LowLevelKeyEventArgs e);
+#endif
         void FlashIndicatorAnimation(Rect size, bool waitable = true, double duration = 300, Action completed = null);
         IEnumerable<string> GenerateHints(string hintKeys, int quantity);
         void Initialize(Control defaultHUDPanel, Control defaultContextPanel);
@@ -43,6 +48,7 @@ namespace UIAssistant.Interfaces.API
         void NotifyInfoMessage(string title, string message);
         void NotifyWarnMessage(string title, string message);
         IEnumerable<ICommand> ParseStatement(string statement);
+        ICandidatesGenerator GetCommandGenerator();
         Data.ValidationResult Validate(string statement);
         IPluginManager PluginManager { get; }
         void PrintDebugMessage(string message);
@@ -57,6 +63,7 @@ namespace UIAssistant.Interfaces.API
         void SwitchHUD();
         void SwitchTheme(string name);
 
+        IEventObserver GetObserver(ObserberKinds kind);
         ILocalizer GetLocalizer();
         ISwitcher GetThemeSwitcher();
         IResourceItem CurrentLanguage { get; }
@@ -69,5 +76,6 @@ namespace UIAssistant.Interfaces.API
         IMouseCursor MouseCursor { get; }
         IMouseOperation MouseOperation { get; }
         IKeyboardOperation KeyboardOperation { get; }
+        IWindow ActiveWindow { get; }
     }
 }

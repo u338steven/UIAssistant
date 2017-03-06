@@ -96,7 +96,7 @@ namespace UIAssistant.Plugin.SearchByText
             Keybinds.Add(_settings.End, () => UIAssistantAPI.CurrentHUD.TextBox.MoveCaretToTail());
             Keybinds.Add(_settings.Execute, () => _stateController.Execute());
             Keybinds.Add(_settings.ShowExtraActions, () => _stateController.SwitchHUD());
-            Keybinds.Add(SearchByTextSettings.Instance.Expand, () =>
+            Keybinds.Add(SearchByText.Settings.Expand, () =>
             {
                 _stateController.Expand();
                 _disposables.Clear();

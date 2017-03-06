@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.IO;
 using System.Windows.Input;
-using UIAssistant.Infrastructure.Settings;
-using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Settings;
 
 using KeybindHelper;
 
 namespace UIAssistant.Plugin.MouseEmulation
 {
-    public class MouseEmulationSettings : Settings<MouseEmulationSettings>
+    public class MouseEmulationSettings : ISettings
     {
         public Keybind Quit { get; } = MouseEmulation.UIAssistantAPI.UIAssistantSettings.Quit;
         public Keybind Back { get; } = MouseEmulation.UIAssistantAPI.UIAssistantSettings.Back;
@@ -37,15 +29,13 @@ namespace UIAssistant.Plugin.MouseEmulation
         public Keybind SlowDown { get; set; } = new Keybind();
 
         private const string FileName = "MouseEmulation.yml";
-        private IFileIO<MouseEmulationSettings> _fileIO = new YamlFile<MouseEmulationSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configurations", FileName));
-        protected override IFileIO<MouseEmulationSettings> FileIO { get { return _fileIO; } }
+        public static readonly string FilePath = Path.Combine(MouseEmulation.UIAssistantAPI.ConfigurationDirectory, FileName);
 
         public MouseEmulationSettings()
         {
-            OnError = ex => MouseEmulation.UIAssistantAPI.NotifyWarnMessage("Load Settings Error", string.Format(MouseEmulation.UIAssistantAPI.Localize(TextID.SettingsLoadError), FileName));
         }
 
-        protected override void LoadDefault()
+        public void SetValuesDefault()
         {
             Left = new Keybind(Key.J);
             Right = new Keybind(Key.L);
@@ -63,6 +53,16 @@ namespace UIAssistant.Plugin.MouseEmulation
 
             SpeedUp = new Keybind(Key.F);
             SlowDown = new Keybind(Key.S);
+        }
+
+        public static MouseEmulationSettings Load()
+        {
+            return MouseEmulation.UIAssistantAPI.DefaultSettingsFileIO.Read(typeof(MouseEmulationSettings), FilePath) as MouseEmulationSettings;
+        }
+
+        public void Save()
+        {
+            MouseEmulation.UIAssistantAPI.DefaultSettingsFileIO.Write(typeof(MouseEmulationSettings), this, FilePath);
         }
     }
 }

@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Input;
-using UIAssistant.Infrastructure.Settings;
-using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Settings;
 
 using KeybindHelper;
 
 namespace UIAssistant.Plugin.HitaHint
 {
-    public class HitaHintSettings : Settings<HitaHintSettings>, ISettings
+    public class HitaHintSettings : ISettings
     {
         private string _HintKeys;
         public string HintKeys
@@ -72,16 +66,16 @@ namespace UIAssistant.Plugin.HitaHint
 
         //public readonly UserSettings _userSettings = HitaHint.UIAssistantAPI.UIAssistantSettings;
 
-        private const string FileName = "HitaHint.yml";
-        private IFileIO<HitaHintSettings> _fileIO = new YamlFile<HitaHintSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configurations", FileName));
-        protected override IFileIO<HitaHintSettings> FileIO { get { return _fileIO; } }
+        public const string FileName = "HitaHint.yml";
+        public static readonly string FilePath = Path.Combine(HitaHint.UIAssistantAPI.ConfigurationDirectory, FileName);
+        //private IFileIO<HitaHintSettings> _fileIO = new YamlFile<HitaHintSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configurations", FileName));
+        //protected override IFileIO<HitaHintSettings> FileIO { get { return _fileIO; } }
 
         public HitaHintSettings()
         {
-            OnError = ex => HitaHint.UIAssistantAPI.NotifyWarnMessage("Load Settings Error", string.Format(HitaHint.UIAssistantAPI.Localize(TextID.SettingsLoadError), FileName));
         }
 
-        protected override void LoadDefault()
+        public void SetValuesDefault()
         {
             HintKeys = "asdfghjkl";
             ScreenWidthDivisionCount = 9;
@@ -98,6 +92,16 @@ namespace UIAssistant.Plugin.HitaHint
             DragAndDrop = new Keybind(Key.P);
 
             MouseEmulation = new Keybind(Key.O);
+        }
+
+        public static HitaHintSettings Load()
+        {
+            return HitaHint.UIAssistantAPI.DefaultSettingsFileIO.Read(typeof(HitaHintSettings), FilePath) as HitaHintSettings;
+        }
+
+        public void Save()
+        {
+            HitaHint.UIAssistantAPI.DefaultSettingsFileIO.Write(typeof(HitaHintSettings), this, FilePath);
         }
     }
 }

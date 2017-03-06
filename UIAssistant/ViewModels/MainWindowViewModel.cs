@@ -102,12 +102,13 @@ namespace UIAssistant.ViewModels
 
         public void Initialize()
         {
+            Notification.Initialize();
             UIAssistantAPI.Instance.Initialize(DefaultHUDPanel, DefaultContextPanel);
 
             IntPtr windowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
             Win32Interop.SetWindowExTransparent(windowHandle);
 
-            DefaultLocalizer.SwitchLanguage(DefaultLocalizer.FindLanguage(UserSettings.Instance.Culture));
+            DefaultLocalizer.SwitchLanguage(DefaultLocalizer.FindLanguage(UIAssistantAPI.Instance.UIAssistantSettings.Culture));
             PluginManager.Instance.Localize();
 
             SettingsWindowModel.RegisterHotkeys();
@@ -115,7 +116,6 @@ namespace UIAssistant.ViewModels
             MainWindowModel.ShowNotifyIcon();
 
             UIAssistantAPI.Instance.SwitchTheme("General");
-            Notification.Initialize();
 
             Left = SystemParameters.VirtualScreenLeft;
             Top = SystemParameters.VirtualScreenTop;

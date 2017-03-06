@@ -28,7 +28,7 @@ namespace UIAssistant.Models
 
         public static void RegisterHotkeys()
         {
-            var setting = UserSettings.Instance;
+            var setting = UIAssistantAPI.Instance.UIAssistantSettings;
             HotkeyResistrant.UnregisterAll();
             foreach (var hotkey in setting.Commands)
             {

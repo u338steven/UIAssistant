@@ -23,7 +23,7 @@ namespace UIAssistant.Plugin.HitaHint
         public Usage()
         {
             InitializeComponent();
-            DataContext = HitaHintSettings.Instance;
+            DataContext = HitaHint.Settings;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
         public StateController(IUIAssistantAPI api) : base(api)
         {
-            Settings = KeybindsManiacsSettings.Instance;
+            Settings = KeybindsManiacs.Settings;
             Mode = Mode.Normal;
         }
 

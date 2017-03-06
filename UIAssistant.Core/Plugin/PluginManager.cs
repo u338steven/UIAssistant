@@ -11,7 +11,6 @@ using System.ComponentModel.Composition.Hosting;
 
 using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
-using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Logger;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Plugin;
@@ -44,10 +43,29 @@ namespace UIAssistant.Core.Plugin
 
             pluginPaths.ForEach(pluginPath =>
             {
-                var asmCatalog = new AssemblyCatalog(pluginPath);
-                if (asmCatalog.Parts.ToList().Count > 0)
+                try
                 {
-                    catalog.Catalogs.Add(asmCatalog);
+                    var asmCatalog = new AssemblyCatalog(pluginPath);
+                    if (asmCatalog.Parts.ToList().Count > 0)
+                    {
+                        catalog.Catalogs.Add(asmCatalog);
+                    }
+                }
+                catch(ReflectionTypeLoadException ex)
+                {
+                    var message = string.Format(TextID.PluginInitializeError.GetLocalizedText(), pluginPath);
+                    UIAssistantAPI.Instance.NotifyWarnMessage("Warning", message);
+                    (ex as ReflectionTypeLoadException).LoaderExceptions.ForEach(x =>
+                    {
+                        Log.Error(x);
+                    });
+                }
+                catch (Exception ex)
+                {
+                    var message = string.Format(TextID.PluginInitializeError.GetLocalizedText(), pluginPath);
+                    UIAssistantAPI.Instance.NotifyWarnMessage("Warning", message);
+                    Log.Error(ex);
+                    Log.Warn(message);
                 }
             });
 
@@ -61,7 +79,7 @@ namespace UIAssistant.Core.Plugin
 
         private void RemoveRemovedPlugins()
         {
-            var settings = UserSettings.Instance;
+            var settings = UIAssistantAPI.Instance.UIAssistantSettings;
 
             var oldDisabledPlugins = new HashSet<string>(settings.DisabledPlugins);
             oldDisabledPlugins.ForEach(x =>
@@ -75,7 +93,7 @@ namespace UIAssistant.Core.Plugin
 
         private void LoadAllPlugins()
         {
-            var settings = UserSettings.Instance;
+            var settings = UIAssistantAPI.Instance.UIAssistantSettings;
 
             Plugins.ForEach(plugin =>
             {

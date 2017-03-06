@@ -31,7 +31,7 @@ namespace UIAssistant.Plugin.HitaHint
 
         public StateController(IUIAssistantAPI api) : base(api)
         {
-            Settings = HitaHintSettings.Instance;
+            Settings = HitaHint.Settings;
             if (Settings.IsMouseCursorHidden)
             {
                 Reset();
@@ -124,7 +124,7 @@ namespace UIAssistant.Plugin.HitaHint
             OperationManager.Change(operationName);
         }
 
-        private string _theme = HitaHintSettings.Instance.Theme;
+        private string _theme = HitaHint.Settings.Theme;
         public void SetTheme(string theme)
         {
             _theme = theme;
@@ -218,7 +218,7 @@ namespace UIAssistant.Plugin.HitaHint
 
         private void AssignHint(ICollection<IHUDItem> items)
         {
-            var hints = UIAssistantAPI.GenerateHints(HitaHintSettings.Instance.HintKeys, items.Count);
+            var hints = UIAssistantAPI.GenerateHints(HitaHint.Settings.HintKeys, items.Count);
             foreach (var x in items.Select((v, i) => new { v, i }))
             {
                 x.v.InternalText = hints.ElementAt(x.i);

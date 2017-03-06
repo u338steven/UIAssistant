@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandInterfaces.cs" />
+    <Compile Include="EventInterfaces.cs" />
     <Compile Include="IHUD.cs" />
     <Compile Include="InputInterfaces.cs" />
     <Compile Include="IPlugin.cs" />

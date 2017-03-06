@@ -23,7 +23,7 @@ namespace UIAssistant.Plugin.SearchByText
         public Usage()
         {
             InitializeComponent();
-            DataContext = SearchByTextSettings.Instance;
+            DataContext = SearchByText.Settings;
         }
     }
 }

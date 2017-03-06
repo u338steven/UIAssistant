@@ -1,24 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using KeybindHelper;
 
 namespace UIAssistant.Interfaces.Settings
 {
-    public interface IFileIO<T>
+    public interface IFileIO
     {
-        string FilePath { get; }
-        T Read();
-        void Write(T data);
+        ISettings Read(Type type, params string[] pathParts);
+        void Write(Type type, ISettings data, params string[] pathParts);
     }
 
     public interface ISettings
     {
-        void Load();
-        void Save();
+        void SetValuesDefault();
     }
-
 
     public interface IUserSettings : ISettings
     {
+        void Save();
         Keybind Back { get; set; }
         Keybind Clear { get; set; }
         List<Keybind> Commands { get; set; }

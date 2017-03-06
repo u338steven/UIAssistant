@@ -76,8 +76,8 @@
     <Compile Include="Resource\ResourceUpdater.cs" />
     <Compile Include="Resource\Theme\Theme.cs" />
     <Compile Include="Resource\Theme\ThemeKeyValueGenerator.cs" />
-    <Compile Include="Settings\Settings.cs" />
-    <Compile Include="Settings\YamlFile.cs" />
+    <Compile Include="Settings\SettingsFileIOBase.cs" />
+    <Compile Include="Settings\YamlFileIO.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UIAssistant.Interfaces\UIAssistant.Interfaces.csproj">

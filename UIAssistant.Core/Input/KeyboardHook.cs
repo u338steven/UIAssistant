@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 using KeybindHelper.LowLevel;
+using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Settings;
 using UIAssistant.Interfaces;
@@ -20,7 +21,7 @@ namespace UIAssistant.Core.Input
         private KeySet _terminate;
         public KeyboardHook()
         {
-            _terminate = new KeySet(UserSettings.Instance.EmergencySwitch);
+            _terminate = new KeySet(UIAssistantAPI.Instance.UIAssistantSettings.EmergencySwitch);
             PreviewKeyDown += _hook_PreviewKeyDown;
         }
 

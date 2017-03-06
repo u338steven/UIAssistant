@@ -13,7 +13,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
     {
         public void Enumerate(ICollection<IHUDItem> container)
         {
-            var divisionCount = HitaHintSettings.Instance.ScreenWidthDivisionCount;
+            var divisionCount = HitaHint.Settings.ScreenWidthDivisionCount;
             foreach (var screen in Screen.AllScreen)
             {
                 Divide(container, screen, divisionCount);
