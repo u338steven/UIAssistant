@@ -19,6 +19,11 @@ namespace UIAssistant.Infrastructure.Commands
 
         public IEnumerable<ICommand> Parse(string statement)
         {
+            if (statement == null)
+            {
+                throw new ArgumentException("");
+            }
+
             IRule command = null;
             IRule current = null;
             List<IArgumentRule> options = new List<IArgumentRule>();

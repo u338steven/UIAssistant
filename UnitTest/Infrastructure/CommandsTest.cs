@@ -134,6 +134,7 @@ namespace CommandsTest
         [TestMethod]
         public void GeneratorTest()
         {
+            CandidatesTest(null, Empty);
             CandidatesTest("", Syntax.Select(x => x.Name).OrderBy(x => x));
             CandidatesTest("hah", Empty);
             CandidatesTest("hah ", Hah.RequiredArgs.Select(x => x.Name).OrderBy(x => x));

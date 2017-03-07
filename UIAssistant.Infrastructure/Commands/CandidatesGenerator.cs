@@ -22,6 +22,11 @@ namespace UIAssistant.Infrastructure.Commands
         {
             Contract.Ensures(Contract.Result<IEnumerable<ICandidate>>() != null);
 
+            if (sentence == null)
+            {
+                return Empty;
+            }
+
             var commandTokens = sentence.Tokenize();
             var command = commandTokens.ElementAt(0);
             var args = commandTokens.Skip(1);
