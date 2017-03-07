@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using System.Windows;
 using System.Windows.Automation;
-using UIAssistant.Utility.Extensions;
 
 namespace UIAssistant.Plugin.SpatialNavigation
 {

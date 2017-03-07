@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using System.Windows.Automation;
 using UIAssistant.Interfaces.HUD;
-using UIAssistant.Utility.Extensions;
 using UIAssistant.Plugin.SearchByText.Items;
 
 namespace UIAssistant.Plugin.SearchByText.Enumerators

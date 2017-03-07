@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Automation;
 
-using UIAssistant.Utility.Win32;
-using UIAssistant.Utility.Extensions;
 using UIAssistant.Interfaces.HUD;
 
 namespace UIAssistant.Plugin.SearchByText.Items
@@ -96,12 +93,12 @@ namespace UIAssistant.Plugin.SearchByText.Items
         public virtual void Execute()
         {
             Prepare();
-            var from = Win32Window.ActiveWindow.Bounds.ToClientCoordinate();
+            var from = SearchByText.UIAssistantAPI.ActiveWindow.Bounds.ToClientCoordinate();
             Rect to = new Rect();
             AutomationElement element = null;
             Task.Run(() =>
             {
-                element = GetCurrentElement(Win32Window.ActiveWindow.Element);
+                element = GetCurrentElement(SearchByText.UIAssistantAPI.ActiveWindow.Element);
                 if (IsEnabled && element != null)
                 {
                     var parent = element.GetParent();

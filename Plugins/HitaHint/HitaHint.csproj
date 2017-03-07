@@ -106,11 +106,6 @@
       <Name>UIAssistant.Plugin</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\UIAssistant.Utility\UIAssistant.Utility.csproj">
-      <Project>{9c9ebd40-2656-4217-9bd3-3cba29f95dbb}</Project>
-      <Name>UIAssistant.Utility</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Languages\en-US.xaml">

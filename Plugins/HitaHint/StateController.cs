@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Windows;
 
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Interfaces.Resource;
-using UIAssistant.Utility.Win32;
-using UIAssistant.Utility.Extensions;
 
 using UIAssistant.Plugin.HitaHint.Enumerators;
 using UIAssistant.Plugin.HitaHint.Operations;
@@ -20,7 +18,7 @@ namespace UIAssistant.Plugin.HitaHint
 {
     internal class StateController : AbstractStateController
     {
-        public Win32Window PreviousWindow { get; set; }
+        public IWindow PreviousWindow { get; set; }
         public EnumerateTarget Target { get; set; }
         public HitaHintSettings Settings { get; private set; }
         private IWidgetEnumerator _enumerator;
@@ -48,7 +46,7 @@ namespace UIAssistant.Plugin.HitaHint
         public void Initialize()
         {
             _history = new History();
-            PreviousWindow = Win32Window.ActiveWindow;
+            PreviousWindow = UIAssistantAPI.ActiveWindow;
             SubscribeReturnMouseCursor();
             UIAssistantAPI.DefaultHUD.Initialize();
         }
@@ -104,7 +102,7 @@ namespace UIAssistant.Plugin.HitaHint
                 return;
             }
             var item = _history.PopState();
-            if (Win32Window.ActiveWindow != item.window)
+            if (UIAssistantAPI.ActiveWindow != item.window)
             {
                 item.window.Activate();
             }

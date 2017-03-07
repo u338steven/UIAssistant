@@ -17,13 +17,11 @@ using System.Windows.Interop;
 
 using UIAssistant.Models;
 using UIAssistant.Views;
-using UIAssistant.Utility.Win32;
 using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Plugin;
+using UIAssistant.Interfaces.Native;
 using UIAssistant.UI.Controls;
-
-using UIAssistant.Core.Settings;
 
 namespace UIAssistant.ViewModels
 {
@@ -106,7 +104,7 @@ namespace UIAssistant.ViewModels
             UIAssistantAPI.Instance.Initialize(DefaultHUDPanel, DefaultContextPanel);
 
             IntPtr windowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
-            Win32Interop.SetWindowExTransparent(windowHandle);
+            NativeMethods.SetWindowExTransparent(windowHandle);
 
             DefaultLocalizer.SwitchLanguage(DefaultLocalizer.FindLanguage(UIAssistantAPI.Instance.UIAssistantSettings.Culture));
             PluginManager.Instance.Localize();

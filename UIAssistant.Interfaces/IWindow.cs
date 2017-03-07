@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Media;
@@ -47,5 +48,48 @@ namespace UIAssistant.Interfaces
         bool SetWindowPos(IWindow insertAfterWindow, bool activate, bool hide = false);
         void ShowWindow(WindowShowStyle flags);
         void ToggleTopMost();
+    }
+
+    public interface IScreen
+    {
+        IReadOnlyCollection<Rect> AllScreen { get; }
+        Rect Bounds { get; }
+
+        Rect GetScreenFrom(Point pt);
+    }
+
+    public enum AppBarMessage : int
+    {
+        New = 0,
+        Remove = 1,
+        QueryPos = 2,
+        SetPos = 3,
+        GetState = 4,
+        GetTaskBarPos = 5,
+        Activate = 6,
+        GetAutoHideBar = 7,
+        SetAutoHideBar = 8,
+        WindowPosChanged = 9,
+        SetState = 10,
+    }
+
+    public enum AppBarEdge : int
+    {
+        Left = 0,
+        Top = 1,
+        Right = 2,
+        Bottom = 3,
+    }
+
+    public enum AppBarState : int
+    {
+        Autohide = 1,
+        AlwaysOnTop = 2,
+    }
+
+    public interface ITaskbar
+    {
+        void GetBounds(out AppBarEdge edge, out Rect bounds);
+        bool IsAutoHide();
     }
 }

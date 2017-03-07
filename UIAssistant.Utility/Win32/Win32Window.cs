@@ -10,6 +10,7 @@ using System.Windows.Automation;
 using System.Windows.Media;
 
 using UIAssistant.Interfaces;
+using UIAssistant.Interfaces.Native;
 
 namespace UIAssistant.Utility.Win32
 {
@@ -70,7 +71,7 @@ namespace UIAssistant.Utility.Win32
         private static extern IntPtr FindWindowExByClass(IntPtr hWnd, IntPtr hwndChildAfter, string lpszClass, IntPtr zero);
 
         [DllImport("user32.dll")]
-        private static extern int GetWindowRect(IntPtr hwnd, ref Win32Interop.Rect lpRect);
+        private static extern int GetWindowRect(IntPtr hwnd, ref RECT lpRect);
 
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -130,7 +131,7 @@ namespace UIAssistant.Utility.Win32
 
         public void ButtonClick()
         {
-            Win32Interop.PostMessage(WindowHandle, Win32Interop.BM_CLICK, IntPtr.Zero, IntPtr.Zero);
+            NativeMethods.PostMessage(WindowHandle, NativeMethods.BM_CLICK, IntPtr.Zero, IntPtr.Zero);
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -139,9 +140,9 @@ namespace UIAssistant.Utility.Win32
             public int Length;
             public WindowPlacementFlags flags;
             public int showCmd;
-            public Win32Interop.Point ptMinPosition;
-            public Win32Interop.Point ptMaxPosition;
-            public Win32Interop.Rect rcNormalPosition;
+            public POINT ptMinPosition;
+            public POINT ptMaxPosition;
+            public RECT rcNormalPosition;
         }
 
         public enum WindowPlacementFlags
@@ -189,7 +190,7 @@ namespace UIAssistant.Utility.Win32
                 return true;
             }
 
-            if ((Win32Interop.GetWindowLongPtr(WindowHandle, Win32Interop.GWL.GWL_EXSTYLE).ToInt32() & WS_EX_TOOLWINDOW) != 0)
+            if ((NativeMethods.GetWindowLongPtr(WindowHandle, GWL.GWL_EXSTYLE).ToInt32() & WS_EX_TOOLWINDOW) != 0)
             {
                 return true;
             }
@@ -223,7 +224,7 @@ namespace UIAssistant.Utility.Win32
             return title?.ToString();
         }
 
-        public static void Filter(Func<Win32Window, bool> func)
+        public static void Filter(Func<IWindow, bool> func)
         {
             EnumWindowsProc filter = (IntPtr windowHandle, IntPtr lParam) =>
             {
@@ -242,7 +243,7 @@ namespace UIAssistant.Utility.Win32
                     return _Icon;
                 }
                 int processId;
-                Win32Interop.GetWindowThreadProcessId(WindowHandle, out processId);
+                NativeMethods.GetWindowThreadProcessId(WindowHandle, out processId);
                 System.Diagnostics.Process process = System.Diagnostics.Process.GetProcessById(processId);
                 try
                 {
@@ -303,7 +304,7 @@ namespace UIAssistant.Utility.Win32
         {
             get
             {
-                return (Win32Interop.GetWindowLongPtr(WindowHandle, Win32Interop.GWL.GWL_EXSTYLE).ToInt32() & WS_EX_TOPMOST) != 0;
+                return (NativeMethods.GetWindowLongPtr(WindowHandle, GWL.GWL_EXSTYLE).ToInt32() & WS_EX_TOPMOST) != 0;
             }
         }
 
@@ -381,19 +382,19 @@ namespace UIAssistant.Utility.Win32
         public void SetOpacity(byte value)
         {
             // SetWindowLong(Handle, GWL_EXSTYLE, GetWindowLong(Handle, GWL_EXSTYLE) ^ WS_EX_LAYERED);
-            Win32Interop.SetWindowLongPtr(WindowHandle, Win32Interop.GWL.GWL_EXSTYLE, new IntPtr(Win32Interop.GetWindowLongPtr(WindowHandle, Win32Interop.GWL.GWL_EXSTYLE).ToInt32() ^ WS_EX_LAYERED));
+            NativeMethods.SetWindowLongPtr(WindowHandle, GWL.GWL_EXSTYLE, new IntPtr(NativeMethods.GetWindowLongPtr(WindowHandle, GWL.GWL_EXSTYLE).ToInt32() ^ WS_EX_LAYERED));
             SetLayeredWindowAttributes(WindowHandle, 0, value, LWA_ALPHA);
         }
 
         public void Close()
         {
-            Win32Interop.PostMessage(WindowHandle, Win32Interop.WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+            NativeMethods.PostMessage(WindowHandle, NativeMethods.WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
         }
 
         public Rect Bounds => GetBounds();
         private Rect GetBounds()
         {
-            Win32Interop.Rect rect = new Win32Interop.Rect();
+            RECT rect = new RECT();
             if (IsIconic(WindowHandle))
             {
                 WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
@@ -401,7 +402,7 @@ namespace UIAssistant.Utility.Win32
                 GetWindowPlacement(WindowHandle, ref wp);
                 if (wp.flags == WindowPlacementFlags.WPF_RESTORETOMAXIMIZED)
                 {
-                    rect = new Win32Interop.Rect(Screen.Bounds);
+                    rect = new RECT(new Screen().Bounds);
                 }
                 else
                 {
@@ -410,8 +411,8 @@ namespace UIAssistant.Utility.Win32
             }
             else
             {
-                var result = DwmApi.DwmGetWindowAttribute(WindowHandle, DWMWINDOWATTRIBUTE.ExtendedFrameBounds, out rect, Marshal.SizeOf(typeof(Win32Interop.Rect)));
-                if (Win32Interop.HResultHasError(result))
+                var result = DwmApi.DwmGetWindowAttribute(WindowHandle, DWMWINDOWATTRIBUTE.ExtendedFrameBounds, out rect, Marshal.SizeOf(typeof(RECT)));
+                if (NativeMethods.HResultHasError(result))
                 {
                     GetWindowRect(WindowHandle, ref rect);
                 }
@@ -423,14 +424,14 @@ namespace UIAssistant.Utility.Win32
 
         private static void ForciblyControlWindow(Action action)
         {
-            Win32Interop.AttachedThreadInputAction(
+            NativeMethods.AttachedThreadInputAction(
                 () =>
                 {
                     IntPtr lockTimeOut = IntPtr.Zero;
-                    Win32Interop.SystemParametersInfo(Win32Interop.SPI_GETFOREGROUNDLOCKTIMEOUT, 0, lockTimeOut, 0);
-                    Win32Interop.SystemParametersInfo(Win32Interop.SPI_SETFOREGROUNDLOCKTIMEOUT, 0, IntPtr.Zero, 0);
+                    NativeMethods.SystemParametersInfo(NativeMethods.SPI_GETFOREGROUNDLOCKTIMEOUT, 0, lockTimeOut, 0);
+                    NativeMethods.SystemParametersInfo(NativeMethods.SPI_SETFOREGROUNDLOCKTIMEOUT, 0, IntPtr.Zero, 0);
                     action();
-                    Win32Interop.SystemParametersInfo(Win32Interop.SPI_SETFOREGROUNDLOCKTIMEOUT, 0, lockTimeOut, 0);
+                    NativeMethods.SystemParametersInfo(NativeMethods.SPI_SETFOREGROUNDLOCKTIMEOUT, 0, lockTimeOut, 0);
                 });
         }
 

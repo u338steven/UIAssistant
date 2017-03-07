@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using System.Windows.Automation;
 using System.Reactive.Linq;
 
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.HUD;
-using UIAssistant.Utility.Win32;
-using UIAssistant.Utility.Extensions;
 using UIAssistant.Plugin.SearchByText.Items;
 
 namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
@@ -41,7 +37,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                 }
                 else
                 {
-                    var parent = Win32Window.ActiveWindow;
+                    var parent = SearchByText.UIAssistantAPI.ActiveWindow;
                     GetRibbonItems(parent.Element, true);
                 }
             }
@@ -111,7 +107,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                         {
                             System.Threading.Thread.Sleep(100);
                             var cond = new PropertyCondition(AutomationElement.NameProperty, el.Current.Name);
-                            var next = Win32Window.ActiveWindow.LastActivePopup.Element;
+                            var next = SearchByText.UIAssistantAPI.ActiveWindow.LastActivePopup.Element;
 
                             var elem = next?.FindFirst(TreeScope.Children | TreeScope.Descendants, cond);
                             if (elem == null)
@@ -141,10 +137,10 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
 
         private void FindRibbonUI(ref IWindow ribbonRoot, ref IWindow ribbon)
         {
-            ribbonRoot = Win32Window.ActiveWindow.FindChild("UIRibbonCommandBarDock");
+            ribbonRoot = SearchByText.UIAssistantAPI.ActiveWindow.FindChild("UIRibbonCommandBarDock");
             while (ribbonRoot.WindowHandle != IntPtr.Zero)
             {
-                ribbonRoot = Win32Window.ActiveWindow.FindChild(ribbonRoot, "UIRibbonCommandBarDock");
+                ribbonRoot = SearchByText.UIAssistantAPI.ActiveWindow.FindChild(ribbonRoot, "UIRibbonCommandBarDock");
                 ribbon = ribbonRoot?.FindChild("UIRibbonCommandBar")
                     .FindChild("UIRibbonWorkPane").FindChild("NUIPane").FindChild("NetUIHWND");
                 if (ribbon != null && ribbon.WindowHandle != IntPtr.Zero)

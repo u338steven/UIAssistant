@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using System.Runtime.InteropServices;
 using System.Windows.Input;
 
 using UIAssistant.Interfaces.Input;
-using UIAssistant.Utility.Win32;
+using UIAssistant.Interfaces.Native;
 
 namespace UIAssistant.Core.Input
 {
@@ -61,7 +57,7 @@ namespace UIAssistant.Core.Input
                     inputs.Add(GenerateKeyUp(_cancelKey));
                 }
 
-                Win32Interop.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
+                NativeMethods.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
                 _forRestore.Clear();
             }
         }
@@ -158,7 +154,7 @@ namespace UIAssistant.Core.Input
                 var keyup = GenerateKeyUp(key);
                 inputs.Add(keyup);
             }
-            Win32Interop.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
+            NativeMethods.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
         public void KeyDown(params Key[] keys)
@@ -173,7 +169,7 @@ namespace UIAssistant.Core.Input
                 var keydown = GenerateKeyDown(key);
                 inputs.Add(keydown);
             }
-            Win32Interop.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
+            NativeMethods.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
         private INPUT GenerateKeyUp(Key key)

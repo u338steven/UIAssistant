@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using UIAssistant.Utility.Win32;
+using UIAssistant.Interfaces;
 using UIAssistant.Plugin.HitaHint.Enumerators;
 
 namespace UIAssistant.Plugin.HitaHint
@@ -40,14 +40,14 @@ namespace UIAssistant.Plugin.HitaHint
         public string OperationName { get; private set; }
         public EnumerateTarget Target { get; private set; }
         public IWidgetEnumerator Enumerator { get; private set; }
-        public Win32Window window { get; private set; }
+        public IWindow window { get; private set; }
 
         public HistoryItem(string operationName, EnumerateTarget target, IWidgetEnumerator enumerator)
         {
             OperationName = operationName;
             Target = target;
             Enumerator = enumerator;
-            window = Win32Window.ActiveWindow;
+            window = HitaHint.UIAssistantAPI.ActiveWindow;
         }
     }
 }

@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-using System.Windows.Automation;
-using UIAssistant.Utility.Win32;
+using UIAssistant.Interfaces.Native;
 
-namespace UIAssistant.Utility.Extensions
+namespace System.Windows.Automation
 {
     public static class AutomationElementExtensions
     {
@@ -18,8 +14,6 @@ namespace UIAssistant.Utility.Extensions
                 return null;
             }
             return TreeWalker.ContentViewWalker.GetParent(el);
-            //return TreeWalker.ControlViewWalker.GetParent(el);
-            //return TreeWalker.RawViewWalker.GetParent(el);
         }
 
         [Flags]
@@ -50,12 +44,12 @@ namespace UIAssistant.Utility.Extensions
 
         public static int GetTabCount(this AutomationElement el)
         {
-            return Win32Interop.SendMessage(el.Current.NativeWindowHandle, Win32Interop.TCM_GETITEMCOUNT, IntPtr.Zero, IntPtr.Zero).ToInt32();
+            return NativeMethods.SendMessage(el.Current.NativeWindowHandle, NativeMethods.TCM_GETITEMCOUNT, IntPtr.Zero, IntPtr.Zero).ToInt32();
         }
 
         public static int GetTabCurrentIndex(this AutomationElement el)
         {
-            return Win32Interop.SendMessage(el.Current.NativeWindowHandle, Win32Interop.TCM_GETCURFOCUS, IntPtr.Zero, IntPtr.Zero).ToInt32();
+            return NativeMethods.SendMessage(el.Current.NativeWindowHandle, NativeMethods.TCM_GETCURFOCUS, IntPtr.Zero, IntPtr.Zero).ToInt32();
         }
 
         public static bool TrySelectTab(this AutomationElement el, int index)
@@ -66,7 +60,7 @@ namespace UIAssistant.Utility.Extensions
             {
                 return false;
             }
-            Win32Interop.SendMessage(handle, Win32Interop.TCM_SETCURFOCUS, new IntPtr(index), IntPtr.Zero);
+            NativeMethods.SendMessage(handle, NativeMethods.TCM_SETCURFOCUS, new IntPtr(index), IntPtr.Zero);
             return true;
         }
 

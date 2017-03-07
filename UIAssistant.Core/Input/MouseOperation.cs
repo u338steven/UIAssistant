@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using System.Runtime.InteropServices;
 using System.Windows;
 
 using UIAssistant.Interfaces.Input;
-using UIAssistant.Utility.Win32;
-using UIAssistant.Utility.Extensions;
+using UIAssistant.Interfaces.Native;
 
 namespace UIAssistant.Core.Input
 {
@@ -137,7 +135,7 @@ namespace UIAssistant.Core.Input
                 inputs.Add(mouse);
             }
 
-            Win32Interop.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
+            NativeMethods.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
         public void DoMouseEventRelative(double x, double y, params MouseEvent[] dwFlags)
@@ -159,7 +157,7 @@ namespace UIAssistant.Core.Input
                 inputs.Add(mouse);
             }
 
-            Win32Interop.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
+            NativeMethods.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
         public void DoMouseEvent(Point point, params MouseEvent[] dwFlags)
@@ -191,7 +189,7 @@ namespace UIAssistant.Core.Input
                 inputs.Add(mouse);
             }
 
-            Win32Interop.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
+            NativeMethods.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
         public void DoWheelEvent(int amountOfMovement, params WheelOrientation[] orientations)
@@ -214,13 +212,13 @@ namespace UIAssistant.Core.Input
                 inputs.Add(mouse);
             }
 
-            Win32Interop.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
+            NativeMethods.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
         public Point GetMousePosition()
         {
-            Win32Interop.Point pt = new Win32Interop.Point();
-            Win32Interop.GetCursorPos(ref pt);
+            POINT pt = new POINT();
+            NativeMethods.GetCursorPos(ref pt);
             return new Point(pt.x, pt.y);
         }
     }

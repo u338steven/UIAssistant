@@ -1,43 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+
+using UIAssistant.Interfaces;
+using UIAssistant.Interfaces.Native;
 
 namespace UIAssistant.Utility.Win32
 {
-    public class Win32Taskbar
+    public class Win32Taskbar : ITaskbar
     {
-        public enum AppBarMessage : int
-        {
-            New = 0,
-            Remove = 1,
-            QueryPos = 2,
-            SetPos = 3,
-            GetState = 4,
-            GetTaskBarPos = 5,
-            Activate = 6,
-            GetAutoHideBar = 7,
-            SetAutoHideBar = 8,
-            WindowPosChanged = 9,
-            SetState = 10,
-        }
-
-        public enum AppBarEdge : int
-        {
-            Left = 0,
-            Top = 1,
-            Right = 2,
-            Bottom = 3,
-        }
-
-        public enum AppBarState : int
-        {
-            Autohide = 1,
-            AlwaysOnTop = 2,
-        }
-
         [StructLayout(LayoutKind.Sequential)]
         public struct APPBARDATA
         {
@@ -46,14 +16,14 @@ namespace UIAssistant.Utility.Win32
             public uint uCallbackMessage;
             [MarshalAs(UnmanagedType.U4)]
             public AppBarEdge uEdge;
-            public Win32Interop.Rect rc;
+            public RECT rc;
             public int lParam;
         }
 
         [DllImport("shell32.dll")]
         private static extern int SHAppBarMessage(AppBarMessage dwMessage, ref APPBARDATA pData);
 
-        public static bool IsAutoHide()
+        public bool IsAutoHide()
         {
             var barData = new APPBARDATA();
 
@@ -64,7 +34,7 @@ namespace UIAssistant.Utility.Win32
             return false;
         }
 
-        public static void GetBounds(out AppBarEdge edge, out System.Windows.Rect bounds)
+        public void GetBounds(out AppBarEdge edge, out System.Windows.Rect bounds)
         {
             var barData = new APPBARDATA();
             int ret = SHAppBarMessage(AppBarMessage.GetTaskBarPos, ref barData);

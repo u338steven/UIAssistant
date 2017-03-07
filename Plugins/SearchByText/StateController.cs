@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Automation;
 
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
@@ -10,7 +10,6 @@ using UIAssistant.Interfaces.HUD;
 using UIAssistant.Interfaces.Settings;
 using UIAssistant.Plugin.SearchByText.Items;
 using UIAssistant.Plugin.SearchByText.Enumerators;
-using UIAssistant.Utility.Extensions;
 
 namespace UIAssistant.Plugin.SearchByText
 {
@@ -152,7 +151,7 @@ namespace UIAssistant.Plugin.SearchByText
                 return;
             }
 
-            var activeWindow = Utility.Win32.Win32Window.ActiveWindow;
+            var activeWindow = UIAssistantAPI.ActiveWindow;
 
             // show popup
             selectedItem.Prepare();
@@ -183,7 +182,7 @@ namespace UIAssistant.Plugin.SearchByText
             }
 
             // WPF etc.
-            var elements = popup.Element.FindAll(System.Windows.Automation.TreeScope.Descendants | System.Windows.Automation.TreeScope.Element, System.Windows.Automation.Condition.TrueCondition).Cast<System.Windows.Automation.AutomationElement>().ToList();
+            var elements = popup.Element.FindAll(TreeScope.Descendants | TreeScope.Element, Condition.TrueCondition).Cast<AutomationElement>().ToList();
             elements.ForEach(x =>
             {
                 var info = x.Current;

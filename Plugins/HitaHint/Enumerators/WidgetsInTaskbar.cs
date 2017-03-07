@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 using System.Windows.Automation;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.HUD;
-using UIAssistant.Utility.Win32;
-using UIAssistant.Utility.Extensions;
 
 namespace UIAssistant.Plugin.HitaHint.Enumerators
 {
@@ -20,36 +18,37 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
 
         public void Enumerate(ICollection<IHUDItem> container)
         {
-            var targetWindow = Win32Window.Find(TaskbarClass, "");
+            var targetWindow = HitaHint.UIAssistantAPI.FindWindow(TaskbarClass, "");
             targetWindow.Activate();
             var enumerator = new WidgetEnumerator();
             enumerator.Enumerate(container, null, _enumerateTargets);
+            var taskbar = HitaHint.UIAssistantAPI.Taskbar;
 
             double x = 0, y = 0;
-            if (Win32Taskbar.IsAutoHide())
+            if (taskbar.IsAutoHide())
             {
                 var adjuster = new System.Windows.Point();
-                Win32Taskbar.AppBarEdge edge;
+                AppBarEdge edge;
                 System.Windows.Rect bounds;
-                Win32Taskbar.GetBounds(out edge, out bounds);
+                taskbar.GetBounds(out edge, out bounds);
                 bounds = bounds.ToClientCoordinate();
 
                 double space = 8;
                 switch (edge)
                 {
-                    case Win32Taskbar.AppBarEdge.Top:
+                    case AppBarEdge.Top:
                         x = bounds.Left + space;
                         y = bounds.Top;
                         break;
-                    case Win32Taskbar.AppBarEdge.Bottom:
+                    case AppBarEdge.Bottom:
                         x = bounds.Left + space;
                         y = bounds.Bottom;
                         break;
-                    case Win32Taskbar.AppBarEdge.Left:
+                    case AppBarEdge.Left:
                         x = bounds.Left;
                         y = bounds.Top + space;
                         break;
-                    case Win32Taskbar.AppBarEdge.Right:
+                    case AppBarEdge.Right:
                         x = bounds.Right;
                         y = bounds.Top + space;
                         break;
@@ -59,7 +58,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
 
                 adjuster.X = bounds.Left - rect.Left;
                 adjuster.Y = bounds.Top - rect.Top;
-                container.ForEach(item => item.Bounds.Offset(adjuster.X, adjuster.Y));
+                container.ToList().ForEach(item => item.Bounds.Offset(adjuster.X, adjuster.Y));
                 HitaHint.UIAssistantAPI.MouseOperation.DoMouseEvent(x, y);
             }
 
@@ -79,13 +78,13 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
                 {
                     return;
                 }
-                var overflowWindow = Win32Window.Find(NotifyIconOverflowClass, "");
+                var overflowWindow = HitaHint.UIAssistantAPI.FindWindow(NotifyIconOverflowClass, "");
                 overflowWindow.ShowWindow(WindowShowStyle.Hide);
             });
         }
 
         private bool _isVisibleNotifyIconOverflow = false;
-        private static bool TryShowNotifyIconOverflow(Win32Window taskbar)
+        private static bool TryShowNotifyIconOverflow(IWindow taskbar)
         {
             var overflowButton = taskbar.FindChild(TasktrayClass, "").FindChild("Button", "");
             if (overflowButton == null)
@@ -95,7 +94,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
             overflowButton.ButtonClick();
             overflowButton.ButtonClick();
             System.Threading.Thread.Sleep(100);
-            var overflowWindow = Win32Window.Find(NotifyIconOverflowClass, "");
+            var overflowWindow = HitaHint.UIAssistantAPI.FindWindow(NotifyIconOverflowClass, "");
             overflowWindow.ShowWindow(WindowShowStyle.Show);
             return true;
         }

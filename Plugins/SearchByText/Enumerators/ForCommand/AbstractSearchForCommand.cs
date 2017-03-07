@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using System.Windows.Automation;
 using System.Text.RegularExpressions;
 
 using UIAssistant.Interfaces.HUD;
-using UIAssistant.Utility.Win32;
-using UIAssistant.Utility.Extensions;
 
 namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
 {
@@ -17,7 +12,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
     {
         public event EventHandler Updated;
         public event EventHandler Finished;
-        protected IntPtr MainWindowHandle { get; private set; } = Win32Window.ActiveWindow.WindowHandle;
+        protected IntPtr MainWindowHandle { get; private set; } = SearchByText.UIAssistantAPI.ActiveWindow.WindowHandle;
         protected ICollection<IHUDItem> _results;
 
         public virtual void Dispose()

@@ -77,5 +77,10 @@ namespace UIAssistant.Interfaces.API
         IMouseOperation MouseOperation { get; }
         IKeyboardOperation KeyboardOperation { get; }
         IWindow ActiveWindow { get; }
+
+        ITaskbar Taskbar { get; }
+        IWindow FindWindow(string className, string caption = null);
+        void EnumerateWindows(Func<IWindow, bool> func);
+        IScreen Screen { get; }
     }
 }

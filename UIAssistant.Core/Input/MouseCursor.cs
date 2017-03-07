@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using System.Windows.Threading;
 using UIAssistant.Interfaces.Input;
-using UIAssistant.Utility.Win32;
+using UIAssistant.Interfaces.Native;
 
 namespace UIAssistant.Core.Input
 {
@@ -41,13 +41,13 @@ namespace UIAssistant.Core.Input
             }
         }
 
-        private void AllCursorsForEach(Action<Win32Interop.OCR_SYSTEM_CURSORS> action)
+        private void AllCursorsForEach(Action<OCR_SYSTEM_CURSORS> action)
         {
-            Enum.GetValues(typeof(Win32Interop.OCR_SYSTEM_CURSORS)).Cast<Win32Interop.OCR_SYSTEM_CURSORS>().ForEach(x => action(x));
+            Enum.GetValues(typeof(OCR_SYSTEM_CURSORS)).Cast<OCR_SYSTEM_CURSORS>().ForEach(x => action(x));
         }
 
-        Dictionary<Win32Interop.OCR_SYSTEM_CURSORS, IntPtr> _blanks = new Dictionary<Win32Interop.OCR_SYSTEM_CURSORS, IntPtr>();
-        Dictionary<Win32Interop.OCR_SYSTEM_CURSORS, IntPtr> _saved = new Dictionary<Win32Interop.OCR_SYSTEM_CURSORS, IntPtr>();
+        Dictionary<OCR_SYSTEM_CURSORS, IntPtr> _blanks = new Dictionary<OCR_SYSTEM_CURSORS, IntPtr>();
+        Dictionary<OCR_SYSTEM_CURSORS, IntPtr> _saved = new Dictionary<OCR_SYSTEM_CURSORS, IntPtr>();
 
         public void InitializeCursor()
         {
@@ -56,16 +56,16 @@ namespace UIAssistant.Core.Input
                 return;
             }
 
-            var width = Win32Interop.GetSystemMetrics(Win32Interop.SystemMetric.SM_CXCURSOR);
-            var height = Win32Interop.GetSystemMetrics(Win32Interop.SystemMetric.SM_CYCURSOR);
+            var width = NativeMethods.GetSystemMetrics(SystemMetric.SM_CXCURSOR);
+            var height = NativeMethods.GetSystemMetrics(SystemMetric.SM_CYCURSOR);
             var andMask = Enumerable.Repeat<byte>(0xff, width * height / 8).ToArray();
             var xorMask = new byte[width * height / 8];
 
             AllCursorsForEach(x =>
             {
-                var cursor = Win32Interop.LoadCursor(IntPtr.Zero, x);
-                _saved.Add(x, Win32Interop.CopyImage(cursor, Win32Interop.IMAGE_CURSOR, 0, 0, 0));
-                _blanks.Add(x, Win32Interop.CreateCursor(IntPtr.Zero, 0, 0, width, height, andMask, xorMask));
+                var cursor = NativeMethods.LoadCursor(IntPtr.Zero, x);
+                _saved.Add(x, NativeMethods.CopyImage(cursor, NativeMethods.IMAGE_CURSOR, 0, 0, 0));
+                _blanks.Add(x, NativeMethods.CreateCursor(IntPtr.Zero, 0, 0, width, height, andMask, xorMask));
             });
 
             _hook = new MouseHook();
@@ -85,7 +85,7 @@ namespace UIAssistant.Core.Input
         {
             InitializeCursor();
 
-            Dictionary<Win32Interop.OCR_SYSTEM_CURSORS, IntPtr> cursors;
+            Dictionary<OCR_SYSTEM_CURSORS, IntPtr> cursors;
             if (visible)
             {
                 cursors = _saved;
@@ -97,14 +97,14 @@ namespace UIAssistant.Core.Input
 
             cursors.ForEach(x =>
             {
-                var cursor = Win32Interop.CopyImage(x.Value, Win32Interop.IMAGE_CURSOR, 0, 0, 0);
-                Win32Interop.SetSystemCursor(cursor, x.Key);
+                var cursor = NativeMethods.CopyImage(x.Value, NativeMethods.IMAGE_CURSOR, 0, 0, 0);
+                NativeMethods.SetSystemCursor(cursor, x.Key);
             });
         }
 
         public void DestroyCursor()
         {
-            _blanks.ForEach(x => Win32Interop.DestroyCursor(x.Value));
+            _blanks.ForEach(x => NativeMethods.DestroyCursor(x.Value));
             _saved.Clear();
             _blanks.Clear();
             _hook?.Dispose();

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using UIAssistant.Utility.Win32;
+using UIAssistant.Interfaces.Native;
 
 namespace UIAssistant.Plugin.SearchByText.Items
 {
@@ -23,7 +23,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
             {
                 return;
             }
-            Win32Interop.PostMessage(WindowHandle, WM_COMMAND, new IntPtr(Id), IntPtr.Zero);
+            NativeMethods.PostMessage(WindowHandle, WM_COMMAND, new IntPtr(Id), IntPtr.Zero);
         }
     }
 }

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using System.Windows;
 using System.Windows.Automation;
 
 using UIAssistant.Interfaces.HUD;
-using UIAssistant.Utility.Extensions;
 using UIAssistant.Plugin.SearchByText.Items;
 
 namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
@@ -59,7 +58,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
         private bool GetMenuItems(AutomationElement element, string parent, List<AutomationElement> groups)
         {
             bool ret = false;
-            var menuItems = element.FindAll(TreeScope.Children, Condition.TrueCondition).Cast<AutomationElement>();
+            var menuItems = element.FindAll(TreeScope.Children, System.Windows.Automation.Condition.TrueCondition).Cast<AutomationElement>();
 
             foreach (var item in menuItems)
             {

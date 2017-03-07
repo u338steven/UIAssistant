@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
-using UIAssistant.Utility.Extensions;
-using UIAssistant.Utility.Win32;
+
+using UIAssistant.Interfaces.Native;
 
 namespace UIAssistant.Plugin.SearchByText.Items
 {
@@ -106,7 +106,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
                             if (shouldBeClosed)
                             {
                                 System.Threading.Thread.Sleep(200);
-                                Win32Interop.SendMessage(Root.Current.NativeWindowHandle, Win32Interop.WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                                NativeMethods.SendMessage(Root.Current.NativeWindowHandle, NativeMethods.WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
                             }
                         }
                     };

@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Automation;
 using System.Threading.Tasks;
-using UIAssistant.Utility.Extensions;
 
 namespace UIAssistant.Plugin.SearchByText.Items
 {

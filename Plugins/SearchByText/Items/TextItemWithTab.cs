@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Automation;
-using UIAssistant.Utility.Win32;
-using UIAssistant.Utility.Extensions;
+
+using UIAssistant.Interfaces.Native;
 
 namespace UIAssistant.Plugin.SearchByText.Items
 {
@@ -25,7 +25,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
             if (TabHandle != IntPtr.Zero)
             {
                 var id = TabId;
-                Win32Interop.SendMessage(TabHandle, Win32Interop.TCM_SETCURFOCUS, new IntPtr(TabId), IntPtr.Zero);
+                NativeMethods.SendMessage(TabHandle, NativeMethods.TCM_SETCURFOCUS, new IntPtr(TabId), IntPtr.Zero);
             }
             else
             {

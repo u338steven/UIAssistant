@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using System.ComponentModel.Composition;
 using UIAssistant.Interfaces.API;
@@ -96,7 +92,7 @@ namespace UIAssistant.Plugin.SearchByText
 
         public void Localize()
         {
-            _localizer.SwitchLanguage(UIAssistantAPI.CurrentLanguage);
+            _localizer?.SwitchLanguage(UIAssistantAPI.CurrentLanguage);
 
             Settings.Expand.Text = _localizer.GetLocalizedText("sbtExpand");
         }

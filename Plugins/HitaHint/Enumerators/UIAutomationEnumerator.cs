@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 using System.Windows.Automation;
 using UIAssistant.Interfaces.HUD;
-using UIAssistant.Utility;
-using UIAssistant.Utility.Win32;
 
 namespace UIAssistant.Plugin.HitaHint.Enumerators
 {
@@ -23,7 +21,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
 
         public UIAutomationEnumerator()
         {
-            DesktopBounds = Screen.Bounds;
+            DesktopBounds = HitaHint.UIAssistantAPI.Screen.Bounds;
             Condition = new PropertyCondition(AutomationElement.IsEnabledProperty, true);
             IgnoreElements = new HashSet<ControlType>();
             EndElements = new HashSet<ControlType>(
@@ -176,7 +174,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
 
         public void Enumerate(ICollection<IHUDItem> container)
         {
-            Enumerate(container, Win32Window.ActiveWindow?.Element);
+            Enumerate(container, HitaHint.UIAssistantAPI.ActiveWindow?.Element);
         }
     }
 

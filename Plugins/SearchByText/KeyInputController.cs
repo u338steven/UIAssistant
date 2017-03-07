@@ -9,7 +9,6 @@ using System.Reactive.Disposables;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Settings;
-using UIAssistant.Utility.Extensions;
 using KeybindHelper.LowLevel;
 
 namespace UIAssistant.Plugin.SearchByText

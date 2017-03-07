@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.Windows;
 using UIAssistant.Interfaces.HUD;
-using UIAssistant.Utility;
-using UIAssistant.Utility.Win32;
-using UIAssistant.Utility.Extensions;
 
 namespace UIAssistant.Plugin.HitaHint.Enumerators
 {
@@ -15,10 +10,10 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
     {
         public void Enumerate(ICollection<IHUDItem> container)
         {
-            var desktopBounds = Screen.Bounds;
+            var desktopBounds = HitaHint.UIAssistantAPI.Screen.Bounds;
             var results = new List<IHUDItem>();
 
-            Win32Window.Filter((window) =>
+            HitaHint.UIAssistantAPI.EnumerateWindows((window) =>
             {
                 if (window.IsAltTabWindow())
                 {
@@ -33,7 +28,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
                 return true;
             });
             // 重なり解消のため必要
-            results.OrderBy(item => item.Bounds.X).ForEach(x => container.Add(x));
+            results.OrderBy(item => item.Bounds.X).ToList().ForEach(x => container.Add(x));
         }
 
         private static void AdjustLocation(IList<IHUDItem> results, IHUDItem item, System.Windows.Rect desktopBounds)

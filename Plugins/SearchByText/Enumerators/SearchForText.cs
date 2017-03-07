@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Automation;
@@ -10,8 +9,6 @@ using System.Text.RegularExpressions;
 
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Plugin.SearchByText.Items;
-using UIAssistant.Utility.Win32;
-using UIAssistant.Utility.Extensions;
 
 namespace UIAssistant.Plugin.SearchByText.Enumerators
 {
@@ -71,7 +68,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
 
         private void EnumerateInternal()
         {
-            var root = Win32Window.ActiveWindow.Element;
+            var root = SearchByText.UIAssistantAPI.ActiveWindow.Element;
             var tabGroups = GetTabGroups(root);
 
             if (tabGroups.Count == 0)
