@@ -63,6 +63,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\ISessionAPI.cs" />
     <Compile Include="CommandInterfaces.cs" />
     <Compile Include="EventInterfaces.cs" />
     <Compile Include="Extensions\AutomationElementExtensions.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="IHUD.cs" />
     <Compile Include="InputInterfaces.cs" />
     <Compile Include="IPlugin.cs" />
+    <Compile Include="ISession.cs" />
     <Compile Include="IUIAssistantAPI.cs" />
     <Compile Include="IWindow.cs" />
     <Compile Include="Native\NativeMethods.cs" />
@@ -86,6 +88,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -69,6 +69,7 @@
     </Compile>
     <Compile Include="Core\HintGeneratorTest.cs" />
     <Compile Include="Infrastructure\CommandsTest.cs" />
+    <Compile Include="Infrastructure\SessionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\ResourceTest.cs" />
     <Compile Include="Infrastructure\SettingsOrderedTest.cs" />

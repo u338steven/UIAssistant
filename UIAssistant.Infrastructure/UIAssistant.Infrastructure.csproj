@@ -76,6 +76,7 @@
     <Compile Include="Resource\ResourceUpdater.cs" />
     <Compile Include="Resource\Theme\Theme.cs" />
     <Compile Include="Resource\Theme\ThemeKeyValueGenerator.cs" />
+    <Compile Include="Session\Session.cs" />
     <Compile Include="Settings\SettingsFileIOBase.cs" />
     <Compile Include="Settings\YamlFileIO.cs" />
   </ItemGroup>
