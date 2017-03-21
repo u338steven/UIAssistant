@@ -93,12 +93,12 @@ namespace UIAssistant.Plugin.SearchByText.Items
         public virtual void Execute()
         {
             Prepare();
-            var from = SearchByText.UIAssistantAPI.ActiveWindow.Bounds.ToClientCoordinate();
+            var from = SearchByText.UIAssistantAPI.WindowAPI.ActiveWindow.Bounds.ToClientCoordinate();
             Rect to = new Rect();
             AutomationElement element = null;
             Task.Run(() =>
             {
-                element = GetCurrentElement(SearchByText.UIAssistantAPI.ActiveWindow.Element);
+                element = GetCurrentElement(SearchByText.UIAssistantAPI.WindowAPI.ActiveWindow.Element);
                 if (IsEnabled && element != null)
                 {
                     var parent = element.GetParent();

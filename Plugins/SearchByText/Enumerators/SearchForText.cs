@@ -68,7 +68,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
 
         private void EnumerateInternal()
         {
-            var root = SearchByText.UIAssistantAPI.ActiveWindow.Element;
+            var root = SearchByText.UIAssistantAPI.WindowAPI.ActiveWindow.Element;
             var tabGroups = GetTabGroups(root);
 
             if (tabGroups.Count == 0)

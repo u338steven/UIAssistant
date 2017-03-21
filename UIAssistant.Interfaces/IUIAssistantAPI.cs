@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Data = System.ComponentModel.DataAnnotations;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -58,11 +57,6 @@ namespace UIAssistant.Interfaces.API
         ILocalizer GetLocalizer();
         IResourceItem CurrentLanguage { get; }
 
-        IWindow ActiveWindow { get; }
-
-        ITaskbar Taskbar { get; }
-        IWindow FindWindow(string className, string caption = null);
-        void EnumerateWindows(Func<IWindow, bool> func);
         IScreen Screen { get; }
 
         ICommandAPI CommandAPI { get; }
@@ -70,5 +64,6 @@ namespace UIAssistant.Interfaces.API
         IMouseAPI MouseAPI { get; }
         ISessionAPI SessionAPI { get; }
         IThemeAPI ThemeAPI { get; }
+        IWindowAPI WindowAPI { get; }
     }
 }

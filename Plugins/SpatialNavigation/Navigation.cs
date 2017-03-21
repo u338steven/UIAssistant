@@ -126,7 +126,7 @@ namespace UIAssistant.Plugin.SpatialNavigation
                 _enumerateTargets = _itemTargets;
             }
 
-            var activeWindow = SpatialNavigation.UIAssistantAPI.ActiveWindow;
+            var activeWindow = SpatialNavigation.UIAssistantAPI.WindowAPI.ActiveWindow;
             var rootElement = activeWindow.Element;
             var current = AutomationElement.FocusedElement;
             if (current == null || current == rootElement)

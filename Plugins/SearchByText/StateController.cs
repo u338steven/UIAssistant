@@ -172,7 +172,7 @@ namespace UIAssistant.Plugin.SearchByText
                 return;
             }
 
-            var activeWindow = UIAssistantAPI.ActiveWindow;
+            var activeWindow = UIAssistantAPI.WindowAPI.ActiveWindow;
 
             // show popup
             selectedItem.Prepare();

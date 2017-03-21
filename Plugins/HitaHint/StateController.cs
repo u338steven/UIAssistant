@@ -98,7 +98,7 @@ namespace UIAssistant.Plugin.HitaHint
         internal State(IUIAssistantAPI api)
         {
             _api = api;
-            PreviousWindow = api.ActiveWindow;
+            PreviousWindow = api.WindowAPI.ActiveWindow;
             Session = api.SessionAPI.Create();
         }
 
@@ -120,7 +120,7 @@ namespace UIAssistant.Plugin.HitaHint
                 return;
             }
             var item = History.PopState();
-            if (_api.ActiveWindow != item.window)
+            if (_api.WindowAPI.ActiveWindow != item.window)
             {
                 item.window.Activate();
             }

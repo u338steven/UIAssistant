@@ -174,7 +174,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
 
         public void Enumerate(ICollection<IHUDItem> container)
         {
-            Enumerate(container, HitaHint.UIAssistantAPI.ActiveWindow?.Element);
+            Enumerate(container, HitaHint.UIAssistantAPI.WindowAPI.ActiveWindow?.Element);
         }
     }
 

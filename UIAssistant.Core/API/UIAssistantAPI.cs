@@ -385,18 +385,6 @@ namespace UIAssistant.Core.API
         }
 
         public IResourceItem CurrentLanguage { get { return DefaultLocalizer.CurrentLanguage; } }
-
-        public IWindow ActiveWindow { get { return Win32Window.ActiveWindow; } }
-        public ITaskbar Taskbar { get { return new Win32Taskbar(); } }
-        public IWindow FindWindow(string className, string caption = null)
-        {
-            return Win32Window.Find(className, caption);
-        }
-
-        public void EnumerateWindows(Func<IWindow, bool> func)
-        {
-            Win32Window.Filter(func);
-        }
         public IScreen Screen { get { return new Utility.Screen(); } }
 
         public ICommandAPI CommandAPI { get; } = new CommandAPI();
@@ -404,5 +392,6 @@ namespace UIAssistant.Core.API
         public IMouseAPI MouseAPI { get; } = new MouseAPI();
         public ISessionAPI SessionAPI { get; } = new SessionAPI();
         public IThemeAPI ThemeAPI { get; } = new ThemeAPI();
+        public IWindowAPI WindowAPI { get; } = new WindowAPI();
     }
 }

@@ -68,6 +68,7 @@
     <Compile Include="API\IMouseAPI.cs" />
     <Compile Include="API\ISessionAPI.cs" />
     <Compile Include="API\IThemeAPI.cs" />
+    <Compile Include="API\IWindowAPI.cs" />
     <Compile Include="CommandInterfaces.cs" />
     <Compile Include="EventInterfaces.cs" />
     <Compile Include="Extensions\AutomationElementExtensions.cs" />

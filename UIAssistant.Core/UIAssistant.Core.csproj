@@ -85,6 +85,7 @@
     <Compile Include="API\SessionAPI.cs" />
     <Compile Include="API\ThemeAPI.cs" />
     <Compile Include="API\UIAssistantAPI.cs" />
+    <Compile Include="API\WindowAPI.cs" />
     <Compile Include="HitaHint\AlternateHintGenerator.cs" />
     <Compile Include="HitaHint\HintGenerator.cs" />
     <Compile Include="Enumerators\HUDItemCollection.cs" />

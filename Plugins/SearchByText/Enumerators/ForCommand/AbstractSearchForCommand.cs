@@ -12,7 +12,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
     {
         public event EventHandler Updated;
         public event EventHandler Finished;
-        protected IntPtr MainWindowHandle { get; private set; } = SearchByText.UIAssistantAPI.ActiveWindow.WindowHandle;
+        protected IntPtr MainWindowHandle { get; private set; } = SearchByText.UIAssistantAPI.WindowAPI.ActiveWindow.WindowHandle;
         protected ICollection<IHUDItem> _results;
 
         public virtual void Dispose()

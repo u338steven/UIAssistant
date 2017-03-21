@@ -18,11 +18,11 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
 
         public void Enumerate(ICollection<IHUDItem> container)
         {
-            var targetWindow = HitaHint.UIAssistantAPI.FindWindow(TaskbarClass, "");
+            var targetWindow = HitaHint.UIAssistantAPI.WindowAPI.FindWindow(TaskbarClass, "");
             targetWindow.Activate();
             var enumerator = new WidgetEnumerator();
             enumerator.Enumerate(container, null, _enumerateTargets);
-            var taskbar = HitaHint.UIAssistantAPI.Taskbar;
+            var taskbar = HitaHint.UIAssistantAPI.WindowAPI.Taskbar;
 
             double x = 0, y = 0;
             if (taskbar.IsAutoHide())
@@ -78,7 +78,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
                 {
                     return;
                 }
-                var overflowWindow = HitaHint.UIAssistantAPI.FindWindow(NotifyIconOverflowClass, "");
+                var overflowWindow = HitaHint.UIAssistantAPI.WindowAPI.FindWindow(NotifyIconOverflowClass, "");
                 overflowWindow.ShowWindow(WindowShowStyle.Hide);
             });
         }
@@ -94,7 +94,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
             overflowButton.ButtonClick();
             overflowButton.ButtonClick();
             System.Threading.Thread.Sleep(100);
-            var overflowWindow = HitaHint.UIAssistantAPI.FindWindow(NotifyIconOverflowClass, "");
+            var overflowWindow = HitaHint.UIAssistantAPI.WindowAPI.FindWindow(NotifyIconOverflowClass, "");
             overflowWindow.ShowWindow(WindowShowStyle.Show);
             return true;
         }

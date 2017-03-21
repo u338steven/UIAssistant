@@ -47,7 +47,7 @@ namespace UIAssistant.Plugin.HitaHint
             OperationName = operationName;
             Target = target;
             Enumerator = enumerator;
-            window = HitaHint.UIAssistantAPI.ActiveWindow;
+            window = HitaHint.UIAssistantAPI.WindowAPI.ActiveWindow;
         }
     }
 }

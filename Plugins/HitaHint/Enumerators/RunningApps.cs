@@ -13,7 +13,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
             var desktopBounds = HitaHint.UIAssistantAPI.Screen.Bounds;
             var results = new List<IHUDItem>();
 
-            HitaHint.UIAssistantAPI.EnumerateWindows((window) =>
+            HitaHint.UIAssistantAPI.WindowAPI.EnumerateWindows((window) =>
             {
                 if (window.IsAltTabWindow())
                 {

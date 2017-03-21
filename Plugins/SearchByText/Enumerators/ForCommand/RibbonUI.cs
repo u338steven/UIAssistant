@@ -37,7 +37,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                 }
                 else
                 {
-                    var parent = SearchByText.UIAssistantAPI.ActiveWindow;
+                    var parent = SearchByText.UIAssistantAPI.WindowAPI.ActiveWindow;
                     GetRibbonItems(parent.Element, true);
                 }
             }
@@ -107,7 +107,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                         {
                             System.Threading.Thread.Sleep(100);
                             var cond = new PropertyCondition(AutomationElement.NameProperty, el.Current.Name);
-                            var next = SearchByText.UIAssistantAPI.ActiveWindow.LastActivePopup.Element;
+                            var next = SearchByText.UIAssistantAPI.WindowAPI.ActiveWindow.LastActivePopup.Element;
 
                             var elem = next?.FindFirst(TreeScope.Children | TreeScope.Descendants, cond);
                             if (elem == null)
@@ -137,10 +137,10 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
 
         private void FindRibbonUI(ref IWindow ribbonRoot, ref IWindow ribbon)
         {
-            ribbonRoot = SearchByText.UIAssistantAPI.ActiveWindow.FindChild("UIRibbonCommandBarDock");
+            ribbonRoot = SearchByText.UIAssistantAPI.WindowAPI.ActiveWindow.FindChild("UIRibbonCommandBarDock");
             while (ribbonRoot.WindowHandle != IntPtr.Zero)
             {
-                ribbonRoot = SearchByText.UIAssistantAPI.ActiveWindow.FindChild(ribbonRoot, "UIRibbonCommandBarDock");
+                ribbonRoot = SearchByText.UIAssistantAPI.WindowAPI.ActiveWindow.FindChild(ribbonRoot, "UIRibbonCommandBarDock");
                 ribbon = ribbonRoot?.FindChild("UIRibbonCommandBar")
                     .FindChild("UIRibbonWorkPane").FindChild("NUIPane").FindChild("NetUIHWND");
                 if (ribbon != null && ribbon.WindowHandle != IntPtr.Zero)

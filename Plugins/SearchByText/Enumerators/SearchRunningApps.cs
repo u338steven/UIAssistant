@@ -15,7 +15,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
         public void Enumerate(ICollection<IHUDItem> resultsContainer)
         {
             var results = new List<IHUDItem>();
-            SearchByText.UIAssistantAPI.EnumerateWindows((window) =>
+            SearchByText.UIAssistantAPI.WindowAPI.EnumerateWindows((window) =>
             {
                 if (window.IsAltTabWindow())
                 {
