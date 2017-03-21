@@ -11,6 +11,7 @@ using UIAssistant.Interfaces.HUD;
 using UIAssistant.Interfaces.Input;
 using UIAssistant.Interfaces.Plugin;
 using UIAssistant.Interfaces.Resource;
+using UIAssistant.Interfaces.Session;
 using UIAssistant.Interfaces.Settings;
 
 namespace UIAssistant.Interfaces.API
@@ -82,5 +83,10 @@ namespace UIAssistant.Interfaces.API
         IWindow FindWindow(string className, string caption = null);
         void EnumerateWindows(Func<IWindow, bool> func);
         IScreen Screen { get; }
+        void InvokePluginCommand(string command, Action quit = null, Action pausing = null, Action resumed = null);
+
+        ISessionAPI SessionAPI { get; }
+        IKeyInputController CreateKeyboardController(IKeyboardPlugin plugin, ISession session);
+        void ReserveToReturnMouseCursor(ISession session, Func<bool> canReturn);
     }
 }

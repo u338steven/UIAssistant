@@ -60,26 +60,34 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         }
     }
 
-    class KeyInputController : AbstractKeyInputController
+    class KeyInputController : IKeyboardPlugin
     {
         private StateController _stateController;
         private KeybindsManiacsSettings _settings;
         private Dictionary<string, KeybindStorage> _keybindsDic { get; set; } = new Dictionary<string, KeybindStorage>();
         private KeybindStorage _currentKeybinds { get; set; } = new KeybindStorage();
 
-        public KeyInputController(IUIAssistantAPI api, StateController controller) : base(api, controller, api.CreateKeyboardHook(), api.CreateKeybindManager())
+        IUIAssistantAPI UIAssistantAPI;
+
+        public KeyInputController(IUIAssistantAPI api, StateController controller)
         {
+            UIAssistantAPI = api;
             _stateController = controller;
-            _settings = _stateController.Settings;
-            InitializeKeybind();
+            _settings = KeybindsManiacs.Settings;
         }
 
-        protected override void InitializeKeybind()
+        public void Initialize(IKeyboardPluginContext context)
+        {
+            context.Hook.IgnoreInjected = true;
+        }
+
+        public void LoadKeybinds(IKeyboardPluginContext context)
         {
             _keybindsDic.Clear();
             foreach (var keybinds in _settings.KeybindsInMode)
             {
-                Keybinds = KeybindsManiacs.UIAssistantAPI.CreateKeybindManager();
+                var defaultKeybinds = context.Keybinds;
+                defaultKeybinds = KeybindsManiacs.UIAssistantAPI.CreateKeybindManager();
                 var keybindStorage = new KeybindStorage();
                 var oneShotDefined = new Dictionary<KeySet, bool>();
                 foreach (var keybind in keybinds.Value.Keybinds)
@@ -131,7 +139,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                                 });
                                 break;
                             }
-                            Keybinds.Add(keyset, () =>
+                            defaultKeybinds.Add(keyset, () =>
                             {
                                 var keys = keybind.OutputKeys;
                                 if (_stateController.Mode == Mode.Visual && ContainsMovingKey(keys))
@@ -143,10 +151,10 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                             });
                             break;
                         case CommandType.RunEmbeddedCommand:
-                            Keybinds.Add(keyset, ParseCommand(keybind.CommandText, keybind.InputKeys));
+                            defaultKeybinds.Add(keyset, ParseCommand(keybind.CommandText, keybind.InputKeys));
                             break;
                         case CommandType.RunUIAssistantCommand:
-                            Keybinds.Add(keyset, () =>
+                            defaultKeybinds.Add(keyset, () =>
                             {
                                 var command = keybind.CommandText;
                                 if (KeybindsManiacs.UIAssistantAPI.PluginManager.Exists(command))
@@ -165,11 +173,10 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                             break;
                     }
                 }
-                base.InitializeKeybind();
                 keybindStorage.IsEnabledWindowsKeybinds = keybinds.Value.IsEnabledWindowsKeybinds;
                 keybindStorage.IsPrefix = keybinds.Value.IsPrefix;
                 keybindStorage.OneShotDefined = oneShotDefined;
-                keybindStorage.Keybinds = Keybinds;
+                keybindStorage.Keybinds = defaultKeybinds;
                 _keybindsDic.Add(keybinds.Key, keybindStorage);
             }
             SwitchMode(_settings.Mode, true);
@@ -378,15 +385,15 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                     _currentKeybinds = _keybindsDic[Consts.DefaultMode];
                 }
             }
-            Keybinds = _currentKeybinds.Keybinds;
+            var keybinds = _currentKeybinds.Keybinds;
 
             if (_currentKeybinds.IsPrefix)
             {
                 _command = (_, keysState) =>
                 {
-                    if (Keybinds.Contains(keysState))
+                    if (keybinds.Contains(keysState))
                     {
-                        Keybinds[keysState].Invoke();
+                        keybinds[keysState].Invoke();
                     }
                     SwitchMode(_settings.Mode, true);
                     _command = null;
@@ -423,11 +430,10 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         {
             if (!_isActive)
             {
+                _stateController.Initialize();
+                var keyController = UIAssistantAPI.CreateKeyboardController(this, _stateController.Session);
                 UIAssistantAPI.NotifyInfoMessage("Keybinds Maniacs", KeybindsManiacs.Localizer.GetLocalizedText(Consts.Activate));
-                Initialize();
-                Hook.IgnoreInjected = true;
-                Hook.KeyDown += Hook_KeyDown;
-                Hook.KeyUp += Hook_KeyUp;
+                keyController.Observe();
             }
             else
             {
@@ -440,12 +446,9 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         bool _isOneShotCandidate = false;
         Key _repeatKey;
         KeySet _currentKeySet = new KeySet();
-        private void Hook_KeyDown(object sender, LowLevelKeyEventArgs e)
+        public void OnKeyDown(IKeyboardPluginContext context, object sender, LowLevelKeyEventArgs e)
         {
-            if (e.Handled)
-            {
-                return;
-            }
+            var keybinds = _currentKeybinds.Keybinds;
             if (e.CurrentKey.IsInjected)
             {
                 e.Handled = false;
@@ -481,9 +484,9 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                 _command.Invoke(input, keysState);
                 return;
             }
-            if (Keybinds.Contains(keysState))
+            if (keybinds.Contains(keysState))
             {
-                var operation = Keybinds[keysState];
+                var operation = keybinds[keysState];
                 ReleaseKeys(keysState);
                 operation?.Invoke();
                 return;
@@ -491,9 +494,9 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
             //var keyset = new KeySet(key);
             var keyset = GenerateKeySet(key, keysState);
-            if (Keybinds.Contains(keyset))
+            if (keybinds.Contains(keyset))
             {
-                var operation = Keybinds[keyset];
+                var operation = keybinds[keyset];
                 ReleaseKeys(keysState);
                 operation?.Invoke();
                 return;
@@ -503,12 +506,9 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             return;
         }
 
-        private void Hook_KeyUp(object sender, LowLevelKeyEventArgs e)
+        public void OnKeyUp(IKeyboardPluginContext context, object sender, LowLevelKeyEventArgs e)
         {
-            if (e.Handled)
-            {
-                return;
-            }
+            var keybinds = _currentKeybinds.Keybinds;
             if (e.CurrentKey.IsInjected)
             {
                 e.Handled = false;
@@ -530,7 +530,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             }
             _isOneShotCandidate = false;
 
-            if (Keybinds.Contains(e.PressedKeys) && !key.IsModifiersKey())
+            if (keybinds.Contains(e.PressedKeys) && !key.IsModifiersKey())
             {
                 return;
             }
@@ -557,6 +557,14 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             var mod = keysState.Keys.Where(x => x.IsModifiersKey());
             var result = new KeySet(mod.Concat(new[] { key }).ToArray());
             return result;
+        }
+
+        public void Cleanup(IKeyboardPluginContext context)
+        {
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Data=System.ComponentModel.DataAnnotations;
+using Data = System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,6 +28,7 @@ using UIAssistant.Interfaces.Input;
 using UIAssistant.Interfaces.Plugin;
 using UIAssistant.Interfaces.Resource;
 using UIAssistant.Interfaces.Settings;
+using UIAssistant.Interfaces.Session;
 using UIAssistant.UI.Controls;
 using UIAssistant.Utility.Win32;
 
@@ -451,7 +452,7 @@ namespace UIAssistant.Core.API
             return new CommandRule(name, action, requiredArgs, optionalArgs);
         }
 
-        public IArgumentRule CreateArgmentRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule>  optionalArgs = null)
+        public IArgumentRule CreateArgmentRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null)
         {
             return new ArgumentRule(name, action, requiredArgs, optionalArgs);
         }
@@ -478,5 +479,192 @@ namespace UIAssistant.Core.API
             Win32Window.Filter(func);
         }
         public IScreen Screen { get { return new Utility.Screen(); } }
+
+        public void InvokePluginCommand(string command, Action quit = null, Action pausing = null, Action resumed = null)
+        {
+            if (PluginManager.Exists(command))
+            {
+                pausing?.Invoke();
+                DefaultHUD.Initialize();
+                PluginManager.Execute(command);
+                PluginManager.Resume += () =>
+                {
+                    resumed?.Invoke();
+                };
+                PluginManager.Quit += () =>
+                {
+                    quit?.Invoke();
+                };
+            }
+            else
+            {
+                NotifyWarnMessage("Plugin Error", string.Format(TextID.CommandNotFound.GetLocalizedText(), command));
+                quit?.Invoke();
+            }
+        }
+
+        public ISessionAPI SessionAPI { get; } = new SessionAPI();
+        public IKeyInputController CreateKeyboardController(IKeyboardPlugin plugin, ISession session)
+        {
+            var controller = new KeyInputController(plugin, session);
+            controller.Initialize();
+            //controller.Observe();
+            return controller;
+        }
+
+        public void ReserveToReturnMouseCursor(ISession session, Func<bool> canReturn)
+        {
+            var prevMousePosition = MouseOperation.GetMousePosition();
+            session.Finished += (_, __) =>
+            {
+                if (!canReturn())
+                {
+                    return;
+                }
+                Task.Run(() =>
+                {
+                    System.Threading.Thread.Sleep(300);
+                    MouseOperation.Move(prevMousePosition);
+                });
+            };
+        }
+    }
+
+    public class KeyInputContext : IKeyboardPluginContext
+    {
+        public IKeyboardHook Hook { get; private set; }
+        public IKeybindManager Keybinds { get; private set; }
+        public UserControl UsagePanel { get; set; }
+
+        public KeyInputContext(IKeyboardHook hook, IKeybindManager keybinds)
+        {
+            Hook = hook;
+            Keybinds = keybinds;
+        }
+
+        public void Dispose()
+        {
+            Keybinds.Clear();
+            Hook.Dispose();
+        }
+    }
+
+    public class KeyInputController : IKeyInputController
+    {
+        IKeyboardPluginContext _context;
+        IKeyboardPlugin _plugin;
+        ISession _session;
+        private KeySet _temporarilyHide = new KeySet();
+
+        public KeyInputController(IKeyboardPlugin plugin, ISession session)
+        {
+            _plugin = plugin;
+            _context = new KeyInputContext(UIAssistantAPI.Instance.CreateKeyboardHook(), UIAssistantAPI.Instance.CreateKeybindManager());
+
+            _session = session;
+            _session.Pausing += (_, __) => _context.Hook.IsActive = false;
+            _session.Resumed += (_, __) => _context.Hook.IsActive = true;
+        }
+
+        public void AddHidingProcess()
+        {
+            _temporarilyHide = new KeySet(UIAssistantAPI.Instance.UIAssistantSettings.TemporarilyHide);
+            _context.Hook.KeyDown += Hide_KeyDown;
+            _context.Hook.KeyUp += Hide_KeyUp;
+        }
+
+        private void Hide_KeyDown(object sender, LowLevelKeyEventArgs e)
+        {
+            if (e.PressedKeys.Equals(_temporarilyHide))
+            {
+                UIAssistantAPI.Instance.Transparent = true;
+                e.Handled = true;
+                return;
+            }
+        }
+
+        private void Hide_KeyUp(object sender, LowLevelKeyEventArgs e)
+        {
+            if (UIAssistantAPI.Instance.Transparent)
+            {
+                UIAssistantAPI.Instance.Transparent = false;
+                e.Handled = true;
+                return;
+            }
+        }
+
+        public void AddUsagePanelProcess(UserControl usagePanel)
+        {
+            _context.UsagePanel = usagePanel;
+            _context.Keybinds.Add(UIAssistantAPI.Instance.UIAssistantSettings.Usage, () =>
+            {
+                if (_context.UsagePanel == null)
+                {
+                    return;
+                }
+                if (!_context.UsagePanel.IsVisible)
+                {
+                    UIAssistantAPI.Instance.AddPanel(_context.UsagePanel);
+                    _session.Finished += RemoveUsagePanel;
+                }
+                else
+                {
+                    RemoveUsagePanel(this, EventArgs.Empty);
+                    _session.Finished -= RemoveUsagePanel;
+                }
+            });
+        }
+
+        public void Observe()
+        {
+            if (_context.Hook.IsActive)
+            {
+                return;
+            }
+
+            _context.Hook.Hook();
+            _context.Hook.KeyDown += CallPluginKeyDown;
+            _context.Hook.KeyUp += CallPluginKeyUp;
+
+            _session.Finished += (_, __) =>
+            {
+                _context.Hook.Unhook();
+                _context.Dispose();
+            };
+        }
+
+        private void CallPluginKeyDown(object sender, LowLevelKeyEventArgs e)
+        {
+#if DEBUG
+            if (!e.CurrentKey.IsInjected)
+            {
+                UIAssistantAPI.Instance.DisplayKeystroke(e);
+            }
+#endif
+            _plugin.OnKeyDown(_context, sender, e);
+        }
+
+        private void CallPluginKeyUp(object sender, LowLevelKeyEventArgs e)
+        {
+            _plugin.OnKeyUp(_context, sender, e);
+        }
+
+        public void Initialize()
+        {
+            _context.Keybinds.Clear();
+            _plugin.Initialize(_context);
+            _plugin.LoadKeybinds(_context);
+        }
+
+        private void RemoveUsagePanel(object sender, EventArgs e)
+        {
+            UIAssistantAPI.Instance.RemovePanel(_context.UsagePanel);
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+            _session.Dispose();
+        }
     }
 }

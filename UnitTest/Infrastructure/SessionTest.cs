@@ -15,7 +15,7 @@ namespace SessionTest
             Session session = new Session();
             var isCalled = false;
 
-            session.Paused += (o, e) => { isCalled = true; };
+            session.Pausing += (o, e) => { isCalled = true; };
 
             Assert.AreEqual(false, isCalled);
 
@@ -47,7 +47,7 @@ namespace SessionTest
             var isResumedCalled = false;
             var isFinishedCalled = false;
 
-            session.Paused += (o, e) => { isPausedCalled = true; };
+            session.Pausing += (o, e) => { isPausedCalled = true; };
             session.Resumed += (o, e) => { isResumedCalled = true; };
             session.Finished += (o, e) => { isFinishedCalled = true; };
 

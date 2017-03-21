@@ -3,44 +3,105 @@ using System.Linq;
 
 using KeybindHelper.LowLevel;
 using UIAssistant.Interfaces;
+using UIAssistant.Interfaces.Input;
 using UIAssistant.Interfaces.API;
 
 namespace UIAssistant.Plugin.HitaHint
 {
-    internal class KeyInputController : AbstractKeyInputController
+    internal class KeyInputController : IKeyboardPlugin
     {
-        private StateController _stateController;
-        private HitaHintSettings _settings;
+        HitaHintSettings _settings;
+        StateController _stateController;
+        IUIAssistantAPI UIAssistantAPI;
 
-        public KeyInputController(IUIAssistantAPI api, StateController controller) : base(api, controller, api.CreateKeyboardHook(), api.CreateKeybindManager())
+        public KeyInputController(IUIAssistantAPI api, StateController controller)
         {
+            UIAssistantAPI = api;
             _stateController = controller;
-            _settings = _stateController.Settings;
-            InitializeKeybind();
+            _settings = HitaHint.Settings;
         }
 
-        public override void Initialize()
+        public void Initialize(IKeyboardPluginContext context)
         {
-            base.Initialize();
-            _stateController.SetKeyboardLayoutName(Hook.GetKeyboardLayoutLanguage());
-            Hook.KeyDown += Hook_KeyDown;
+            _stateController.State.KeyboardLayoutName = context.Hook.GetKeyboardLayoutLanguage();
         }
 
-        private void Hook_KeyDown(object sender, LowLevelKeyEventArgs e)
+        public void Dispose()
         {
-            if (e.Handled)
+            //_keyController.Dispose();
+        }
+
+        public void Cleanup(IKeyboardPluginContext context)
+        {
+            //_keyController.Dispose();
+        }
+
+        public void LoadKeybinds(IKeyboardPluginContext context)
+        {
+            var keybinds = context.Keybinds;
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Quit, () =>
             {
-                return;
-            }
+                _stateController.ActivateLastActiveWindow();
+                _stateController.Quit();
+            });
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.SwitchTheme, () => _stateController.SwitchNextTheme());
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Back, () => _stateController.Back());
+            keybinds.Add(_settings.Reload, () =>
+            {
+                if (_stateController.IsBusy)
+                {
+                    return;
+                }
+                _stateController.Clear();
+                _stateController.Enumerate();
+                _stateController.PrintState();
+            });
+            keybinds.Add(_settings.Reverse, () => UIAssistantAPI.DefaultHUD.Items = UIAssistantAPI.DefaultHUD.Items.Reverse().ToList());
+
+            keybinds.Add(_settings.Click, () => _stateController.ChangeOperation(Consts.Click));
+            keybinds.Add(_settings.RightClick, () => _stateController.ChangeOperation(Consts.RightClick));
+            keybinds.Add(_settings.MiddleClick, () => _stateController.ChangeOperation(Consts.MiddleClick));
+            keybinds.Add(_settings.DoubleClick, () => _stateController.ChangeOperation(Consts.DoubleClick));
+            keybinds.Add(_settings.Hover, () => _stateController.ChangeOperation(Consts.Hover));
+            keybinds.Add(_settings.DragAndDrop, () => _stateController.ChangeOperation(Consts.DragAndDrop));
+
+            keybinds.Add(_settings.MouseEmulation, () => _stateController.ChangeOperation(Consts.MouseEmulation));
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.SwitchKeyboardLayout, () =>
+            {
+                context.Hook.LoadAnotherKeyboardLayout();
+                var layoutLanguage = context.Hook.GetKeyboardLayoutLanguage();
+                UIAssistantAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(UIAssistantAPI.Localize(TextID.SwitchKeyboardLayout), layoutLanguage));
+                _stateController.State.KeyboardLayoutName = layoutLanguage;
+            });
+
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Up, () => UIAssistantAPI.DefaultHUD.FocusPreviousItem());
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Down, () => UIAssistantAPI.DefaultHUD.FocusNextItem());
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Execute, () =>
+            {
+                var selectedItem = UIAssistantAPI.DefaultHUD.SelectedItem;
+                if (selectedItem != null)
+                {
+                    _stateController.Invoke(selectedItem);
+                }
+                else if (UIAssistantAPI.DefaultHUD.Items.Count == 1)
+                {
+                    _stateController.Invoke(UIAssistantAPI.DefaultHUD.Items.ElementAt(0));
+                }
+
+            });
+        }
+
+        public void OnKeyDown(IKeyboardPluginContext context, object sender, LowLevelKeyEventArgs e)
+        {
             e.Handled = true;
 
             try
             {
                 var keysState = e.PressedKeys;
                 var input = e.ConvertToCurrentLanguage();
-                if (Keybinds.Contains(keysState))
+                if (context.Keybinds.Contains(keysState))
                 {
-                    Keybinds[keysState]?.Invoke();
+                    context.Keybinds[keysState]?.Invoke();
                     _stateController.PrintState();
                     return;
                 }
@@ -56,61 +117,8 @@ namespace UIAssistant.Plugin.HitaHint
             }
         }
 
-        public override void Reset()
+        public void OnKeyUp(IKeyboardPluginContext context, object sender, LowLevelKeyEventArgs e)
         {
-            base.Reset();
-        }
-
-        protected override void InitializeKeybind()
-        {
-            UIAssistantAPI.UIDispatcher.Invoke(() => UsagePanel = new Usage());
-            Keybinds.Clear();
-            Keybinds.Add(UIAssistantAPI.UIAssistantSettings.Quit, () =>
-            {
-                _stateController.ActivateLastActiveWindow();
-                _stateController.Quit();
-            });
-            Keybinds.Add(UIAssistantAPI.UIAssistantSettings.Back, () => _stateController.Back());
-            Keybinds.Add(_settings.Reload, () =>
-            {
-                _stateController.Clear();
-                _stateController.Enumerate();
-                _stateController.PrintState();
-            });
-            Keybinds.Add(_settings.Reverse, () => UIAssistantAPI.DefaultHUD.Items = UIAssistantAPI.DefaultHUD.Items.Reverse().ToList());
-
-            Keybinds.Add(_settings.Click, () => _stateController.ChangeOperation(Consts.Click));
-            Keybinds.Add(_settings.RightClick, () => _stateController.ChangeOperation(Consts.RightClick));
-            Keybinds.Add(_settings.MiddleClick, () => _stateController.ChangeOperation(Consts.MiddleClick));
-            Keybinds.Add(_settings.DoubleClick, () => _stateController.ChangeOperation(Consts.DoubleClick));
-            Keybinds.Add(_settings.Hover, () => _stateController.ChangeOperation(Consts.Hover));
-            Keybinds.Add(_settings.DragAndDrop, () => _stateController.ChangeOperation(Consts.DragAndDrop));
-
-            Keybinds.Add(_settings.MouseEmulation, () => _stateController.ChangeOperation(Consts.MouseEmulation));
-            Keybinds.Add(UIAssistantAPI.UIAssistantSettings.SwitchKeyboardLayout, () =>
-            {
-                Hook.LoadAnotherKeyboardLayout();
-                var layoutLanguage = Hook.GetKeyboardLayoutLanguage();
-                UIAssistantAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(UIAssistantAPI.Localize(TextID.SwitchKeyboardLayout), layoutLanguage));
-                _stateController.SetKeyboardLayoutName(layoutLanguage);
-            });
-
-            Keybinds.Add(UIAssistantAPI.UIAssistantSettings.Up, () => UIAssistantAPI.DefaultHUD.FocusPreviousItem());
-            Keybinds.Add(UIAssistantAPI.UIAssistantSettings.Down, () => UIAssistantAPI.DefaultHUD.FocusNextItem());
-            Keybinds.Add(UIAssistantAPI.UIAssistantSettings.Execute, () =>
-            {
-                var selectedItem = UIAssistantAPI.DefaultHUD.SelectedItem;
-                if (selectedItem != null)
-                {
-                    _stateController.Invoke(selectedItem);
-                }
-                else if (UIAssistantAPI.DefaultHUD.Items.Count == 1)
-                {
-                    _stateController.Invoke(UIAssistantAPI.DefaultHUD.Items.ElementAt(0));
-                }
-
-            });
-            base.InitializeKeybind();
         }
     }
 }

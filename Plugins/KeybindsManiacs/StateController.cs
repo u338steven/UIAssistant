@@ -5,27 +5,36 @@ using System.Text;
 using System.Threading.Tasks;
 
 using UIAssistant.Interfaces.API;
+using UIAssistant.Interfaces.Session;
 
 namespace UIAssistant.Plugin.KeybindsManiacs
 {
-    class StateController : AbstractStateController
+    class StateController
     {
         public KeybindsManiacsSettings Settings { get; private set; }
         public Mode Mode { get; private set; }
+        public ISession Session { get; private set; }
+        private IUIAssistantAPI API;
 
-        public StateController(IUIAssistantAPI api) : base(api)
+        public StateController(IUIAssistantAPI api)
         {
             Settings = KeybindsManiacs.Settings;
-            Mode = Mode.Normal;
+            API = api;
         }
 
-        public override void Quit()
+        public void Initialize()
         {
             Mode = Mode.Normal;
-            Cleanup();
+            Session = API.SessionAPI.Create();
         }
 
-        public override void SwitchNextTheme()
+        public void Quit()
+        {
+            Mode = Mode.Normal;
+            Session.Dispose();
+        }
+
+        public void SwitchNextTheme()
         {
         }
 
@@ -34,7 +43,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             Mode = Mode.UserCustom;
             if (!isSilent)
             {
-                //UIAssistantAPI.NotifyInfoMessage("KeybindsManiacs", string.Format(KeybindsManiacs.Localizer.GetLocalizedText(Consts.SwitchMode), modeName));
+                API.NotifyInfoMessage("KeybindsManiacs", string.Format(KeybindsManiacs.Localizer.GetLocalizedText(Consts.SwitchMode), modeName));
             }
         }
 
@@ -47,7 +56,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             Mode = mode;
             if (!isSilent)
             {
-                //UIAssistantAPI.NotifyInfoMessage("KeybindsManiacs", string.Format(KeybindsManiacs.Localizer.GetLocalizedText(Consts.SwitchMode), mode.ToString()));
+                API.NotifyInfoMessage("KeybindsManiacs", string.Format(KeybindsManiacs.Localizer.GetLocalizedText(Consts.SwitchMode), mode.ToString()));
             }
         }
     }

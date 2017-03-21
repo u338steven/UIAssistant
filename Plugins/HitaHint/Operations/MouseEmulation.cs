@@ -9,7 +9,7 @@ namespace UIAssistant.Plugin.HitaHint.Operations
         public void Dispose() { }
         public void Next(StateController controller)
         {
-            controller.PreviousWindow = null;
+            controller.State.PreviousWindow = null;
             controller.InvokePlugin("me");
             HitaHint.UIAssistantAPI.DefaultHUD.TextBox.SetText("Mouse Emulation Mode");
         }

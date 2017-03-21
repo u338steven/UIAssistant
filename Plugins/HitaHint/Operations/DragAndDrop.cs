@@ -10,12 +10,12 @@ namespace UIAssistant.Plugin.HitaHint.Operations
         public void Dispose() { }
         public void Next(StateController controller)
         {
-            if (controller.Target == EnumerateTarget.DividedScreen)
+            if (controller.State.Target == EnumerateTarget.DividedScreen)
             {
                 controller.SaveState();
                 controller.ChangeOperation(Consts.Drop);
             }
-            else if (controller.Target != EnumerateTarget.DividedScreen)
+            else if (controller.State.Target != EnumerateTarget.DividedScreen)
             {
                 controller.SaveState();
                 controller.ChangeOperation(Consts.Dragged);

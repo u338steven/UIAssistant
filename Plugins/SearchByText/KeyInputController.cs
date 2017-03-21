@@ -8,32 +8,31 @@ using System.Reactive.Disposables;
 
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
+using UIAssistant.Interfaces.Input;
 using UIAssistant.Interfaces.Settings;
 using KeybindHelper.LowLevel;
 
 namespace UIAssistant.Plugin.SearchByText
 {
-    internal class KeyInputController : AbstractKeyInputController
+    internal class KeyInputController : IKeyboardPlugin
     {
         private StateController _stateController;
         private IUserSettings _settings;
         private CompositeDisposable _disposables = new CompositeDisposable();
+        private IUIAssistantAPI UIAssistantAPI;
 
-        public KeyInputController(IUIAssistantAPI api, StateController controller) : base(api, controller, api.CreateKeyboardHook(), api.CreateKeybindManager())
+        public KeyInputController(IUIAssistantAPI api, StateController controller)
         {
             _stateController = controller;
             _settings = _stateController.Settings;
-            InitializeKeybind();
+            UIAssistantAPI = api;
         }
 
-        public override void Initialize()
+        public void Initialize(IKeyboardPluginContext context)
         {
-            base.Initialize();
-            Hook.IgnoreInjected = true;
-
+            context.Hook.IgnoreInjected = true;
             ObserveEvent(UIAssistantAPI.DefaultHUD.TextBox);
             ObserveEvent(UIAssistantAPI.DefaultContextHUD.TextBox);
-            Hook.KeyDown += Hook_KeyDown;
         }
 
         private void ObserveEvent(ITextBox textBox)
@@ -42,25 +41,20 @@ namespace UIAssistant.Plugin.SearchByText
                 action => (s, ev) => action(ev),
                 h => textBox.TextChanged += h,
                 h => textBox.TextChanged -= h)
-                .Where(_ => Hook.IsActive)
                 .Throttle(TimeSpan.FromMilliseconds(150))
                 .Subscribe(ev => _stateController.Filter())
                 .AddTo(_disposables);
         }
 
-        private void Hook_KeyDown(object sender, LowLevelKeyEventArgs e)
+        public void OnKeyDown(IKeyboardPluginContext context, object sender, LowLevelKeyEventArgs e)
         {
-            if (e.Handled)
-            {
-                return;
-            }
             e.Handled = true;
 
             var keysState = e.PressedKeys;
             var input = e.ConvertToCurrentLanguage();
-            if (Keybinds.Contains(keysState))
+            if (context.Keybinds.Contains(keysState))
             {
-                Keybinds[keysState].Invoke();
+                context.Keybinds[keysState].Invoke();
                 return;
             }
 
@@ -71,48 +65,50 @@ namespace UIAssistant.Plugin.SearchByText
             _stateController.Input(input);
         }
 
-        public override void Reset()
+        public void OnKeyUp(IKeyboardPluginContext context, object sender, LowLevelKeyEventArgs e)
         {
-            base.Reset();
         }
 
-        protected override void InitializeKeybind()
+        public void LoadKeybinds(IKeyboardPluginContext context)
         {
-            UIAssistantAPI.UIDispatcher.Invoke(() => UsagePanel = new Usage());
-            Keybinds.Clear();
-            Keybinds.Add(_settings.Quit, () => { _stateController.Cancel(); _stateController.Quit(); });
-            Keybinds.Add(_settings.Back, () => UIAssistantAPI.CurrentHUD.TextBox.Backspace());
-            Keybinds.Add(_settings.Delete, () => UIAssistantAPI.CurrentHUD.TextBox.Delete());
-            Keybinds.Add(_settings.Clear, () => UIAssistantAPI.CurrentHUD.TextBox.SetText(""));
+            var keybinds = context.Keybinds;
+            keybinds.Clear();
+            keybinds.Add(_settings.Quit, () => { _stateController.Cancel(); _stateController.Quit(); });
+            keybinds.Add(_settings.Back, () => UIAssistantAPI.CurrentHUD.TextBox.Backspace());
+            keybinds.Add(_settings.Delete, () => UIAssistantAPI.CurrentHUD.TextBox.Delete());
+            keybinds.Add(_settings.Clear, () => UIAssistantAPI.CurrentHUD.TextBox.SetText(""));
 
-            Keybinds.Add(_settings.Left, () => UIAssistantAPI.CurrentHUD.TextBox.MoveCaretToLeft(1));
-            Keybinds.Add(_settings.Right, () => UIAssistantAPI.CurrentHUD.TextBox.MoveCaretToRight(1));
-            Keybinds.Add(_settings.Up, () => UIAssistantAPI.CurrentHUD.FocusPreviousItem());
-            Keybinds.Add(_settings.Down, () => UIAssistantAPI.CurrentHUD.FocusNextItem());
-            Keybinds.Add(_settings.PageUp, () => UIAssistantAPI.CurrentHUD.PageUp());
-            Keybinds.Add(_settings.PageDown, () => UIAssistantAPI.CurrentHUD.PageDown());
-            Keybinds.Add(_settings.Home, () => UIAssistantAPI.CurrentHUD.TextBox.MoveCaretToHead());
-            Keybinds.Add(_settings.End, () => UIAssistantAPI.CurrentHUD.TextBox.MoveCaretToTail());
-            Keybinds.Add(_settings.Execute, () => _stateController.Execute());
-            Keybinds.Add(_settings.ShowExtraActions, () => _stateController.SwitchHUD());
-            Keybinds.Add(SearchByText.Settings.Expand, () =>
+            keybinds.Add(_settings.Left, () => UIAssistantAPI.CurrentHUD.TextBox.MoveCaretToLeft(1));
+            keybinds.Add(_settings.Right, () => UIAssistantAPI.CurrentHUD.TextBox.MoveCaretToRight(1));
+            keybinds.Add(_settings.Up, () => UIAssistantAPI.CurrentHUD.FocusPreviousItem());
+            keybinds.Add(_settings.Down, () => UIAssistantAPI.CurrentHUD.FocusNextItem());
+            keybinds.Add(_settings.PageUp, () => UIAssistantAPI.CurrentHUD.PageUp());
+            keybinds.Add(_settings.PageDown, () => UIAssistantAPI.CurrentHUD.PageDown());
+            keybinds.Add(_settings.Home, () => UIAssistantAPI.CurrentHUD.TextBox.MoveCaretToHead());
+            keybinds.Add(_settings.End, () => UIAssistantAPI.CurrentHUD.TextBox.MoveCaretToTail());
+            keybinds.Add(_settings.Execute, () => _stateController.Execute());
+            keybinds.Add(_settings.ShowExtraActions, () => _stateController.SwitchHUD());
+            keybinds.Add(SearchByText.Settings.Expand, () =>
             {
                 _stateController.Expand();
                 _disposables.Clear();
                 ObserveEvent(UIAssistantAPI.DefaultHUD.TextBox);
                 ObserveEvent(UIAssistantAPI.DefaultContextHUD.TextBox);
             });
-            Keybinds.Add(_settings.SwitchKeyboardLayout, () =>
+            keybinds.Add(_settings.SwitchTheme, () => _stateController.SwitchNextTheme());
+            keybinds.Add(_settings.SwitchKeyboardLayout, () =>
             {
-                Hook.LoadAnotherKeyboardLayout();
-                UIAssistantAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(UIAssistantAPI.Localize(TextID.SwitchKeyboardLayout), Hook.GetKeyboardLayoutLanguage()));
+                context.Hook.LoadAnotherKeyboardLayout();
+                UIAssistantAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(UIAssistantAPI.Localize(TextID.SwitchKeyboardLayout), context.Hook.GetKeyboardLayoutLanguage()));
             });
-            base.InitializeKeybind();
         }
 
-        protected override void Dispose(bool disposing)
+        public void Cleanup(IKeyboardPluginContext context)
         {
-            base.Dispose(disposing);
+        }
+
+        public void Dispose()
+        {
             _disposables.Dispose();
         }
     }

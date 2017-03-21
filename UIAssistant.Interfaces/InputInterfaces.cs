@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Controls;
 
 using KeybindHelper;
 using KeybindHelper.LowLevel;
@@ -85,5 +86,45 @@ namespace UIAssistant.Interfaces.Input
         void KeyUp(params Key[] keys);
         void PressedKeyUp();
         void SendKeys(params Key[] keys);
+    }
+
+    public interface IThemeSwitchable
+    {
+        //void SwitchTheme(string theme);
+        void SwitchNextTheme();
+    }
+
+    public interface IKeyboardPlugin : IDisposable
+    {
+        //IKeyboardHook Hook { get; }
+        //IStateController StateController { get; }
+        //IKeybindManager Keybinds { get; set; }
+        //UserControl UsagePanel { get; set; }
+        //IUIAssistantAPI UIAssistantAPI { get; }
+
+        //void Initialize();
+        //void Observe();
+        //void Reset();
+
+        void Initialize(IKeyboardPluginContext context);
+        void Cleanup(IKeyboardPluginContext context);
+        void LoadKeybinds(IKeyboardPluginContext context);
+        void OnKeyDown(IKeyboardPluginContext context, object sender, LowLevelKeyEventArgs e);
+        void OnKeyUp(IKeyboardPluginContext context, object sender, LowLevelKeyEventArgs e);
+    }
+
+    public interface IKeyboardPluginContext : IDisposable
+    {
+        IKeyboardHook Hook { get; }
+        //IStateController StateController { get; }
+        IKeybindManager Keybinds { get; }
+        UserControl UsagePanel { get; set; }
+    }
+
+    public interface IKeyInputController : IDisposable
+    {
+        void AddHidingProcess();
+        void AddUsagePanelProcess(UserControl usagePanel);
+        void Observe();
     }
 }

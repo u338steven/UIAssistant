@@ -8,6 +8,7 @@
         // Errors, Warnings
         public const string RegisterHotkeyFailed = "registerHotkeyFailed";
         public const string InvalidCommand = "invalidCommand";
+        public const string Canceled = "canceled";
         public const string NoOneFound = "noOneFound";
         public const string CommandNotFound = "commandNotFound";
         public const string SwitchTheme = "switchTheme";

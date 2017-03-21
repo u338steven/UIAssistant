@@ -7,12 +7,12 @@ namespace UIAssistant.Infrastructure.Session
     public class Session : ISession
     {
         public event EventHandler Finished;
-        public event EventHandler Paused;
+        public event EventHandler Pausing;
         public event EventHandler Resumed;
 
         public void Pause()
         {
-            Paused?.Invoke(this, EventArgs.Empty);
+            Pausing?.Invoke(this, EventArgs.Empty);
         }
 
         public void Resume()
@@ -30,7 +30,7 @@ namespace UIAssistant.Infrastructure.Session
             _disposed = true;
             Finished?.Invoke(this, EventArgs.Empty);
             Finished = null;
-            Paused = null;
+            Pausing = null;
             Resumed = null;
         }
     }

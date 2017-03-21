@@ -7,25 +7,30 @@ using System.Windows.Automation;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.HUD;
+using UIAssistant.Interfaces.Session;
 using UIAssistant.Interfaces.Settings;
 using UIAssistant.Plugin.SearchByText.Items;
 using UIAssistant.Plugin.SearchByText.Enumerators;
 
 namespace UIAssistant.Plugin.SearchByText
 {
-    internal class StateController : AbstractStateController
+    internal class StateController
     {
         private ISearchByTextEnumerator _enumerator;
         private ICollection<IHUDItem> _sourceForFiltering, _contextSource;
         public bool AutoFire { get; set; }
         public IUserSettings Settings => UIAssistantAPI.UIAssistantSettings;
+        public ISession Session { get; private set; }
+        IUIAssistantAPI UIAssistantAPI;
 
-        public StateController(IUIAssistantAPI api) : base(api)
+        public StateController(IUIAssistantAPI api)
         {
+            UIAssistantAPI = api;
         }
 
         public void Initialize()
         {
+            Session = UIAssistantAPI.SessionAPI.Create();
             UIAssistantAPI.DefaultHUD.Initialize();
             UIAssistantAPI.DefaultHUD.ItemsCountPerPage = Settings.ItemsCountPerPage;
             UIAssistantAPI.DefaultContextHUD.Initialize();
@@ -49,7 +54,22 @@ namespace UIAssistant.Plugin.SearchByText
             Task.Run(() => _enumerator.Enumerate(_sourceForFiltering));
         }
 
-        protected override void OnSwitchingToContext(bool isItemSelected)
+        public void SwitchHUD()
+        {
+            if (!UIAssistantAPI.IsContextAvailable)
+            {
+                return;
+            }
+
+            if (!UIAssistantAPI.IsContextVisible)
+            {
+                OnSwitchingToContext(UIAssistantAPI.DefaultHUD.SelectedItem != null);
+            }
+
+            UIAssistantAPI.SwitchHUD();
+        }
+
+        private void OnSwitchingToContext(bool isItemSelected)
         {
             UIAssistantAPI.DefaultContextHUD.Items.Clear();
             if (isItemSelected)
@@ -122,7 +142,7 @@ namespace UIAssistant.Plugin.SearchByText
             UIAssistantAPI.CurrentHUD.TextBox.Input(input);
         }
 
-        public override void SwitchNextTheme()
+        public void SwitchNextTheme()
         {
             UIAssistantAPI.NextTheme();
             UIAssistantAPI.UIAssistantSettings.Theme = UIAssistantAPI.CurrentTheme.Id;
@@ -130,11 +150,12 @@ namespace UIAssistant.Plugin.SearchByText
             UIAssistantAPI.UIAssistantSettings.Save();
         }
 
-        public override void Quit()
+        public void Quit()
         {
             Task.Run(() =>
             {
-                Cleanup();
+                Session.Dispose();
+                //Cleanup();
                 UIAssistantAPI.RemoveDefaultHUD();
                 UIAssistantAPI.RemoveContextHUD();
                 UIAssistantAPI.TopMost = false;

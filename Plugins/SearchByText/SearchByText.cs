@@ -60,7 +60,11 @@ namespace UIAssistant.Plugin.SearchByText
         public void Setup()
         {
             _stateController.Initialize();
-            _keyController.Initialize();
+            var keyController = UIAssistantAPI.CreateKeyboardController(_keyController, _stateController.Session);
+            keyController.AddHidingProcess();
+            UIAssistantAPI.UIDispatcher.Invoke(() => keyController.AddUsagePanelProcess(new Usage()));
+            keyController.Observe();
+
             UIAssistantAPI.SwitchTheme(UIAssistantAPI.UIAssistantSettings.Theme);
         }
 
@@ -87,7 +91,6 @@ namespace UIAssistant.Plugin.SearchByText
         public void Save()
         {
             Settings.Save();
-            _keyController.Reset();
         }
 
         public void Localize()

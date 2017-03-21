@@ -7,6 +7,7 @@
     <system:String x:Key="trayIconExit">終了(&amp;X)</system:String>
 
     <!--Notifications-->
+    <system:String x:Key="canceled">処理がキャンセルされました</system:String>
     <system:String x:Key="noOneFound">検索対象が見つかりませんでした</system:String>
     <system:String x:Key="commandNotFound">{0} コマンドが見つかりません</system:String>
     <system:String x:Key="switchTheme">テーマを {0} に変更しました</system:String>

@@ -65,7 +65,7 @@ namespace UIAssistant.Plugin.HitaHint
             var argDividedscreen = UIAssistantAPI.CreateArgmentRule(Consts.DividedScreen, x => _stateController.ChangeTarget(EnumerateTarget.DividedScreen),
                 new[] { argClick, argDoubleClick, argDragAndDrop, argHover, argMiddleClick, argMouseEmulation, argRightClick });
 
-            var optTheme = UIAssistantAPI.CreateArgmentRule(Consts.Theme, x => _stateController.SetTheme(x.Value));
+            var optTheme = UIAssistantAPI.CreateArgmentRule(Consts.Theme, x => _stateController.SetTemporaryTheme(x.Value));
             var optNoReturnCursor = UIAssistantAPI.CreateArgmentRule(Consts.NoReturnCursor, _ => _stateController.NoReturnCursor = true);
 
             var command = UIAssistantAPI.CreateCommandRule(Consts.Command, Run,
@@ -77,8 +77,11 @@ namespace UIAssistant.Plugin.HitaHint
 
         public void Setup()
         {
-            _keyController.Initialize();
             _stateController.Initialize();
+            var keyController = UIAssistantAPI.CreateKeyboardController(_keyController, _stateController.State.Session);
+            keyController.AddHidingProcess();
+            UIAssistantAPI.UIDispatcher.Invoke(() => keyController.AddUsagePanelProcess(new Usage()));
+            keyController.Observe();
         }
 
         private void Run(ICommand command)
@@ -105,8 +108,6 @@ namespace UIAssistant.Plugin.HitaHint
         public void Save()
         {
             Settings.Save();
-            _keyController?.Reset();
-            _stateController?.Reset();
         }
 
         public void Localize()

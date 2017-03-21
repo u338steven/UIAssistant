@@ -7,6 +7,7 @@
     <system:String x:Key="trayIconExit">E&amp;xit</system:String>
 
     <!--Notifications-->
+    <system:String x:Key="canceled">Canceled</system:String>
     <system:String x:Key="noOneFound">No one found</system:String>
     <system:String x:Key="commandNotFound">{0} command cannot be found</system:String>
     <system:String x:Key="switchTheme">Switch to {0} Theme</system:String>

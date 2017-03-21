@@ -70,8 +70,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
         public void Save()
         {
-            KeybindsManiacs.Settings.Save();
-            _keyController?.Reset();
+            Settings.Save();
         }
 
         #region IDisposable Support

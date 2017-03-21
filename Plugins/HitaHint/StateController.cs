@@ -10,79 +10,177 @@ using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Interfaces.Resource;
+using UIAssistant.Interfaces.Session;
 
 using UIAssistant.Plugin.HitaHint.Enumerators;
 using UIAssistant.Plugin.HitaHint.Operations;
 
 namespace UIAssistant.Plugin.HitaHint
 {
-    internal class StateController : AbstractStateController
+    internal static class StringBuilderExtensions
     {
-        public IWindow PreviousWindow { get; set; }
-        public EnumerateTarget Target { get; set; }
-        public HitaHintSettings Settings { get; private set; }
-        private IWidgetEnumerator _enumerator;
-        private History _history = new History();
-        private StringBuilder _inputText = new StringBuilder();
-        private ICollection<IHUDItem> _enumeratedResults;
-        private ISwitcher _themeSwitcher;
-
-        public StateController(IUIAssistantAPI api) : base(api)
+        internal static void BackSpace(this StringBuilder sb, int times = 1)
         {
-            Settings = HitaHint.Settings;
-            if (Settings.IsMouseCursorHidden)
+            sb.Remove(sb.Length - times, times);
+        }
+    }
+
+    public static class CancelableTask<T>
+    {
+        public static Task<T> Run(Func<T> action, CancellationToken token)
+        {
+            return Task.Run(() => action.Invoke(), token);
+        }
+    }
+
+    internal class KeyInputValidator
+    {
+        const int MaxNotFoundCount = 3;
+        private static int _notFoundCount = 0;
+        private static StringBuilder _notFoundInput = new StringBuilder();
+
+        private static bool WhetherShowWarning(string inputChar)
+        {
+            _notFoundInput.Append(inputChar);
+            ++_notFoundCount;
+            if (_notFoundCount > MaxNotFoundCount)
+            {
+                _notFoundCount = 0;
+                return true;
+            }
+            return false;
+        }
+
+        public static bool IsValid(string inputChar, string hintKeys, IUIAssistantAPI api)
+        {
+            if (!hintKeys.Contains(inputChar))
+            {
+                if (WhetherShowWarning(inputChar))
+                {
+                    api.NotifyInfoMessage("Hit-a-Hint", api.Localize(TextID.NoOneFound) + $"\nInput:{_notFoundInput.ToString()}");
+                    _notFoundInput.Clear();
+                }
+                return false;
+            }
+            return true;
+        }
+
+        public static void Cleanup()
+        {
+            _notFoundCount = 0;
+            _notFoundInput.Clear();
+        }
+    }
+
+    internal class Context // persistent
+    {
+        internal ISwitcher ThemeSwitcher { get; }
+
+        internal Context(IUIAssistantAPI api)
+        {
+            ThemeSwitcher = api.GetThemeSwitcher();
+        }
+    }
+
+    internal class State : IDisposable
+    {
+        internal History History { get; } = new History();
+        internal IWindow PreviousWindow { get; set; }
+        internal ISession Session { get; private set; }
+        internal EnumerateTarget Target { get; set; }
+        internal StringBuilder InputText { get; } = new StringBuilder();
+        internal ICollection<IHUDItem> EnumeratedResults { get; set; }
+        internal IWidgetEnumerator Enumerator;
+        internal string KeyboardLayoutName { get; set; }
+
+        private IUIAssistantAPI _api;
+
+        internal State(IUIAssistantAPI api)
+        {
+            _api = api;
+            PreviousWindow = api.ActiveWindow;
+            Session = api.SessionAPI.Create();
+        }
+
+        internal void ChangeTarget(EnumerateTarget target)
+        {
+            Target = target;
+            Enumerator = Enumerators.Enumerator.Factory(target);
+        }
+
+        internal void Save()
+        {
+            History.PushState(OperationManager.CurrentName, Target, Enumerator);
+        }
+
+        internal void Restore()
+        {
+            if (!History.CanUndo)
+            {
+                return;
+            }
+            var item = History.PopState();
+            if (_api.ActiveWindow != item.window)
+            {
+                item.window.Activate();
+            }
+            OperationManager.Change(item.OperationName);
+            Target = item.Target;
+            Enumerator = item.Enumerator;
+        }
+
+        public void Dispose()
+        {
+            Enumerator?.Dispose();
+            InputText?.Clear();
+            Session.Dispose();
+            Enumerator = null;
+            EnumeratedResults = null;
+        }
+    }
+
+    internal class StateController
+    {
+        internal bool NoReturnCursor { get; set; } = false;
+        internal State State { get; set; }
+        private IUIAssistantAPI UIAssistantAPI { get; set; }
+        private Context _context { get; }
+
+        public StateController(IUIAssistantAPI api)
+        {
+            UIAssistantAPI = api;
+            _context = new Context(api);
+            if (HitaHint.Settings.IsMouseCursorHidden)
             {
                 Reset();
             }
-            _themeSwitcher = api.GetThemeSwitcher();
         }
 
         public void Reset()
         {
-            HitaHint.UIAssistantAPI.MouseCursor.AutoHide = Settings.IsMouseCursorHidden;
-            HitaHint.UIAssistantAPI.MouseCursor.SetCursorVisibility(!Settings.IsMouseCursorHidden);
+            UIAssistantAPI.MouseCursor.AutoHide = HitaHint.Settings.IsMouseCursorHidden;
+            UIAssistantAPI.MouseCursor.SetCursorVisibility(!HitaHint.Settings.IsMouseCursorHidden);
         }
 
         public void Initialize()
         {
-            _history = new History();
-            PreviousWindow = UIAssistantAPI.ActiveWindow;
-            SubscribeReturnMouseCursor();
+            State = new State(UIAssistantAPI);
+            UIAssistantAPI.ReserveToReturnMouseCursor(State.Session, () => OperationManager.CurrentCommand.IsReturnCursor && !NoReturnCursor);
             UIAssistantAPI.DefaultHUD.Initialize();
         }
 
         public void ActivateLastActiveWindow()
         {
-            PreviousWindow?.Activate();
+            State.PreviousWindow?.Activate();
         }
 
-        public bool NoReturnCursor { get; set; } = false;
-        private static System.Windows.Point _prevMousePosition;
-        private void SubscribeReturnMouseCursor()
-        {
-            _prevMousePosition = HitaHint.UIAssistantAPI.MouseOperation.GetMousePosition();
-            Finished += (_, __) =>
-            {
-                if (!OperationManager.CurrentCommand.IsReturnCursor || NoReturnCursor)
-                {
-                    return;
-                }
-                Task.Run(() =>
-                {
-                    System.Threading.Thread.Sleep(300);
-                    HitaHint.UIAssistantAPI.MouseOperation.Move(_prevMousePosition);
-                });
-            };
-        }
-
-        public override void Quit()
+        public void Quit()
         {
             // NOTE: Why async?
             // In order to process a next keyup event
             Task.Run(() =>
             {
-                _cancelToken?.Cancel();
-                _enumerator?.Dispose();
+                //_cancelToken?.Cancel();
                 UIAssistantAPI.RemoveDefaultHUD();
                 UIAssistantAPI.TopMost = false;
                 Cleanup();
@@ -92,29 +190,17 @@ namespace UIAssistant.Plugin.HitaHint
 
         public void SaveState()
         {
-            _history.PushState(OperationManager.CurrentName, Target, _enumerator);
+            State.Save();
         }
 
         public void Undo()
         {
-            if (!_history.CanUndo)
-            {
-                return;
-            }
-            var item = _history.PopState();
-            if (UIAssistantAPI.ActiveWindow != item.window)
-            {
-                item.window.Activate();
-            }
-            OperationManager.Change(item.OperationName);
-            Target = item.Target;
-            _enumerator = item.Enumerator;
+            State.Restore();
         }
 
         public void ChangeTarget(EnumerateTarget target)
         {
-            Target = target;
-            _enumerator = Enumerator.Factory(target);
+            State.ChangeTarget(target);
         }
 
         public void ChangeOperation(string operationName)
@@ -122,68 +208,73 @@ namespace UIAssistant.Plugin.HitaHint
             OperationManager.Change(operationName);
         }
 
-        private string _theme = HitaHint.Settings.Theme;
-        public void SetTheme(string theme)
+        private string _temporaryTheme = HitaHint.Settings.Theme;
+        public void SetTemporaryTheme(string theme)
         {
-            _theme = theme;
+            _temporaryTheme = theme;
         }
 
         public void ApplyTheme()
         {
-            _themeSwitcher.Switch(_theme);
+            _context.ThemeSwitcher.Switch(_temporaryTheme);
         }
 
-        CancellationTokenSource _cancelToken;
-        public void Enumerate()
+        private async Task<ICollection<IHUDItem>> EnumerateAsync(ICollection<IHUDItem> container, CancellationTokenSource tokenSource)
         {
-            _enumeratedResults = UIAssistantAPI.DefaultHUD.Items;
-            _enumeratedResults.Clear();
-            _cancelToken = new CancellationTokenSource();
-            var t = Task.Run(() => _enumerator.Enumerate(_enumeratedResults), _cancelToken.Token);
             try
             {
-                t.Wait(_cancelToken.Token);
+                await Task.Run(() => State.Enumerator.Enumerate(container), tokenSource.Token);
             }
             catch (OperationCanceledException ex)
             {
+                UIAssistantAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.Localize(TextID.Canceled));
                 System.Diagnostics.Debug.Print($"{ex.Message}");
+            }
+            return container;
+        }
+
+        public bool IsBusy { get; private set; }
+
+        public async void Enumerate()
+        {
+            IsBusy = true;
+            UIAssistantAPI.DefaultHUD.Items.Clear();
+
+            var cancelToken = new CancellationTokenSource();
+            var t = EnumerateAsync(UIAssistantAPI.DefaultHUD.Items, cancelToken);
+            State.Session.Finished += (_, __) => { if (!t.IsCompleted) { cancelToken.Cancel(); } };
+            State.EnumeratedResults = await t;
+            IsBusy = false;
+
+            if (cancelToken.IsCancellationRequested)
+            {
                 return;
             }
-            finally
-            {
-                _cancelToken = null;
-            }
-            if (_enumeratedResults == null || _enumeratedResults.Count == 0)
+            if (State.EnumeratedResults.Count == 0)
             {
                 UIAssistantAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.Localize(TextID.NoOneFound));
                 Quit();
                 return;
             }
-            AssignHint(_enumeratedResults);
+            AssignHint(State.EnumeratedResults);
             UIAssistantAPI.DefaultHUD.Update();
             UIAssistantAPI.TopMost = true;
-        }
-
-        string _layoutName;
-        public void SetKeyboardLayoutName(string name)
-        {
-            _layoutName = name;
         }
 
         private string _messageFormat = "Hit-a-Hint:Input:";
         public void PrintState()
         {
             string cultureName = string.Empty;
-            if (!string.IsNullOrEmpty(_layoutName))
+            if (!string.IsNullOrEmpty(State.KeyboardLayoutName))
             {
-                cultureName = $" Keyboard Layout:[{_layoutName}]";
+                cultureName = $" Keyboard Layout:[{State.KeyboardLayoutName}]";
             }
-            UIAssistantAPI.DefaultHUD.TextBox.SetText($"{_messageFormat} [ {_inputText.ToString()} ] {OperationManager.CurrentName} {cultureName}");
+            UIAssistantAPI.DefaultHUD.TextBox.SetText($"{_messageFormat} [ {State.InputText.ToString()} ] {OperationManager.CurrentName} {cultureName}");
         }
 
         public void Invoke(IHUDItem item)
         {
-            var center = new System.Windows.Rect(item.Bounds.Center(), new System.Windows.Size(0, 0));
+            var center = new Rect(item.Bounds.Center(), new Size(0, 0));
             UIAssistantAPI.ScaleIndicatorAnimation(center, item.Bounds, false, 250);
             OperationManager.CurrentCommand.Execute(item);
 
@@ -197,21 +288,19 @@ namespace UIAssistant.Plugin.HitaHint
 
         public void InvokePlugin(string command)
         {
-            Resumed += (_, __) =>
+            UIAssistantAPI.InvokePluginCommand(command, Quit, State.Session.Pause, () =>
             {
-                _inputText.Clear();
+                State.Session.Resume();
+                State.InputText.Clear();
                 Enumerate();
                 PrintState();
-            };
-            InvokeAnotherPlugin(command);
+            });
         }
 
-        public override void Cleanup()
+        public void Cleanup()
         {
-            _enumerator = null;
-            _enumeratedResults = null;
-            _inputText?.Clear();
-            base.Cleanup();
+            State.Dispose();
+            State = null;
         }
 
         private void AssignHint(ICollection<IHUDItem> items)
@@ -224,49 +313,23 @@ namespace UIAssistant.Plugin.HitaHint
             }
         }
 
-        public IEnumerable<IHUDItem> FilterInternal(IEnumerable<IHUDItem> list, params string[] inputs)
-        {
-            return list.Where(item => item.InternalText.StartsWith(inputs[0].ToString())).ToList();
-        }
-
-        int _notFoundCount = 0;
-        StringBuilder _notFoundInput = new StringBuilder();
-        const int MaxNotFoundCount = 3;
-        private bool WhetherShowWarning(string inputChar)
-        {
-            _notFoundInput.Append(inputChar);
-            ++_notFoundCount;
-            if (_notFoundCount > MaxNotFoundCount)
-            {
-                _notFoundCount = 0;
-                return true;
-            }
-            return false;
-        }
-
         public void FilterHints(string inputChar)
         {
-            _inputText.Append(inputChar);
-            if (!Settings.HintKeys.Contains(inputChar))
+            State.InputText.Append(inputChar);
+            if (!KeyInputValidator.IsValid(inputChar, HitaHint.Settings.HintKeys, UIAssistantAPI))
             {
-                if (WhetherShowWarning(inputChar))
-                {
-                    UIAssistantAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.Localize(TextID.NoOneFound) + $"\nInput:{_notFoundInput.ToString()}\nKeyboard Layout:{_layoutName}");
-                    _notFoundInput.Clear();
-                }
-                _inputText.Remove(_inputText.Length - 1, 1);
+                State.InputText.BackSpace();
                 return;
             }
-            _notFoundCount = 0;
-            _notFoundInput.Clear();
+            KeyInputValidator.Cleanup();
 
-            var items = _enumeratedResults.Where(item => item.InternalText.StartsWith(_inputText.ToString())).ToList();
+            var items = State.EnumeratedResults.Where(item => item.InternalText.StartsWith(State.InputText.ToString())).ToList();
             var resultCount = items.Count;
 
             if (resultCount == 0)
             {
-                UIAssistantAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.Localize(TextID.NoOneFound) + $"\nInput:{_inputText}");
-                _inputText.Remove(_inputText.Length - 1, 1);
+                UIAssistantAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.Localize(TextID.NoOneFound) + $"\nInput:{State.InputText}");
+                State.InputText.BackSpace();
                 return;
             }
             else if (resultCount == 1)
@@ -279,29 +342,29 @@ namespace UIAssistant.Plugin.HitaHint
             PrintState();
         }
 
-        public override void SwitchNextTheme()
+        public void SwitchNextTheme()
         {
-            _themeSwitcher.Next();
-            Settings.Theme = _themeSwitcher.CurrentTheme.Id;
-            UIAssistantAPI.NotifyInfoMessage("Switch Theme", string.Format(UIAssistantAPI.Localize(TextID.SwitchTheme), Settings.Theme));
-            Settings.Save();
+            _context.ThemeSwitcher.Next();
+            HitaHint.Settings.Theme = _context.ThemeSwitcher.CurrentTheme.Id;
+            UIAssistantAPI.NotifyInfoMessage("Switch Theme", string.Format(UIAssistantAPI.Localize(TextID.SwitchTheme), HitaHint.Settings.Theme));
+            HitaHint.Settings.Save();
         }
 
         public void Clear()
         {
-            _inputText.Clear();
+            State.InputText.Clear();
         }
 
         public void Back()
         {
-            if (_inputText.Length > 0)
+            if (State.InputText.Length > 0)
             {
-                _inputText.Remove(_inputText.Length - 1, 1);
+                State.InputText.BackSpace();
                 FilterHints("");
             }
             else
             {
-                if (!_history.CanUndo)
+                if (!State.History.CanUndo)
                 {
                     return;
                 }
@@ -311,14 +374,13 @@ namespace UIAssistant.Plugin.HitaHint
             }
         }
 
-        protected override void Dispose(bool disposing)
+        public void Dispose()
         {
-            if (Settings.IsMouseCursorHidden)
+            if (HitaHint.Settings.IsMouseCursorHidden)
             {
                 HitaHint.UIAssistantAPI.MouseCursor.SetCursorVisibility(true);
                 HitaHint.UIAssistantAPI.MouseCursor.DestroyCursor();
             }
-            base.Dispose(disposing);
         }
     }
 }
