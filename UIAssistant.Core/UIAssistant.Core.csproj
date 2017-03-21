@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\SessionAPI.cs" />
+    <Compile Include="API\ThemeAPI.cs" />
     <Compile Include="API\UIAssistantAPI.cs" />
     <Compile Include="HitaHint\AlternateHintGenerator.cs" />
     <Compile Include="HitaHint\HintGenerator.cs" />
@@ -89,6 +90,8 @@
     <Compile Include="I18n\Localizer.cs" />
     <Compile Include="Input\KeybindManager.cs" />
     <Compile Include="Input\KeyboardHook.cs" />
+    <Compile Include="Input\KeyInputContext.cs" />
+    <Compile Include="Input\KeyInputController.cs" />
     <Compile Include="Input\MouseCursor.cs" />
     <Compile Include="Input\MouseHook.cs" />
     <Compile Include="Input\MouseOperation.cs" />

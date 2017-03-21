@@ -14,7 +14,6 @@ using UIAssistant.Core.HitaHint;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Input;
 using UIAssistant.Core.Settings;
-using UIAssistant.Core.Themes;
 using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Infrastructure.Events;
 using UIAssistant.Infrastructure.Logger;
@@ -70,30 +69,6 @@ namespace UIAssistant.Core.API
         }
 
         public System.Windows.Threading.Dispatcher UIDispatcher => window.Dispatcher;
-
-        public void SwitchTheme(string name)
-        {
-            window.Dispatcher.Invoke(() =>
-            {
-                ThemeDefaultSwitcher.Switch(name);
-            });
-        }
-
-        public void NextTheme()
-        {
-            window.Dispatcher.Invoke(() =>
-            {
-                ThemeDefaultSwitcher.Next();
-            });
-        }
-
-        public IResourceItem CurrentTheme
-        {
-            get
-            {
-                return ThemeDefaultSwitcher.CurrentTheme;
-            }
-        }
 
         public IEnumerable<string> GenerateHints(string hintKeys, int quantity)
         {
@@ -440,11 +415,6 @@ namespace UIAssistant.Core.API
             return new Localizer(Directory.GetParent(System.Reflection.Assembly.GetCallingAssembly().Location).ToString());
         }
 
-        public ISwitcher GetThemeSwitcher()
-        {
-            return new ThemeSwitcher(Directory.GetParent(System.Reflection.Assembly.GetCallingAssembly().Location).ToString());
-        }
-
         public IResourceItem CurrentLanguage { get { return DefaultLocalizer.CurrentLanguage; } }
 
         public ICommandRule CreateCommandRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null)
@@ -504,6 +474,7 @@ namespace UIAssistant.Core.API
         }
 
         public ISessionAPI SessionAPI { get; } = new SessionAPI();
+        public IThemeAPI ThemeAPI { get; } = new ThemeAPI();
         public IKeyInputController CreateKeyboardController(IKeyboardPlugin plugin, ISession session)
         {
             var controller = new KeyInputController(plugin, session);

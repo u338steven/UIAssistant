@@ -19,7 +19,6 @@ namespace UIAssistant.Interfaces.API
     public interface IUIAssistantAPI
     {
         IHUD CurrentHUD { get; }
-        IResourceItem CurrentTheme { get; }
         IHUD DefaultContextHUD { get; }
         IHUD DefaultHUD { get; }
         bool IsContextAvailable { get; }
@@ -44,7 +43,6 @@ namespace UIAssistant.Interfaces.API
         void Initialize(Control defaultHUDPanel, Control defaultContextPanel);
         string Localize(string id);
         void MoveTargetingReticle(double x, double y);
-        void NextTheme();
         void NotifyErrorMessage(string title, string message);
         void NotifyInfoMessage(string title, string message);
         void NotifyWarnMessage(string title, string message);
@@ -62,11 +60,9 @@ namespace UIAssistant.Interfaces.API
         void RemoveTargetingReticle();
         void ScaleIndicatorAnimation(Rect from, Rect to, bool waitable = true, double duration = 300, Action completed = null);
         void SwitchHUD();
-        void SwitchTheme(string name);
 
         IEventObserver GetObserver(ObserberKinds kind);
         ILocalizer GetLocalizer();
-        ISwitcher GetThemeSwitcher();
         IResourceItem CurrentLanguage { get; }
         ICommandRule CreateCommandRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null);
         IArgumentRule CreateArgmentRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null);
@@ -86,6 +82,7 @@ namespace UIAssistant.Interfaces.API
         void InvokePluginCommand(string command, Action quit = null, Action pausing = null, Action resumed = null);
 
         ISessionAPI SessionAPI { get; }
+        IThemeAPI ThemeAPI { get; }
         IKeyInputController CreateKeyboardController(IKeyboardPlugin plugin, ISession session);
         void ReserveToReturnMouseCursor(ISession session, Func<bool> canReturn);
     }

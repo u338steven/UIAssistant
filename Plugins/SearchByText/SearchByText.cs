@@ -65,7 +65,7 @@ namespace UIAssistant.Plugin.SearchByText
             UIAssistantAPI.UIDispatcher.Invoke(() => keyController.AddUsagePanelProcess(new Usage()));
             keyController.Observe();
 
-            UIAssistantAPI.SwitchTheme(UIAssistantAPI.UIAssistantSettings.Theme);
+            UIAssistantAPI.ThemeAPI.SwitchTheme(UIAssistantAPI.UIAssistantSettings.Theme);
         }
 
         public void Run(ICommand command)

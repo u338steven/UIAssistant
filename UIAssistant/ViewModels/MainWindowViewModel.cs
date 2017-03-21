@@ -113,7 +113,7 @@ namespace UIAssistant.ViewModels
 
             MainWindowModel.ShowNotifyIcon();
 
-            UIAssistantAPI.Instance.SwitchTheme("General");
+            UIAssistantAPI.Instance.ThemeAPI.SwitchTheme("General");
 
             Left = SystemParameters.VirtualScreenLeft;
             Top = SystemParameters.VirtualScreenTop;

@@ -116,7 +116,7 @@ namespace UIAssistant.Plugin.SpatialNavigation
         private static void InternalMoveTo(Direction direction, Unit unit)
         {
             Initialize();
-            Task.Run(() => SpatialNavigation.UIAssistantAPI.SwitchTheme("General"));
+            Task.Run(() => SpatialNavigation.UIAssistantAPI.ThemeAPI.SwitchTheme("General"));
             if (unit == Unit.Group)
             {
                 _enumerateTargets = _groupTargets;

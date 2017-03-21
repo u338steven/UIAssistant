@@ -78,7 +78,7 @@ namespace UIAssistant.Plugin.HitaHint
 
         internal Context(IUIAssistantAPI api)
         {
-            ThemeSwitcher = api.GetThemeSwitcher();
+            ThemeSwitcher = api.ThemeAPI.GetThemeSwitcher();
         }
     }
 
