@@ -15,26 +15,60 @@ namespace UnitTest
         [TestMethod]
         public void HintGeneratorTest1()
         {
-            Enumerable.Range(1, 200).ToList().ForEach(x =>
+            Enumerable.Range(1, 200).ToList().ForEach(amount =>
             {
-                GeneratorTest(HintGenerator.Generate, x, "asdfhjkl");
+                var result = HintGenerator.Generate("asdfhjkl", amount);
+                Assert.AreEqual(amount, result.Count());
+                Assert.IsFalse(result.Any(x => result.Any(y => y.StartsWith(x) && y != x)));
             });
         }
 
         [TestMethod]
         public void AlternateHintGeneratorTest1()
         {
-            Enumerable.Range(1, 200).ToList().ForEach(x =>
+            Enumerable.Range(1, 200).ToList().ForEach(amount =>
             {
-                GeneratorTest(AlternateHintGenerator.Generate, x, "asdf|hjkl");
+                var hintKeys = "asdfg|hjkl";
+                var result = AlternateHintGenerator.Generate(hintKeys, amount);
+                Assert.AreEqual(amount, result.Count());
+                Assert.IsFalse(result.Any(x => result.Any(y => y.StartsWith(x) && y != x)));
+                Assert.IsTrue(IsValidAlterneation(hintKeys, result));
             });
         }
 
-        static void GeneratorTest(GenerateDelegate func, int amount, string hintKeys)
+        enum HintContain
         {
-            var result = HintGenerator.Generate("asdfghjkl", amount);
-            Assert.AreEqual(amount, result.Count());
-            Assert.IsFalse(result.Any(x => result.Any(y => y.StartsWith(x) && y != x)));
+            Null,
+            Left,
+            Right,
+        }
+
+        private bool IsValidAlterneation(string hintKeys, IEnumerable<string> result)
+        {
+            var a = hintKeys.Split('|');
+            var left = a[0];
+            var right = a[1];
+            var next = HintContain.Null;
+            foreach (var item in result)
+            {
+                next = HintContain.Null;
+                foreach (var c in item)
+                {
+                    if (left.Contains(c) && (next == HintContain.Left || next == HintContain.Null))
+                    {
+                        next = HintContain.Right;
+                        continue;
+                    }
+                    if (right.Contains(c) && (next == HintContain.Right || next == HintContain.Null))
+                    {
+                        next = HintContain.Left;
+                        continue;
+                    }
+                    Console.WriteLine($"Check NG!!!!!!!!!!!: {item}");
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

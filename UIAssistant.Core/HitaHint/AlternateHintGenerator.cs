@@ -54,10 +54,17 @@ namespace UIAssistant.Core.HitaHint
             int used;
 
             var remainder = quantity - partialHints1.Count() - partialHints2.Count();
-            var maxLengthResults1 = GenerateAlternateHintsInternal(leftSource, partialHints1, ref remainder, out used);
+            var source1 = leftSource;
+            var source2 = rightSource;
+            if (maxLength % 2 == 0)
+            {
+                source1 = rightSource;
+                source2 = leftSource;
+            }
+            var maxLengthResults1 = GenerateAlternateHintsInternal(source1, partialHints1, ref remainder, out used);
             var minLengthResults1 = partialHints1.Skip(used);
 
-            var maxLengthResults2 = GenerateAlternateHintsInternal(rightSource, partialHints2, ref remainder, out used);
+            var maxLengthResults2 = GenerateAlternateHintsInternal(source2, partialHints2, ref remainder, out used);
             var minLengthResults2 = partialHints2.Skip(used);
 
             return minLengthResults1.Concat(minLengthResults2).Concat(maxLengthResults1).Concat(maxLengthResults2);
