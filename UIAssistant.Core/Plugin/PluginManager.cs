@@ -124,7 +124,7 @@ namespace UIAssistant.Core.Plugin
             {
                 return null;
             }
-            var actions = UIAssistantAPI.Instance.ParseStatement(command).Reverse();
+            var actions = UIAssistantAPI.Instance.CommandAPI.ParseStatement(command).Reverse();
             return () =>
             {
                 InitializeBeforePluginCalled();

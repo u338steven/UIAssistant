@@ -38,9 +38,9 @@ namespace UIAssistant.Plugin.MouseEmulation
 
         private void RegisterCommand()
         {
-            var command = UIAssistantAPI.CreateCommandRule(Consts.Command, Run);
+            var command = UIAssistantAPI.CommandAPI.CreateCommandRule(Consts.Command, Run);
             command.Description = Consts.PluginName;
-            UIAssistantAPI.RegisterCommand(command);
+            UIAssistantAPI.CommandAPI.RegisterCommand(command);
         }
 
         public void Setup()

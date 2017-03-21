@@ -288,7 +288,7 @@ namespace UIAssistant.Plugin.HitaHint
 
         public void InvokePlugin(string command)
         {
-            UIAssistantAPI.InvokePluginCommand(command, Quit, State.Session.Pause, () =>
+            UIAssistantAPI.CommandAPI.InvokePluginCommand(command, Quit, State.Session.Pause, () =>
             {
                 State.Session.Resume();
                 State.InputText.Clear();

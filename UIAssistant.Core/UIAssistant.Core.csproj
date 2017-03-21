@@ -79,6 +79,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\CommandAPI.cs" />
     <Compile Include="API\KeyboardAPI.cs" />
     <Compile Include="API\MouseAPI.cs" />
     <Compile Include="API\SessionAPI.cs" />

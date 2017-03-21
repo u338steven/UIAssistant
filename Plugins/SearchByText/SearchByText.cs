@@ -42,19 +42,20 @@ namespace UIAssistant.Plugin.SearchByText
 
         private void RegisterCommand()
         {
-            var argCommands = UIAssistantAPI.CreateArgmentRule(Consts.Commands, _ => _stateController.ChangeTarget(EnumerateTarget.Commands));
-            var argTextsInWindow = UIAssistantAPI.CreateArgmentRule(Consts.TextsInWindow, _ => _stateController.ChangeTarget(EnumerateTarget.TextsInWindow));
-            var argTextsInContainer = UIAssistantAPI.CreateArgmentRule(Consts.TextsInContainer, _ => _stateController.ChangeTarget(EnumerateTarget.TextsInContainer));
-            var argRunningApps = UIAssistantAPI.CreateArgmentRule(Consts.RunningApps, _ => _stateController.ChangeTarget(EnumerateTarget.RunningApps));
-            var argContextMenu = UIAssistantAPI.CreateArgmentRule(Consts.ContextMenu, _ => _stateController.ChangeTarget(EnumerateTarget.ContextMenu));
+            var commandAPI = UIAssistantAPI.CommandAPI;
+            var argCommands = commandAPI.CreateArgmentRule(Consts.Commands, _ => _stateController.ChangeTarget(EnumerateTarget.Commands));
+            var argTextsInWindow = commandAPI.CreateArgmentRule(Consts.TextsInWindow, _ => _stateController.ChangeTarget(EnumerateTarget.TextsInWindow));
+            var argTextsInContainer = commandAPI.CreateArgmentRule(Consts.TextsInContainer, _ => _stateController.ChangeTarget(EnumerateTarget.TextsInContainer));
+            var argRunningApps = commandAPI.CreateArgmentRule(Consts.RunningApps, _ => _stateController.ChangeTarget(EnumerateTarget.RunningApps));
+            var argContextMenu = commandAPI.CreateArgmentRule(Consts.ContextMenu, _ => _stateController.ChangeTarget(EnumerateTarget.ContextMenu));
 
-            var optAutoFire = UIAssistantAPI.CreateArgmentRule(Consts.AutoFire, _ => _stateController.AutoFire = true);
+            var optAutoFire = commandAPI.CreateArgmentRule(Consts.AutoFire, _ => _stateController.AutoFire = true);
 
-            var command = UIAssistantAPI.CreateCommandRule(Consts.Command, Run,
+            var command = commandAPI.CreateCommandRule(Consts.Command, Run,
                 new[] { argCommands, argTextsInWindow, argTextsInContainer, argRunningApps, argContextMenu },
                 new[] { optAutoFire });
             command.Description = Consts.PluginName;
-            UIAssistantAPI.RegisterCommand(command);
+            commandAPI.RegisterCommand(command);
         }
 
         public void Setup()

@@ -45,16 +45,17 @@ namespace UIAssistant.Plugin.SpatialNavigation
         public void Initialize(IUIAssistantAPI api)
         {
             UIAssistantAPI = api;
+            var commandAPI = UIAssistantAPI.CommandAPI;
             var args = new[] {
-                api.CreateArgmentRule(Consts.Up, Up),
-                api.CreateArgmentRule(Consts.Down, Down),
-                api.CreateArgmentRule(Consts.Left, Left),
-                api.CreateArgmentRule(Consts.Right, Right) };
+                commandAPI.CreateArgmentRule(Consts.Up, Up),
+                commandAPI.CreateArgmentRule(Consts.Down, Down),
+                commandAPI.CreateArgmentRule(Consts.Left, Left),
+                commandAPI.CreateArgmentRule(Consts.Right, Right) };
 
-            var group = api.CreateArgmentRule("-g", x => _current = Unit.Group);
-            var command = api.CreateCommandRule(Consts.Command, Run, args);
+            var group = commandAPI.CreateArgmentRule("-g", x => _current = Unit.Group);
+            var command = commandAPI.CreateCommandRule(Consts.Command, Run, args);
             command.Description = Consts.PluginName;
-            UIAssistantAPI.RegisterCommand(command);
+            commandAPI.RegisterCommand(command);
             Navigation.Initialize();
         }
 

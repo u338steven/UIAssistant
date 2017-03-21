@@ -67,7 +67,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                 "EmacsLike kill-region",
                 //"EmacsLike set-mark-command",
             };
-            Generator = KeybindsManiacs.UIAssistantAPI.GetCommandGenerator();
+            Generator = KeybindsManiacs.UIAssistantAPI.CommandAPI.GetCommandGenerator();
         }
 
         public void SwitchMode(string modeName)

@@ -48,31 +48,32 @@ namespace UIAssistant.Plugin.HitaHint
 
         private void RegisterCommand()
         {
-            var argSwitch = UIAssistantAPI.CreateArgmentRule(Consts.Switch, x => OperationManager.Change(x.Name));
-            var argClick = UIAssistantAPI.CreateArgmentRule(Consts.Click, x => OperationManager.Change(x.Name));
-            var argDoubleClick = UIAssistantAPI.CreateArgmentRule(Consts.DoubleClick, x => OperationManager.Change(x.Name));
-            var argDragAndDrop = UIAssistantAPI.CreateArgmentRule(Consts.DragAndDrop, x => OperationManager.Change(x.Name));
-            var argHover = UIAssistantAPI.CreateArgmentRule(Consts.Hover, x => OperationManager.Change(x.Name));
-            var argMiddleClick = UIAssistantAPI.CreateArgmentRule(Consts.MiddleClick, x => OperationManager.Change(x.Name));
-            var argMouseEmulation = UIAssistantAPI.CreateArgmentRule(Consts.MouseEmulation, x => OperationManager.Change(x.Name));
-            var argRightClick = UIAssistantAPI.CreateArgmentRule(Consts.RightClick, x => OperationManager.Change(x.Name));
+            var commandAPI = UIAssistantAPI.CommandAPI;
+            var argSwitch = commandAPI.CreateArgmentRule(Consts.Switch, x => OperationManager.Change(x.Name));
+            var argClick = commandAPI.CreateArgmentRule(Consts.Click, x => OperationManager.Change(x.Name));
+            var argDoubleClick = commandAPI.CreateArgmentRule(Consts.DoubleClick, x => OperationManager.Change(x.Name));
+            var argDragAndDrop = commandAPI.CreateArgmentRule(Consts.DragAndDrop, x => OperationManager.Change(x.Name));
+            var argHover = commandAPI.CreateArgmentRule(Consts.Hover, x => OperationManager.Change(x.Name));
+            var argMiddleClick = commandAPI.CreateArgmentRule(Consts.MiddleClick, x => OperationManager.Change(x.Name));
+            var argMouseEmulation = commandAPI.CreateArgmentRule(Consts.MouseEmulation, x => OperationManager.Change(x.Name));
+            var argRightClick = commandAPI.CreateArgmentRule(Consts.RightClick, x => OperationManager.Change(x.Name));
 
-            var argRunningApps = UIAssistantAPI.CreateArgmentRule(Consts.RunningApps, x => _stateController.ChangeTarget(EnumerateTarget.RunningApps), new[] { argSwitch });
-            var argWidgetsInWindow = UIAssistantAPI.CreateArgmentRule(Consts.WidgetsInWindow, x => _stateController.ChangeTarget(EnumerateTarget.WidgetsInWindow),
+            var argRunningApps = commandAPI.CreateArgmentRule(Consts.RunningApps, x => _stateController.ChangeTarget(EnumerateTarget.RunningApps), new[] { argSwitch });
+            var argWidgetsInWindow = commandAPI.CreateArgmentRule(Consts.WidgetsInWindow, x => _stateController.ChangeTarget(EnumerateTarget.WidgetsInWindow),
                 new[] { argClick, argDoubleClick, argDragAndDrop, argHover, argMiddleClick, argMouseEmulation, argRightClick });
-            var argWidgetsInTaskbar = UIAssistantAPI.CreateArgmentRule(Consts.WidgetsInTaskbar, x => _stateController.ChangeTarget(EnumerateTarget.WidgetsInTaskbar),
+            var argWidgetsInTaskbar = commandAPI.CreateArgmentRule(Consts.WidgetsInTaskbar, x => _stateController.ChangeTarget(EnumerateTarget.WidgetsInTaskbar),
                 new[] { argClick, argDoubleClick, argDragAndDrop, argHover, argMiddleClick, argMouseEmulation, argRightClick });
-            var argDividedscreen = UIAssistantAPI.CreateArgmentRule(Consts.DividedScreen, x => _stateController.ChangeTarget(EnumerateTarget.DividedScreen),
+            var argDividedscreen = commandAPI.CreateArgmentRule(Consts.DividedScreen, x => _stateController.ChangeTarget(EnumerateTarget.DividedScreen),
                 new[] { argClick, argDoubleClick, argDragAndDrop, argHover, argMiddleClick, argMouseEmulation, argRightClick });
 
-            var optTheme = UIAssistantAPI.CreateArgmentRule(Consts.Theme, x => _stateController.SetTemporaryTheme(x.Value));
-            var optNoReturnCursor = UIAssistantAPI.CreateArgmentRule(Consts.NoReturnCursor, _ => _stateController.NoReturnCursor = true);
+            var optTheme = commandAPI.CreateArgmentRule(Consts.Theme, x => _stateController.SetTemporaryTheme(x.Value));
+            var optNoReturnCursor = commandAPI.CreateArgmentRule(Consts.NoReturnCursor, _ => _stateController.NoReturnCursor = true);
 
-            var command = UIAssistantAPI.CreateCommandRule(Consts.Command, Run,
+            var command = commandAPI.CreateCommandRule(Consts.Command, Run,
                 new[] { argWidgetsInWindow, argRunningApps, argWidgetsInTaskbar, argDividedscreen, },
                 new[] { optTheme, optNoReturnCursor });
             command.Description = Consts.PluginName;
-            UIAssistantAPI.RegisterCommand(command);
+            commandAPI.RegisterCommand(command);
         }
 
         public void Setup()

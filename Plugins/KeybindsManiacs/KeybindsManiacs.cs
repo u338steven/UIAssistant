@@ -48,9 +48,9 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
         private void RegisterCommand()
         {
-            var command = UIAssistantAPI.CreateCommandRule(Consts.Command, _ => _keyController.Toggle());
+            var command = UIAssistantAPI.CommandAPI.CreateCommandRule(Consts.Command, _ => _keyController.Toggle());
             command.Description = Consts.PluginName;
-            UIAssistantAPI.RegisterCommand(command);
+            UIAssistantAPI.CommandAPI.RegisterCommand(command);
         }
 
         public void Setup()

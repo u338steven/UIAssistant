@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Data = System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -11,13 +10,11 @@ using KeybindHelper.LowLevel;
 using UIAssistant.Core.HitaHint;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Settings;
-using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Infrastructure.Events;
 using UIAssistant.Infrastructure.Logger;
 using UIAssistant.Infrastructure.Settings;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
-using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Events;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Interfaces.Plugin;
@@ -229,26 +226,6 @@ namespace UIAssistant.Core.API
             return I18n.DefaultLocalizer.GetLocalizedText(id);
         }
 
-        public void RegisterCommand(ICommandRule rule)
-        {
-            CommandManager.Add(rule);
-        }
-
-        public IEnumerable<ICommand> ParseStatement(string statement)
-        {
-            return CommandManager.Parse(statement);
-        }
-
-        public ICandidatesGenerator GetCommandGenerator()
-        {
-            return CommandManager.GetGenerator();
-        }
-
-        public Data.ValidationResult Validate(string statement)
-        {
-            return CommandManager.GetValidator(DefaultLocalizer.Instance).Validate(statement);
-        }
-
 #if DEBUG
         public void DisplayKeystroke(LowLevelKeyEventArgs e)
         {
@@ -409,16 +386,6 @@ namespace UIAssistant.Core.API
 
         public IResourceItem CurrentLanguage { get { return DefaultLocalizer.CurrentLanguage; } }
 
-        public ICommandRule CreateCommandRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null)
-        {
-            return new CommandRule(name, action, requiredArgs, optionalArgs);
-        }
-
-        public IArgumentRule CreateArgmentRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null)
-        {
-            return new ArgumentRule(name, action, requiredArgs, optionalArgs);
-        }
-
         public IWindow ActiveWindow { get { return Win32Window.ActiveWindow; } }
         public ITaskbar Taskbar { get { return new Win32Taskbar(); } }
         public IWindow FindWindow(string className, string caption = null)
@@ -432,29 +399,7 @@ namespace UIAssistant.Core.API
         }
         public IScreen Screen { get { return new Utility.Screen(); } }
 
-        public void InvokePluginCommand(string command, Action quit = null, Action pausing = null, Action resumed = null)
-        {
-            if (PluginManager.Exists(command))
-            {
-                pausing?.Invoke();
-                DefaultHUD.Initialize();
-                PluginManager.Execute(command);
-                PluginManager.Resume += () =>
-                {
-                    resumed?.Invoke();
-                };
-                PluginManager.Quit += () =>
-                {
-                    quit?.Invoke();
-                };
-            }
-            else
-            {
-                NotifyWarnMessage("Plugin Error", string.Format(TextID.CommandNotFound.GetLocalizedText(), command));
-                quit?.Invoke();
-            }
-        }
-
+        public ICommandAPI CommandAPI { get; } = new CommandAPI();
         public IKeyboardAPI KeyboardAPI { get; } = new KeyboardAPI();
         public IMouseAPI MouseAPI { get; } = new MouseAPI();
         public ISessionAPI SessionAPI { get; } = new SessionAPI();

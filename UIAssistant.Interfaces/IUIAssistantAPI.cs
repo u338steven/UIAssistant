@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using KeybindHelper.LowLevel;
-using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Events;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Interfaces.Plugin;
@@ -44,13 +43,9 @@ namespace UIAssistant.Interfaces.API
         void NotifyErrorMessage(string title, string message);
         void NotifyInfoMessage(string title, string message);
         void NotifyWarnMessage(string title, string message);
-        IEnumerable<ICommand> ParseStatement(string statement);
-        ICandidatesGenerator GetCommandGenerator();
-        Data.ValidationResult Validate(string statement);
         IPluginManager PluginManager { get; }
         void PrintDebugMessage(string message);
         void PrintErrorMessage(Exception ex, string message = null);
-        void RegisterCommand(ICommandRule rule);
         void RemoveContextHUD();
         void RemoveDefaultHUD();
         void RemoveIndicator(Control indicator);
@@ -62,8 +57,6 @@ namespace UIAssistant.Interfaces.API
         IEventObserver GetObserver(ObserberKinds kind);
         ILocalizer GetLocalizer();
         IResourceItem CurrentLanguage { get; }
-        ICommandRule CreateCommandRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null);
-        IArgumentRule CreateArgmentRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null);
 
         IWindow ActiveWindow { get; }
 
@@ -71,8 +64,8 @@ namespace UIAssistant.Interfaces.API
         IWindow FindWindow(string className, string caption = null);
         void EnumerateWindows(Func<IWindow, bool> func);
         IScreen Screen { get; }
-        void InvokePluginCommand(string command, Action quit = null, Action pausing = null, Action resumed = null);
 
+        ICommandAPI CommandAPI { get; }
         IKeyboardAPI KeyboardAPI { get; }
         IMouseAPI MouseAPI { get; }
         ISessionAPI SessionAPI { get; }
