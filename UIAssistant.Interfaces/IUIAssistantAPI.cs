@@ -8,10 +8,8 @@ using KeybindHelper.LowLevel;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Events;
 using UIAssistant.Interfaces.HUD;
-using UIAssistant.Interfaces.Input;
 using UIAssistant.Interfaces.Plugin;
 using UIAssistant.Interfaces.Resource;
-using UIAssistant.Interfaces.Session;
 using UIAssistant.Interfaces.Settings;
 
 namespace UIAssistant.Interfaces.API
@@ -67,12 +65,6 @@ namespace UIAssistant.Interfaces.API
         ICommandRule CreateCommandRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null);
         IArgumentRule CreateArgmentRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null);
 
-        IKeyboardHook CreateKeyboardHook();
-        IKeybindManager CreateKeybindManager();
-
-        IMouseCursor MouseCursor { get; }
-        IMouseOperation MouseOperation { get; }
-        IKeyboardOperation KeyboardOperation { get; }
         IWindow ActiveWindow { get; }
 
         ITaskbar Taskbar { get; }
@@ -81,9 +73,9 @@ namespace UIAssistant.Interfaces.API
         IScreen Screen { get; }
         void InvokePluginCommand(string command, Action quit = null, Action pausing = null, Action resumed = null);
 
+        IKeyboardAPI KeyboardAPI { get; }
+        IMouseAPI MouseAPI { get; }
         ISessionAPI SessionAPI { get; }
         IThemeAPI ThemeAPI { get; }
-        IKeyInputController CreateKeyboardController(IKeyboardPlugin plugin, ISession session);
-        void ReserveToReturnMouseCursor(ISession session, Func<bool> canReturn);
     }
 }

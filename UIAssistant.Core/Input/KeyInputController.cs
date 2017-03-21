@@ -17,7 +17,7 @@ namespace UIAssistant.Core.Input
         public KeyInputController(IKeyboardPlugin plugin, ISession session)
         {
             _plugin = plugin;
-            _context = new KeyInputContext(UIAssistantAPI.Instance.CreateKeyboardHook(), UIAssistantAPI.Instance.CreateKeybindManager());
+            _context = new KeyInputContext(UIAssistantAPI.Instance.KeyboardAPI.CreateKeyboardHook(), UIAssistantAPI.Instance.KeyboardAPI.CreateKeybindManager());
 
             _session = session;
             _session.Pausing += (_, __) => _context.Hook.IsActive = false;

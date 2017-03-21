@@ -27,7 +27,7 @@ namespace UIAssistant.Plugin.HitaHint.Operations
         }
         public void Execute(IHUDItem item)
         {
-            HitaHint.UIAssistantAPI.MouseOperation.Drag(item.Bounds);
+            HitaHint.UIAssistantAPI.MouseAPI.MouseOperation.Drag(item.Bounds);
         }
     }
 
@@ -37,8 +37,8 @@ namespace UIAssistant.Plugin.HitaHint.Operations
         public bool IsReturnCursor { get { return true; } }
         public void Dispose()
         {
-            HitaHint.UIAssistantAPI.KeyboardOperation.SendKeys(System.Windows.Input.Key.Escape);
-            HitaHint.UIAssistantAPI.MouseOperation.LeftUp();
+            HitaHint.UIAssistantAPI.KeyboardAPI.KeyboardOperation.SendKeys(System.Windows.Input.Key.Escape);
+            HitaHint.UIAssistantAPI.MouseAPI.MouseOperation.LeftUp();
         }
         public void Next(StateController controller)
         {
@@ -61,13 +61,13 @@ namespace UIAssistant.Plugin.HitaHint.Operations
         public bool IsReturnCursor { get { return true; } }
         public void Dispose()
         {
-            HitaHint.UIAssistantAPI.KeyboardOperation.SendKeys(System.Windows.Input.Key.Escape);
-            HitaHint.UIAssistantAPI.MouseOperation.LeftUp();
+            HitaHint.UIAssistantAPI.KeyboardAPI.KeyboardOperation.SendKeys(System.Windows.Input.Key.Escape);
+            HitaHint.UIAssistantAPI.MouseAPI.MouseOperation.LeftUp();
         }
         public void Next(StateController controller) { }
         public void Execute(IHUDItem item)
         {
-            HitaHint.UIAssistantAPI.MouseOperation.Drop(item.Bounds);
+            HitaHint.UIAssistantAPI.MouseAPI.MouseOperation.Drop(item.Bounds);
         }
     }
 }

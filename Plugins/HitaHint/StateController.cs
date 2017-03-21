@@ -158,14 +158,14 @@ namespace UIAssistant.Plugin.HitaHint
 
         public void Reset()
         {
-            UIAssistantAPI.MouseCursor.AutoHide = HitaHint.Settings.IsMouseCursorHidden;
-            UIAssistantAPI.MouseCursor.SetCursorVisibility(!HitaHint.Settings.IsMouseCursorHidden);
+            UIAssistantAPI.MouseAPI.MouseCursor.AutoHide = HitaHint.Settings.IsMouseCursorHidden;
+            UIAssistantAPI.MouseAPI.MouseCursor.SetCursorVisibility(!HitaHint.Settings.IsMouseCursorHidden);
         }
 
         public void Initialize()
         {
             State = new State(UIAssistantAPI);
-            UIAssistantAPI.ReserveToReturnMouseCursor(State.Session, () => OperationManager.CurrentCommand.IsReturnCursor && !NoReturnCursor);
+            UIAssistantAPI.MouseAPI.ReserveToReturnMouseCursor(State.Session, () => OperationManager.CurrentCommand.IsReturnCursor && !NoReturnCursor);
             UIAssistantAPI.DefaultHUD.Initialize();
         }
 
@@ -378,8 +378,8 @@ namespace UIAssistant.Plugin.HitaHint
         {
             if (HitaHint.Settings.IsMouseCursorHidden)
             {
-                HitaHint.UIAssistantAPI.MouseCursor.SetCursorVisibility(true);
-                HitaHint.UIAssistantAPI.MouseCursor.DestroyCursor();
+                HitaHint.UIAssistantAPI.MouseAPI.MouseCursor.SetCursorVisibility(true);
+                HitaHint.UIAssistantAPI.MouseAPI.MouseCursor.DestroyCursor();
             }
         }
     }

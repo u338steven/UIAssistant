@@ -31,8 +31,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
 
         public override void Enumerate(ICollection<IHUDItem> results)
         {
-            _mouseCurrentPosition = SearchByText.UIAssistantAPI.MouseOperation.GetMousePosition();
-            SearchByText.UIAssistantAPI.MouseOperation.Move(0, 0);
+            _mouseCurrentPosition = SearchByText.UIAssistantAPI.MouseAPI.MouseOperation.GetMousePosition();
+            SearchByText.UIAssistantAPI.MouseAPI.MouseOperation.Move(0, 0);
             _results = results;
             GetMenuItems(ContextRoot, null, new List<AutomationElement>());
             _isFinished = true;
@@ -46,11 +46,11 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
             {
                 var contextMenuBounds = ContextRoot.Current.BoundingRectangle;
                 var menuTopCenter = contextMenuBounds.TopCenter();
-                SearchByText.UIAssistantAPI.MouseOperation.Move(menuTopCenter.X, menuTopCenter.Y + 2);
+                SearchByText.UIAssistantAPI.MouseAPI.MouseOperation.Move(menuTopCenter.X, menuTopCenter.Y + 2);
                 System.Threading.Thread.Sleep(400);
                 if (!contextMenuBounds.Contains(_mouseCurrentPosition))
                 {
-                    SearchByText.UIAssistantAPI.MouseOperation.Move(_mouseCurrentPosition);
+                    SearchByText.UIAssistantAPI.MouseAPI.MouseOperation.Move(_mouseCurrentPosition);
                 }
             });
         }

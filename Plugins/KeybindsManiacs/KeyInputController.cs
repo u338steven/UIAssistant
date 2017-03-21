@@ -47,16 +47,20 @@ namespace UIAssistant.Plugin.KeybindsManiacs
     class KeybindStorage
     {
         public Dictionary<KeySet, bool> OneShotDefined { get; set; } = new Dictionary<KeySet, bool>();
-        public IKeybindManager OneShotKeybinds { get; set; } = KeybindsManiacs.UIAssistantAPI.CreateKeybindManager();
-        public IKeybindManager OneShotKeyDown { get; set; } = KeybindsManiacs.UIAssistantAPI.CreateKeybindManager();
-        public IKeybindManager OneShotKeyUp { get; set; } = KeybindsManiacs.UIAssistantAPI.CreateKeybindManager();
-        public IKeybindManager Keybinds { get; set; } = KeybindsManiacs.UIAssistantAPI.CreateKeybindManager();
+        public IKeybindManager OneShotKeybinds { get; set; }
+        public IKeybindManager OneShotKeyDown { get; set; }
+        public IKeybindManager OneShotKeyUp { get; set; }
+        public IKeybindManager Keybinds { get; set; }
         public bool IsEnabledWindowsKeybinds { get; set; } = false;
         public bool IsPrefix { get; set; } = false;
 
         public KeybindStorage()
         {
-
+            var api = KeybindsManiacs.UIAssistantAPI.KeyboardAPI;
+            OneShotKeybinds = api.CreateKeybindManager();
+            OneShotKeyDown = api.CreateKeybindManager();
+            OneShotKeyUp = api.CreateKeybindManager();
+            Keybinds = api.CreateKeybindManager();
         }
     }
 
@@ -68,10 +72,12 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         private KeybindStorage _currentKeybinds { get; set; } = new KeybindStorage();
 
         IUIAssistantAPI UIAssistantAPI;
+        IKeyboardAPI KeyboardAPI;
 
         public KeyInputController(IUIAssistantAPI api, StateController controller)
         {
             UIAssistantAPI = api;
+            KeyboardAPI = UIAssistantAPI.KeyboardAPI;
             _stateController = controller;
             _settings = KeybindsManiacs.Settings;
         }
@@ -87,7 +93,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             foreach (var keybinds in _settings.KeybindsInMode)
             {
                 var defaultKeybinds = context.Keybinds;
-                defaultKeybinds = KeybindsManiacs.UIAssistantAPI.CreateKeybindManager();
+                defaultKeybinds = KeyboardAPI.CreateKeybindManager();
                 var keybindStorage = new KeybindStorage();
                 var oneShotDefined = new Dictionary<KeySet, bool>();
                 foreach (var keybind in keybinds.Value.Keybinds)
@@ -112,30 +118,30 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                                     var keys = keybind.OneShot;
                                     if (_stateController.Mode == Mode.Visual && ContainsMovingKey(keys))
                                     {
-                                        KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(new[] { Key.RightShift }.Concat(keys).ToArray());
+                                        KeyboardAPI.KeyboardOperation.SendKeys(new[] { Key.RightShift }.Concat(keys).ToArray());
                                         return;
                                     }
-                                    KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(keys);
+                                    KeyboardAPI.KeyboardOperation.SendKeys(keys);
                                 });
                                 keybindStorage.OneShotKeyDown.Add(keyset, () =>
                                 {
                                     var keys = keybind.OutputKeys;
                                     if (_stateController.Mode == Mode.Visual && ContainsMovingKey(keys))
                                     {
-                                        KeybindsManiacs.UIAssistantAPI.KeyboardOperation.KeyDown(new[] { Key.RightShift }.Concat(keys).ToArray());
+                                        KeyboardAPI.KeyboardOperation.KeyDown(new[] { Key.RightShift }.Concat(keys).ToArray());
                                         return;
                                     }
-                                    KeybindsManiacs.UIAssistantAPI.KeyboardOperation.KeyDown(keys);
+                                    KeyboardAPI.KeyboardOperation.KeyDown(keys);
                                 });
                                 keybindStorage.OneShotKeyUp.Add(keyset, () =>
                                 {
                                     var keys = keybind.OutputKeys;
                                     if (_stateController.Mode == Mode.Visual && ContainsMovingKey(keys))
                                     {
-                                        KeybindsManiacs.UIAssistantAPI.KeyboardOperation.KeyUp(new[] { Key.RightShift }.Concat(keys).ToArray());
+                                        KeyboardAPI.KeyboardOperation.KeyUp(new[] { Key.RightShift }.Concat(keys).ToArray());
                                         return;
                                     }
-                                    KeybindsManiacs.UIAssistantAPI.KeyboardOperation.KeyUp(keys);
+                                    KeyboardAPI.KeyboardOperation.KeyUp(keys);
                                 });
                                 break;
                             }
@@ -144,10 +150,10 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                                 var keys = keybind.OutputKeys;
                                 if (_stateController.Mode == Mode.Visual && ContainsMovingKey(keys))
                                 {
-                                    KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(new[] { Key.RightShift }.Concat(keys).ToArray());
+                                    KeyboardAPI.KeyboardOperation.SendKeys(new[] { Key.RightShift }.Concat(keys).ToArray());
                                     return;
                                 }
-                                KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(keys);
+                                KeyboardAPI.KeyboardOperation.SendKeys(keys);
                             });
                             break;
                         case CommandType.RunEmbeddedCommand:
@@ -327,7 +333,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         {
             if (_stateController.Mode == Mode.Visual)
             {
-                KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(Key.RightCtrl, Key.C);
+                KeyboardAPI.KeyboardOperation.SendKeys(Key.RightCtrl, Key.C);
                 //SwitchMode(Mode.Normal);
                 SwitchMode(_settings.Mode, true);
                 return;
@@ -336,7 +342,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             {
                 if (keysState.Equals(new KeySet(keys)))
                 {
-                    KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(Key.Home, Key.None, Key.RightShift, Key.End, Key.None, Key.RightCtrl, Key.C);
+                    KeyboardAPI.KeyboardOperation.SendKeys(Key.Home, Key.None, Key.RightShift, Key.End, Key.None, Key.RightCtrl, Key.C);
                     _command = null;
                     return;
                 }
@@ -346,7 +352,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                     SwitchMode(Mode.Visual, true);
                     _currentKeybinds.Keybinds[keysState].Invoke();
                 }
-                KeybindsManiacs.UIAssistantAPI.KeyboardOperation.SendKeys(Key.RightCtrl, Key.C);
+                KeyboardAPI.KeyboardOperation.SendKeys(Key.RightCtrl, Key.C);
                 if (_stateController.Mode == Mode.Visual)
                 {
                     //SwitchMode(Mode.Normal, true);
@@ -405,7 +411,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                 if (_currentKeySet.Keys.Any(x => x.IsModifiersKey()))
                 {
                     var keys = _currentKeySet.Keys.Where(x => x.IsModifiersKey()).ToArray();
-                    KeybindsManiacs.UIAssistantAPI.KeyboardOperation.KeyUp(keys);
+                    KeyboardAPI.KeyboardOperation.KeyUp(keys);
                 }
             }
         }
@@ -431,7 +437,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             if (!_isActive)
             {
                 _stateController.Initialize();
-                var keyController = UIAssistantAPI.CreateKeyboardController(this, _stateController.Session);
+                var keyController = KeyboardAPI.CreateKeyboardController(this, _stateController.Session);
                 UIAssistantAPI.NotifyInfoMessage("Keybinds Maniacs", KeybindsManiacs.Localizer.GetLocalizedText(Consts.Activate));
                 keyController.Observe();
             }
@@ -544,11 +550,11 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             if (_currentKeybinds.IsEnabledWindowsKeybinds)
             {
                 var pressedKeys = keysState.Keys.Where(x => x.IsModifiersKey()).ToArray();
-                KeybindsManiacs.UIAssistantAPI.KeyboardOperation.Initialize(pressedKeys);
+                KeyboardAPI.KeyboardOperation.Initialize(pressedKeys);
             }
             else
             {
-                KeybindsManiacs.UIAssistantAPI.KeyboardOperation.Initialize(Key.None);
+                KeyboardAPI.KeyboardOperation.Initialize(Key.None);
             }
         }
 

@@ -27,9 +27,9 @@ namespace UIAssistant.Plugin.SearchByText.Items
                 Element.ScrollIntoView();
                 Element.TrySelectItem();
 
-                var pt = SearchByText.UIAssistantAPI.MouseOperation.GetMousePosition();
-                SearchByText.UIAssistantAPI.MouseOperation.Click(Element.Current.BoundingRectangle);
-                SearchByText.UIAssistantAPI.MouseOperation.Move(pt);
+                var pt = SearchByText.UIAssistantAPI.MouseAPI.MouseOperation.GetMousePosition();
+                SearchByText.UIAssistantAPI.MouseAPI.MouseOperation.Click(Element.Current.BoundingRectangle);
+                SearchByText.UIAssistantAPI.MouseAPI.MouseOperation.Move(pt);
             });
         }
     }

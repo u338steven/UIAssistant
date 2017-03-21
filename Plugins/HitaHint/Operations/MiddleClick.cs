@@ -10,7 +10,7 @@ namespace UIAssistant.Plugin.HitaHint.Operations
         public void Next(StateController controller) { }
         public void Execute(IHUDItem item)
         {
-            HitaHint.UIAssistantAPI.MouseOperation.MiddleClick(item.Bounds);
+            HitaHint.UIAssistantAPI.MouseAPI.MouseOperation.MiddleClick(item.Bounds);
         }
     }
 }

@@ -57,7 +57,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
             bool ret = false;
             var toolbarItems = el.FindAll(TreeScope.Descendants, Condition.TrueCondition).Cast<AutomationElement>();
 
-            var pt = SearchByText.UIAssistantAPI.MouseOperation.GetMousePosition();
+            var pt = SearchByText.UIAssistantAPI.MouseAPI.MouseOperation.GetMousePosition();
             foreach (AutomationElement item in toolbarItems)
             {
                 try
@@ -70,7 +70,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                     }
 
 
-                    SearchByText.UIAssistantAPI.MouseOperation.DoMouseEvent(elementInfo.BoundingRectangle);
+                    SearchByText.UIAssistantAPI.MouseAPI.MouseOperation.DoMouseEvent(elementInfo.BoundingRectangle);
                     string addName = elementInfo.Name;
                     if (addName == null || addName == "")
                     {
@@ -93,7 +93,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                     System.Diagnostics.Debug.Print("{0}", e.Message);
                 }
             }
-            SearchByText.UIAssistantAPI.MouseOperation.Move(pt);
+            SearchByText.UIAssistantAPI.MouseAPI.MouseOperation.Move(pt);
             return ret;
         }
     }

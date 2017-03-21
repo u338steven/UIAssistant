@@ -78,7 +78,7 @@ namespace UIAssistant.Plugin.HitaHint
         public void Setup()
         {
             _stateController.Initialize();
-            var keyController = UIAssistantAPI.CreateKeyboardController(_keyController, _stateController.State.Session);
+            var keyController = UIAssistantAPI.KeyboardAPI.CreateKeyboardController(_keyController, _stateController.State.Session);
             keyController.AddHidingProcess();
             UIAssistantAPI.UIDispatcher.Invoke(() => keyController.AddUsagePanelProcess(new Usage()));
             keyController.Observe();

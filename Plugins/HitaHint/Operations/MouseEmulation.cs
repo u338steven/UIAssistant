@@ -15,7 +15,7 @@ namespace UIAssistant.Plugin.HitaHint.Operations
         }
         public void Execute(IHUDItem item)
         {
-            HitaHint.UIAssistantAPI.MouseOperation.Move(item.Bounds);
+            HitaHint.UIAssistantAPI.MouseAPI.MouseOperation.Move(item.Bounds);
         }
     }
 }

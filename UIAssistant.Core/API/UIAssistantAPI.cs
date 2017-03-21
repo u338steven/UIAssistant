@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using Data = System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -12,7 +10,6 @@ using System.Windows.Media.Animation;
 using KeybindHelper.LowLevel;
 using UIAssistant.Core.HitaHint;
 using UIAssistant.Core.I18n;
-using UIAssistant.Core.Input;
 using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Infrastructure.Events;
@@ -23,11 +20,9 @@ using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Events;
 using UIAssistant.Interfaces.HUD;
-using UIAssistant.Interfaces.Input;
 using UIAssistant.Interfaces.Plugin;
 using UIAssistant.Interfaces.Resource;
 using UIAssistant.Interfaces.Settings;
-using UIAssistant.Interfaces.Session;
 using UIAssistant.UI.Controls;
 using UIAssistant.Utility.Win32;
 
@@ -51,9 +46,6 @@ namespace UIAssistant.Core.API
         public string ConfigurationDirectory { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configurations");
         public IFileIO DefaultSettingsFileIO { get; private set; }
         public IUserSettings UIAssistantSettings { get; private set; }
-        public IMouseCursor MouseCursor { get; } = new MouseCursor();
-        public IMouseOperation MouseOperation { get; } = new MouseOperation();
-        public IKeyboardOperation KeyboardOperation { get; } = new KeyboardOperation();
 
         public void Initialize(Control defaultHUDPanel, Control defaultContextPanel)
         {
@@ -292,7 +284,7 @@ namespace UIAssistant.Core.API
         public void AddTargetingReticle()
         {
             _reticle = window.FindResource("TargetingReticle") as Control;
-            var pt = MouseOperation.GetMousePosition();
+            var pt = MouseAPI.MouseOperation.GetMousePosition();
             window.Dispatcher.Invoke(() =>
             {
                 Canvas.SetLeft(_reticle, pt.X);
@@ -313,7 +305,7 @@ namespace UIAssistant.Core.API
             {
                 return;
             }
-            var pt = MouseOperation.GetMousePosition();
+            var pt = MouseAPI.MouseOperation.GetMousePosition();
             window.Dispatcher.Invoke(() =>
             {
                 Canvas.SetLeft(_reticle, pt.X);
@@ -427,16 +419,6 @@ namespace UIAssistant.Core.API
             return new ArgumentRule(name, action, requiredArgs, optionalArgs);
         }
 
-        public IKeyboardHook CreateKeyboardHook()
-        {
-            return new KeyboardHook();
-        }
-
-        public IKeybindManager CreateKeybindManager()
-        {
-            return new KeybindManager();
-        }
-
         public IWindow ActiveWindow { get { return Win32Window.ActiveWindow; } }
         public ITaskbar Taskbar { get { return new Win32Taskbar(); } }
         public IWindow FindWindow(string className, string caption = null)
@@ -473,31 +455,9 @@ namespace UIAssistant.Core.API
             }
         }
 
+        public IKeyboardAPI KeyboardAPI { get; } = new KeyboardAPI();
+        public IMouseAPI MouseAPI { get; } = new MouseAPI();
         public ISessionAPI SessionAPI { get; } = new SessionAPI();
         public IThemeAPI ThemeAPI { get; } = new ThemeAPI();
-        public IKeyInputController CreateKeyboardController(IKeyboardPlugin plugin, ISession session)
-        {
-            var controller = new KeyInputController(plugin, session);
-            controller.Initialize();
-            //controller.Observe();
-            return controller;
-        }
-
-        public void ReserveToReturnMouseCursor(ISession session, Func<bool> canReturn)
-        {
-            var prevMousePosition = MouseOperation.GetMousePosition();
-            session.Finished += (_, __) =>
-            {
-                if (!canReturn())
-                {
-                    return;
-                }
-                Task.Run(() =>
-                {
-                    System.Threading.Thread.Sleep(300);
-                    MouseOperation.Move(prevMousePosition);
-                });
-            };
-        }
     }
 }

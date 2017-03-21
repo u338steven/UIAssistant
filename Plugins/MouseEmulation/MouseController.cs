@@ -29,7 +29,7 @@ namespace UIAssistant.Plugin.MouseEmulation
 
         public static void Start()
         {
-            _keyHook = MouseEmulation.UIAssistantAPI.CreateKeyboardHook();
+            _keyHook = MouseEmulation.UIAssistantAPI.KeyboardAPI.CreateKeyboardHook();
             _keyHook.Hook();
             _keyHook.KeyDown += _keyHook_KeyDown;
             _timer = new Timer();
@@ -86,7 +86,7 @@ namespace UIAssistant.Plugin.MouseEmulation
         static void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             var moveDelta = 4;
-            var operation = MouseEmulation.UIAssistantAPI.MouseOperation;
+            var operation = MouseEmulation.UIAssistantAPI.MouseAPI.MouseOperation;
             if (_keyHook.IsPressed(_mouseSettings.SlowDown.Key))
             {
                 moveDelta = 1;

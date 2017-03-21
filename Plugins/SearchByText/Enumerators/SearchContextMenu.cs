@@ -29,8 +29,8 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
 
             observer.Observe();
 
-            SearchByText.UIAssistantAPI.KeyboardOperation.PressedKeyUp();
-            SearchByText.UIAssistantAPI.KeyboardOperation.SendKeys(Key.Apps);
+            SearchByText.UIAssistantAPI.KeyboardAPI.KeyboardOperation.PressedKeyUp();
+            SearchByText.UIAssistantAPI.KeyboardAPI.KeyboardOperation.SendKeys(Key.Apps);
             if (!observer.Wait(2000))
             {
                 // timeout

@@ -59,7 +59,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
                 adjuster.X = bounds.Left - rect.Left;
                 adjuster.Y = bounds.Top - rect.Top;
                 container.ToList().ForEach(item => item.Bounds.Offset(adjuster.X, adjuster.Y));
-                HitaHint.UIAssistantAPI.MouseOperation.DoMouseEvent(x, y);
+                HitaHint.UIAssistantAPI.MouseAPI.MouseOperation.DoMouseEvent(x, y);
             }
 
             if (TryShowNotifyIconOverflow(targetWindow))
