@@ -113,7 +113,7 @@ namespace UIAssistant.Plugin.HitaHint
             }
             catch (Exception ex)
             {
-                UIAssistantAPI.PrintErrorMessage(ex);
+                UIAssistantAPI.LogAPI.WriteErrorMessage(ex);
             }
         }
 

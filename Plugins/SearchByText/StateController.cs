@@ -118,7 +118,7 @@ namespace UIAssistant.Plugin.SearchByText
             }
             catch (Exception ex)
             {
-                UIAssistantAPI.PrintErrorMessage(ex);
+                UIAssistantAPI.LogAPI.WriteErrorMessage(ex);
             }
         }
 

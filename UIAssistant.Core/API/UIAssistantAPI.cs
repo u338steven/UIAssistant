@@ -11,7 +11,6 @@ using UIAssistant.Core.HitaHint;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Events;
-using UIAssistant.Infrastructure.Logger;
 using UIAssistant.Infrastructure.Settings;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
@@ -232,16 +231,6 @@ namespace UIAssistant.Core.API
             KeyVisualizer.Notify(e);
         }
 #endif
-        public void PrintDebugMessage(string message)
-        {
-            Log.Debug(message);
-        }
-
-        public void PrintErrorMessage(Exception ex, string message = null)
-        {
-            Log.Error(ex, message);
-        }
-
         Control _reticle;
         public void AddTargetingReticle()
         {
@@ -374,6 +363,7 @@ namespace UIAssistant.Core.API
 
         public ICommandAPI CommandAPI { get; } = new CommandAPI();
         public IKeyboardAPI KeyboardAPI { get; } = new KeyboardAPI();
+        public ILogAPI LogAPI { get; } = new LogAPI();
         public IMouseAPI MouseAPI { get; } = new MouseAPI();
         public INotificationAPI NotificationAPI { get; } = new NotificationAPI();
         public ISessionAPI SessionAPI { get; } = new SessionAPI();

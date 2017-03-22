@@ -56,7 +56,7 @@ namespace UIAssistant.Plugin.MouseEmulation
             }
             catch (Exception ex)
             {
-                UIAssistantAPI.PrintErrorMessage(ex);
+                UIAssistantAPI.LogAPI.WriteErrorMessage(ex);
             }
         }
 

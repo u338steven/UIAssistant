@@ -40,8 +40,6 @@ namespace UIAssistant.Interfaces.API
         string Localize(string id);
         void MoveTargetingReticle(double x, double y);
         IPluginManager PluginManager { get; }
-        void PrintDebugMessage(string message);
-        void PrintErrorMessage(Exception ex, string message = null);
         void RemoveContextHUD();
         void RemoveDefaultHUD();
         void RemoveIndicator(Control indicator);
@@ -58,6 +56,7 @@ namespace UIAssistant.Interfaces.API
 
         ICommandAPI CommandAPI { get; }
         IKeyboardAPI KeyboardAPI { get; }
+        ILogAPI LogAPI { get; }
         IMouseAPI MouseAPI { get; }
         INotificationAPI NotificationAPI { get; }
         ISessionAPI SessionAPI { get; }
