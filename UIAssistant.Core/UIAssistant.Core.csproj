@@ -82,6 +82,7 @@
     <Compile Include="API\CommandAPI.cs" />
     <Compile Include="API\KeyboardAPI.cs" />
     <Compile Include="API\MouseAPI.cs" />
+    <Compile Include="API\NotificationAPI.cs" />
     <Compile Include="API\SessionAPI.cs" />
     <Compile Include="API\ThemeAPI.cs" />
     <Compile Include="API\UIAssistantAPI.cs" />

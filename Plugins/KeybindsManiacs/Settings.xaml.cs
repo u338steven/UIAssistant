@@ -57,7 +57,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         {
             if (mode.Text == Consts.DefaultMode)
             {
-                KeybindsManiacs.UIAssistantAPI.NotifyInfoMessage("Cannot remove it", $"{Consts.DefaultMode} mode is not removable");
+                KeybindsManiacs.UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Cannot remove it", $"{Consts.DefaultMode} mode is not removable");
                 return;
             }
         }

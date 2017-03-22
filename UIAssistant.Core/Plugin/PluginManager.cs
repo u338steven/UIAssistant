@@ -54,7 +54,7 @@ namespace UIAssistant.Core.Plugin
                 catch(ReflectionTypeLoadException ex)
                 {
                     var message = string.Format(TextID.PluginInitializeError.GetLocalizedText(), pluginPath);
-                    UIAssistantAPI.Instance.NotifyWarnMessage("Warning", message);
+                    UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("Warning", message);
                     (ex as ReflectionTypeLoadException).LoaderExceptions.ForEach(x =>
                     {
                         Log.Error(x);
@@ -63,7 +63,7 @@ namespace UIAssistant.Core.Plugin
                 catch (Exception ex)
                 {
                     var message = string.Format(TextID.PluginInitializeError.GetLocalizedText(), pluginPath);
-                    UIAssistantAPI.Instance.NotifyWarnMessage("Warning", message);
+                    UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("Warning", message);
                     Log.Error(ex);
                     Log.Warn(message);
                 }
@@ -158,7 +158,7 @@ namespace UIAssistant.Core.Plugin
             catch (Exception ex)
             {
                 var message = string.Format(TextID.PluginInitializeError.GetLocalizedText(), plugin.Metadata.Name);
-                UIAssistantAPI.Instance.NotifyWarnMessage("Warning", message);
+                UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("Warning", message);
                 Log.Error(ex);
                 Log.Warn(message);
             }
@@ -168,7 +168,7 @@ namespace UIAssistant.Core.Plugin
             }
             else
             {
-                UIAssistantAPI.Instance.NotifyWarnMessage("Warning", string.Format(TextID.PluginCommandDuplication.GetLocalizedText(), plugin.Metadata.Name));
+                UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("Warning", string.Format(TextID.PluginCommandDuplication.GetLocalizedText(), plugin.Metadata.Name));
             }
         }
 

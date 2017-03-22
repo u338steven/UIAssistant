@@ -35,7 +35,7 @@ namespace UIAssistant.Models
                 var validationResult = CommandManager.GetValidator(DefaultLocalizer.Instance).Validate(hotkey.Text);
                 if (!validationResult.IsSuccess())
                 {
-                    UIAssistantAPI.Instance.NotifyWarnMessage("Warning", string.Format(TextID.RegisterHotkeyFailed.GetLocalizedText(), validationResult.ErrorMessage));
+                    UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("Warning", string.Format(TextID.RegisterHotkeyFailed.GetLocalizedText(), validationResult.ErrorMessage));
                     continue;
                 }
                 var action = PluginManager.Instance.GenerateAction(hotkey.Text);
@@ -45,7 +45,7 @@ namespace UIAssistant.Models
                 }
                 catch (DuplicateHotkeyException ex)
                 {
-                    Notification.NotifyMessage("Waring", string.Format(TextID.HotkeyDuplication.GetLocalizedText(), ex.Message), NotificationIcon.Warning);
+                    UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("Warning", string.Format(TextID.HotkeyDuplication.GetLocalizedText(), ex.Message));
                 }
             }
         }

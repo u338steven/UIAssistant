@@ -169,7 +169,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                                 }
                                 else
                                 {
-                                    UIAssistantAPI.NotifyWarnMessage("Plugin Error", string.Format(KeybindsManiacs.UIAssistantAPI.Localize(TextID.CommandNotFound), command));
+                                    UIAssistantAPI.NotificationAPI.NotifyWarnMessage("Plugin Error", string.Format(KeybindsManiacs.UIAssistantAPI.Localize(TextID.CommandNotFound), command));
                                 }
                             });
                             break;
@@ -438,12 +438,12 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             {
                 _stateController.Initialize();
                 var keyController = KeyboardAPI.CreateKeyboardController(this, _stateController.Session);
-                UIAssistantAPI.NotifyInfoMessage("Keybinds Maniacs", KeybindsManiacs.Localizer.GetLocalizedText(Consts.Activate));
+                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Keybinds Maniacs", KeybindsManiacs.Localizer.GetLocalizedText(Consts.Activate));
                 keyController.Observe();
             }
             else
             {
-                UIAssistantAPI.NotifyInfoMessage("Keybinds Maniacs", KeybindsManiacs.Localizer.GetLocalizedText(Consts.Deactivate));
+                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Keybinds Maniacs", KeybindsManiacs.Localizer.GetLocalizedText(Consts.Deactivate));
                 _stateController.Quit();
             }
             _isActive = !_isActive;

@@ -66,6 +66,7 @@
     <Compile Include="API\ICommandAPI.cs" />
     <Compile Include="API\IKeyboardAPI.cs" />
     <Compile Include="API\IMouseAPI.cs" />
+    <Compile Include="API\INotificationAPI.cs" />
     <Compile Include="API\ISessionAPI.cs" />
     <Compile Include="API\IThemeAPI.cs" />
     <Compile Include="API\IWindowAPI.cs" />

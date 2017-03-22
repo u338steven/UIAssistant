@@ -43,7 +43,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             Mode = Mode.UserCustom;
             if (!isSilent)
             {
-                API.NotifyInfoMessage("KeybindsManiacs", string.Format(KeybindsManiacs.Localizer.GetLocalizedText(Consts.SwitchMode), modeName));
+                API.NotificationAPI.NotifyInfoMessage("KeybindsManiacs", string.Format(KeybindsManiacs.Localizer.GetLocalizedText(Consts.SwitchMode), modeName));
             }
         }
 
@@ -56,7 +56,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             Mode = mode;
             if (!isSilent)
             {
-                API.NotifyInfoMessage("KeybindsManiacs", string.Format(KeybindsManiacs.Localizer.GetLocalizedText(Consts.SwitchMode), mode.ToString()));
+                API.NotificationAPI.NotifyInfoMessage("KeybindsManiacs", string.Format(KeybindsManiacs.Localizer.GetLocalizedText(Consts.SwitchMode), mode.ToString()));
             }
         }
     }

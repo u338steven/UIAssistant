@@ -67,14 +67,14 @@ namespace UIAssistant.Plugin.SearchByText.Items
                                 var element = GetCurrentElement(x);
                                 if (element == null)
                                 {
-                                    SearchByText.UIAssistantAPI.NotifyWarnMessage(Consts.PluginName, "Cannot find the selected menu item");
+                                    SearchByText.UIAssistantAPI.NotificationAPI.NotifyWarnMessage(Consts.PluginName, "Cannot find the selected menu item");
                                     return;
                                 }
 
                                 // 見えない要素(要スクロール)の場合、実行できないので実行は諦める
                                 if (element.Current.IsOffscreen)
                                 {
-                                    SearchByText.UIAssistantAPI.NotifyWarnMessage(Consts.PluginName, "Cannot run the selected menu item");
+                                    SearchByText.UIAssistantAPI.NotificationAPI.NotifyWarnMessage(Consts.PluginName, "Cannot run the selected menu item");
                                     return;
                                     //System.Diagnostics.Debug.Print($"1: {element.Current.AccessKey}, {element.Current.IsOffscreen}, {element.Current.IsEnabled}, {element.Current.BoundingRectangle}");
                                     //Core.Input.KeyboardOperation.SendKeys(System.Windows.Input.Key.Up);
@@ -99,7 +99,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
                         }
                         catch (Exception ex)
                         {
-                            SearchByText.UIAssistantAPI.NotifyErrorMessage(Consts.PluginName, ex.Message + "\nThe menu may not be scrolled");
+                            SearchByText.UIAssistantAPI.NotificationAPI.NotifyErrorMessage(Consts.PluginName, ex.Message + "\nThe menu may not be scrolled");
                         }
                         finally
                         {
@@ -116,7 +116,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
                     var candidate = Root.FindAll(TreeScope.Descendants, propCondition);
                     if (candidate.Count == 0)
                     {
-                        SearchByText.UIAssistantAPI.NotifyWarnMessage(Consts.PluginName, "Cannot find the selected menu item");
+                        SearchByText.UIAssistantAPI.NotificationAPI.NotifyWarnMessage(Consts.PluginName, "Cannot find the selected menu item");
                         return;
                     }
                     Ancestors.RemoveAt(0);

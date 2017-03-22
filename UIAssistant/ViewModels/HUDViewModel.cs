@@ -120,7 +120,7 @@ namespace UIAssistant.ViewModels
             }
             catch (Exception ex)
             {
-                UIAssistantAPI.Instance.NotifyWarnMessage("Load Migemo Error", $"{ex.Message}");
+                UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("Load Migemo Error", $"{ex.Message}");
                 Infrastructure.Logger.Log.Error(ex);
             }
         }

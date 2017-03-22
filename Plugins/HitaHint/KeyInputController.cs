@@ -70,7 +70,7 @@ namespace UIAssistant.Plugin.HitaHint
             {
                 context.Hook.LoadAnotherKeyboardLayout();
                 var layoutLanguage = context.Hook.GetKeyboardLayoutLanguage();
-                UIAssistantAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(UIAssistantAPI.Localize(TextID.SwitchKeyboardLayout), layoutLanguage));
+                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(UIAssistantAPI.Localize(TextID.SwitchKeyboardLayout), layoutLanguage));
                 _stateController.State.KeyboardLayoutName = layoutLanguage;
             });
 

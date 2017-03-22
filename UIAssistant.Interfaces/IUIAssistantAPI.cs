@@ -39,9 +39,6 @@ namespace UIAssistant.Interfaces.API
         void Initialize(Control defaultHUDPanel, Control defaultContextPanel);
         string Localize(string id);
         void MoveTargetingReticle(double x, double y);
-        void NotifyErrorMessage(string title, string message);
-        void NotifyInfoMessage(string title, string message);
-        void NotifyWarnMessage(string title, string message);
         IPluginManager PluginManager { get; }
         void PrintDebugMessage(string message);
         void PrintErrorMessage(Exception ex, string message = null);
@@ -62,6 +59,7 @@ namespace UIAssistant.Interfaces.API
         ICommandAPI CommandAPI { get; }
         IKeyboardAPI KeyboardAPI { get; }
         IMouseAPI MouseAPI { get; }
+        INotificationAPI NotificationAPI { get; }
         ISessionAPI SessionAPI { get; }
         IThemeAPI ThemeAPI { get; }
         IWindowAPI WindowAPI { get; }

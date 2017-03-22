@@ -99,7 +99,7 @@ namespace UIAssistant.Plugin.SearchByText
             keybinds.Add(_settings.SwitchKeyboardLayout, () =>
             {
                 context.Hook.LoadAnotherKeyboardLayout();
-                UIAssistantAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(UIAssistantAPI.Localize(TextID.SwitchKeyboardLayout), context.Hook.GetKeyboardLayoutLanguage()));
+                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(UIAssistantAPI.Localize(TextID.SwitchKeyboardLayout), context.Hook.GetKeyboardLayoutLanguage()));
             });
         }
 

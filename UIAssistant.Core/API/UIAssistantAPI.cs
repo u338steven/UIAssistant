@@ -32,7 +32,7 @@ namespace UIAssistant.Core.API
 
         private UIAssistantAPI()
         {
-            DefaultSettingsFileIO = new YamlFileIO((path, ex) => NotifyWarnMessage("Load Settings Error", string.Format(Localize(TextID.SettingsLoadError), path)));
+            DefaultSettingsFileIO = new YamlFileIO((path, ex) => NotificationAPI.NotifyWarnMessage("Load Settings Error", string.Format(Localize(TextID.SettingsLoadError), path)));
             UIAssistantSettings = DefaultSettingsFileIO.Read(typeof(UserSettings), UserSettings.FilePath) as UserSettings;
         }
 
@@ -242,21 +242,6 @@ namespace UIAssistant.Core.API
             Log.Error(ex, message);
         }
 
-        public void NotifyWarnMessage(string title, string message)
-        {
-            Notification.NotifyMessage(title, message, NotificationIcon.Warning);
-        }
-
-        public void NotifyInfoMessage(string title, string message)
-        {
-            Notification.NotifyMessage(title, message, NotificationIcon.Information);
-        }
-
-        public void NotifyErrorMessage(string title, string message)
-        {
-            Notification.NotifyMessage(title, message, NotificationIcon.Error);
-        }
-
         Control _reticle;
         public void AddTargetingReticle()
         {
@@ -390,6 +375,7 @@ namespace UIAssistant.Core.API
         public ICommandAPI CommandAPI { get; } = new CommandAPI();
         public IKeyboardAPI KeyboardAPI { get; } = new KeyboardAPI();
         public IMouseAPI MouseAPI { get; } = new MouseAPI();
+        public INotificationAPI NotificationAPI { get; } = new NotificationAPI();
         public ISessionAPI SessionAPI { get; } = new SessionAPI();
         public IThemeAPI ThemeAPI { get; } = new ThemeAPI();
         public IWindowAPI WindowAPI { get; } = new WindowAPI();

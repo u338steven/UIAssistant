@@ -60,7 +60,7 @@ namespace UIAssistant.Core.API
             }
             else
             {
-                UIAssistantAPI.Instance.NotifyWarnMessage("Plugin Error", string.Format(TextID.CommandNotFound.GetLocalizedText(), command));
+                UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("Plugin Error", string.Format(TextID.CommandNotFound.GetLocalizedText(), command));
                 quit?.Invoke();
             }
         }
