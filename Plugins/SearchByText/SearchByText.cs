@@ -36,7 +36,7 @@ namespace UIAssistant.Plugin.SearchByText
             Settings = SearchByTextSettings.Load();
             _stateController = new StateController(api);
             _keyController = new KeyInputController(api, _stateController);
-            _localizer = api.GetLocalizer();
+            _localizer = api.LocalizationAPI.GetLocalizer();
             RegisterCommand();
         }
 
@@ -96,7 +96,7 @@ namespace UIAssistant.Plugin.SearchByText
 
         public void Localize()
         {
-            _localizer?.SwitchLanguage(UIAssistantAPI.CurrentLanguage);
+            _localizer?.SwitchLanguage(UIAssistantAPI.LocalizationAPI.CurrentLanguage);
 
             Settings.Expand.Text = _localizer.GetLocalizedText("sbtExpand");
         }

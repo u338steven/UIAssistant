@@ -46,7 +46,7 @@ namespace UIAssistant.Plugin.SearchByText
                 _enumerator.Dispose();
                 if (_sourceForFiltering.Count == 0)
                 {
-                    UIAssistantAPI.NotificationAPI.NotifyInfoMessage(Consts.PluginName, UIAssistantAPI.Localize(TextID.NoOneFound));
+                    UIAssistantAPI.NotificationAPI.NotifyInfoMessage(Consts.PluginName, UIAssistantAPI.LocalizationAPI.Localize(TextID.NoOneFound));
                     Quit();
                 }
                 Filter();
@@ -146,7 +146,7 @@ namespace UIAssistant.Plugin.SearchByText
         {
             UIAssistantAPI.ThemeAPI.NextTheme();
             UIAssistantAPI.UIAssistantSettings.Theme = UIAssistantAPI.ThemeAPI.CurrentTheme.Id;
-            UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Theme", string.Format(UIAssistantAPI.Localize(TextID.SwitchTheme), UIAssistantAPI.UIAssistantSettings.Theme));
+            UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Theme", string.Format(UIAssistantAPI.LocalizationAPI.Localize(TextID.SwitchTheme), UIAssistantAPI.UIAssistantSettings.Theme));
             UIAssistantAPI.UIAssistantSettings.Save();
         }
 

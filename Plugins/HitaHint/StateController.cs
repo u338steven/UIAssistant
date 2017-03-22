@@ -57,7 +57,7 @@ namespace UIAssistant.Plugin.HitaHint
             {
                 if (WhetherShowWarning(inputChar))
                 {
-                    api.NotificationAPI.NotifyInfoMessage("Hit-a-Hint", api.Localize(TextID.NoOneFound) + $"\nInput:{_notFoundInput.ToString()}");
+                    api.NotificationAPI.NotifyInfoMessage("Hit-a-Hint", api.LocalizationAPI.Localize(TextID.NoOneFound) + $"\nInput:{_notFoundInput.ToString()}");
                     _notFoundInput.Clear();
                 }
                 return false;
@@ -227,7 +227,7 @@ namespace UIAssistant.Plugin.HitaHint
             }
             catch (OperationCanceledException ex)
             {
-                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.Localize(TextID.Canceled));
+                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.LocalizationAPI.Localize(TextID.Canceled));
                 System.Diagnostics.Debug.Print($"{ex.Message}");
             }
             return container;
@@ -252,7 +252,7 @@ namespace UIAssistant.Plugin.HitaHint
             }
             if (State.EnumeratedResults.Count == 0)
             {
-                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.Localize(TextID.NoOneFound));
+                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.LocalizationAPI.Localize(TextID.NoOneFound));
                 Quit();
                 return;
             }
@@ -328,7 +328,7 @@ namespace UIAssistant.Plugin.HitaHint
 
             if (resultCount == 0)
             {
-                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.Localize(TextID.NoOneFound) + $"\nInput:{State.InputText}");
+                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Hit-a-Hint", UIAssistantAPI.LocalizationAPI.Localize(TextID.NoOneFound) + $"\nInput:{State.InputText}");
                 State.InputText.BackSpace();
                 return;
             }
@@ -346,7 +346,7 @@ namespace UIAssistant.Plugin.HitaHint
         {
             _context.ThemeSwitcher.Next();
             HitaHint.Settings.Theme = _context.ThemeSwitcher.CurrentTheme.Id;
-            UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Theme", string.Format(UIAssistantAPI.Localize(TextID.SwitchTheme), HitaHint.Settings.Theme));
+            UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Theme", string.Format(UIAssistantAPI.LocalizationAPI.Localize(TextID.SwitchTheme), HitaHint.Settings.Theme));
             HitaHint.Settings.Save();
         }
 

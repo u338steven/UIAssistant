@@ -32,7 +32,7 @@ namespace UIAssistant.Plugin.MouseEmulation
             UIAssistantAPI = api;
 
             Settings = MouseEmulationSettings.Load();
-            _localizer = api.GetLocalizer();
+            _localizer = api.LocalizationAPI.GetLocalizer();
             RegisterCommand();
         }
 
@@ -67,7 +67,7 @@ namespace UIAssistant.Plugin.MouseEmulation
 
         public void Localize()
         {
-            _localizer.SwitchLanguage(UIAssistantAPI.CurrentLanguage);
+            _localizer.SwitchLanguage(UIAssistantAPI.LocalizationAPI.CurrentLanguage);
             var settings = MouseEmulation.Settings;
 
             settings.Click.Text = _localizer.GetLocalizedText("meClick");

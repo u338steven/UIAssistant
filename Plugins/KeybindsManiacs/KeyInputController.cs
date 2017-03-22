@@ -169,7 +169,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                                 }
                                 else
                                 {
-                                    UIAssistantAPI.NotificationAPI.NotifyWarnMessage("Plugin Error", string.Format(KeybindsManiacs.UIAssistantAPI.Localize(TextID.CommandNotFound), command));
+                                    UIAssistantAPI.NotificationAPI.NotifyWarnMessage("Plugin Error", string.Format(KeybindsManiacs.UIAssistantAPI.LocalizationAPI.Localize(TextID.CommandNotFound), command));
                                 }
                             });
                             break;

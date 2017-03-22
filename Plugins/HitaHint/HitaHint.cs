@@ -42,7 +42,7 @@ namespace UIAssistant.Plugin.HitaHint
             Settings = HitaHintSettings.Load();
             _stateController = new StateController(api);
             _keyController = new KeyInputController(api, _stateController);
-            _localizer = api.GetLocalizer();
+            _localizer = api.LocalizationAPI.GetLocalizer();
             RegisterCommand();
         }
 
@@ -113,7 +113,7 @@ namespace UIAssistant.Plugin.HitaHint
 
         public void Localize()
         {
-            _localizer.SwitchLanguage(UIAssistantAPI.CurrentLanguage);
+            _localizer.SwitchLanguage(UIAssistantAPI.LocalizationAPI.CurrentLanguage);
 
             Settings.Click.Text = _localizer.GetLocalizedText("hahClick");
             Settings.DoubleClick.Text = _localizer.GetLocalizedText("hahDoubleClick");

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Controls;
 
 using UIAssistant.Core.HitaHint;
-using UIAssistant.Core.I18n;
 using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Events;
 using UIAssistant.Infrastructure.Settings;
@@ -13,7 +12,6 @@ using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
 using UIAssistant.Interfaces.Events;
 using UIAssistant.Interfaces.Plugin;
-using UIAssistant.Interfaces.Resource;
 using UIAssistant.Interfaces.Settings;
 
 namespace UIAssistant.Core.API
@@ -28,7 +26,7 @@ namespace UIAssistant.Core.API
 
         private UIAssistantAPI()
         {
-            DefaultSettingsFileIO = new YamlFileIO((path, ex) => NotificationAPI.NotifyWarnMessage("Load Settings Error", string.Format(Localize(TextID.SettingsLoadError), path)));
+            DefaultSettingsFileIO = new YamlFileIO((path, ex) => NotificationAPI.NotifyWarnMessage("Load Settings Error", string.Format(LocalizationAPI.Localize(TextID.SettingsLoadError), path)));
             UIAssistantSettings = DefaultSettingsFileIO.Read(typeof(UserSettings), UserSettings.FilePath) as UserSettings;
         }
 
@@ -47,11 +45,6 @@ namespace UIAssistant.Core.API
             return HintGenerator.Generate(hintKeys, quantity);
         }
 
-        public string Localize(string id)
-        {
-            return DefaultLocalizer.GetLocalizedText(id);
-        }
-
        public IEventObserver GetObserver(ObserberKinds kind)
         {
             switch (kind)
@@ -67,16 +60,11 @@ namespace UIAssistant.Core.API
             }
         }
 
-        public ILocalizer GetLocalizer()
-        {
-            return new Localizer(Directory.GetParent(System.Reflection.Assembly.GetCallingAssembly().Location).ToString());
-        }
-
-        public IResourceItem CurrentLanguage { get { return DefaultLocalizer.CurrentLanguage; } }
         public IScreen Screen { get { return new Utility.Screen(); } }
 
         public ICommandAPI CommandAPI { get; } = new CommandAPI();
         public IKeyboardAPI KeyboardAPI { get; } = new KeyboardAPI();
+        public ILocalizationAPI LocalizationAPI { get; } = new LocalizationAPI();
         public ILogAPI LogAPI { get; } = new LogAPI();
         public IMouseAPI MouseAPI { get; } = new MouseAPI();
         public INotificationAPI NotificationAPI { get; } = new NotificationAPI();

@@ -17,7 +17,7 @@ namespace UIAssistant.Plugin.HitaHint
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    throw new Exception(HitaHint.UIAssistantAPI.Localize("requiredError"));
+                    throw new Exception(HitaHint.UIAssistantAPI.LocalizationAPI.Localize("requiredError"));
                 }
                 _HintKeys = value;
             }
@@ -33,7 +33,7 @@ namespace UIAssistant.Plugin.HitaHint
             {
                 if (value < _minDivisionCount || value > _maxDivisionCount)
                 {
-                    throw new Exception(string.Format(HitaHint.UIAssistantAPI.Localize("rangeError"), _minDivisionCount, _maxDivisionCount));
+                    throw new Exception(string.Format(HitaHint.UIAssistantAPI.LocalizationAPI.Localize("rangeError"), _minDivisionCount, _maxDivisionCount));
                 }
                 _screenWidthDivisionCount = value;
             }

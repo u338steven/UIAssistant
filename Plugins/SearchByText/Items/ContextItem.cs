@@ -29,7 +29,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
     {
         public Copy()
         {
-            DisplayText = SearchByText.UIAssistantAPI.Localize(TextID.ActionsCopy);
+            DisplayText = SearchByText.UIAssistantAPI.LocalizationAPI.Localize(TextID.ActionsCopy);
             IsEnabled = true;
         }
 
@@ -48,7 +48,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
     {
         public CopyAll()
         {
-            DisplayText = SearchByText.UIAssistantAPI.Localize(TextID.ActionsCopyAll);
+            DisplayText = SearchByText.UIAssistantAPI.LocalizationAPI.Localize(TextID.ActionsCopyAll);
             IsEnabled = true;
         }
 
@@ -63,7 +63,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
     {
         public CopyHwnd()
         {
-            DisplayText = SearchByText.UIAssistantAPI.Localize(TextID.ActionsCopyHwnd);
+            DisplayText = SearchByText.UIAssistantAPI.LocalizationAPI.Localize(TextID.ActionsCopyHwnd);
             IsEnabled = true;
         }
 
@@ -82,7 +82,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
     {
         public ToggleTopMost()
         {
-            DisplayText = SearchByText.UIAssistantAPI.Localize(TextID.ActionsToggleTopMost);
+            DisplayText = SearchByText.UIAssistantAPI.LocalizationAPI.Localize(TextID.ActionsToggleTopMost);
             IsEnabled = true;
         }
 
@@ -97,7 +97,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
     {
         public CloseWindow()
         {
-            DisplayText = SearchByText.UIAssistantAPI.Localize(TextID.ActionsCloseWindow);
+            DisplayText = SearchByText.UIAssistantAPI.LocalizationAPI.Localize(TextID.ActionsCloseWindow);
             IsEnabled = true;
         }
 

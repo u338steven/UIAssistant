@@ -37,7 +37,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             Settings = KeybindsManiacsSettings.Load();
             _stateController = new StateController(api);
             _keyController = new KeyInputController(api, _stateController);
-            Localizer = api.GetLocalizer();
+            Localizer = api.LocalizationAPI.GetLocalizer();
             RegisterCommand();
 
             if (_stateController.Settings.RunAtStartup)
@@ -65,7 +65,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
         public void Localize()
         {
-            Localizer.SwitchLanguage(UIAssistantAPI.CurrentLanguage);
+            Localizer.SwitchLanguage(UIAssistantAPI.LocalizationAPI.CurrentLanguage);
         }
 
         public void Save()
