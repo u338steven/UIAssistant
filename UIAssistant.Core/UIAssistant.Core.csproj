@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\CommandAPI.cs" />
+    <Compile Include="API\ViewAPI.cs" />
     <Compile Include="API\KeyboardAPI.cs" />
     <Compile Include="API\LogAPI.cs" />
     <Compile Include="API\MouseAPI.cs" />

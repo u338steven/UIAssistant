@@ -35,7 +35,7 @@ namespace UIAssistant.Core.Input
         {
             if (e.PressedKeys.Equals(_temporarilyHide))
             {
-                UIAssistantAPI.Instance.Transparent = true;
+                UIAssistantAPI.Instance.ViewAPI.Transparent = true;
                 e.Handled = true;
                 return;
             }
@@ -43,9 +43,9 @@ namespace UIAssistant.Core.Input
 
         private void Hide_KeyUp(object sender, LowLevelKeyEventArgs e)
         {
-            if (UIAssistantAPI.Instance.Transparent)
+            if (UIAssistantAPI.Instance.ViewAPI.Transparent)
             {
-                UIAssistantAPI.Instance.Transparent = false;
+                UIAssistantAPI.Instance.ViewAPI.Transparent = false;
                 e.Handled = true;
                 return;
             }
@@ -62,7 +62,7 @@ namespace UIAssistant.Core.Input
                 }
                 if (!_context.UsagePanel.IsVisible)
                 {
-                    UIAssistantAPI.Instance.AddPanel(_context.UsagePanel);
+                    UIAssistantAPI.Instance.ViewAPI.AddPanel(_context.UsagePanel);
                     _session.Finished += RemoveUsagePanel;
                 }
                 else
@@ -96,7 +96,7 @@ namespace UIAssistant.Core.Input
 #if DEBUG
             if (!e.CurrentKey.IsInjected)
             {
-                UIAssistantAPI.Instance.DisplayKeystroke(e);
+                UIAssistantAPI.Instance.ViewAPI.DisplayKeystroke(e);
             }
 #endif
             _plugin.OnKeyDown(_context, sender, e);
@@ -116,7 +116,7 @@ namespace UIAssistant.Core.Input
 
         private void RemoveUsagePanel(object sender, EventArgs e)
         {
-            UIAssistantAPI.Instance.RemovePanel(_context.UsagePanel);
+            UIAssistantAPI.Instance.ViewAPI.RemovePanel(_context.UsagePanel);
         }
 
         public void Dispose()

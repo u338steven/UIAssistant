@@ -120,7 +120,7 @@ namespace UIAssistant.ViewModels
             Width = SystemParameters.VirtualScreenWidth;
             Height = SystemParameters.VirtualScreenHeight;
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
-            UIAssistantAPI.Instance.TopMost = false;
+            UIAssistantAPI.Instance.ViewAPI.TopMost = false;
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)

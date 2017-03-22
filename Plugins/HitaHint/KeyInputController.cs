@@ -56,7 +56,7 @@ namespace UIAssistant.Plugin.HitaHint
                 _stateController.Enumerate();
                 _stateController.PrintState();
             });
-            keybinds.Add(_settings.Reverse, () => UIAssistantAPI.DefaultHUD.Items = UIAssistantAPI.DefaultHUD.Items.Reverse().ToList());
+            keybinds.Add(_settings.Reverse, () => UIAssistantAPI.ViewAPI.DefaultHUD.Items = UIAssistantAPI.ViewAPI.DefaultHUD.Items.Reverse().ToList());
 
             keybinds.Add(_settings.Click, () => _stateController.ChangeOperation(Consts.Click));
             keybinds.Add(_settings.RightClick, () => _stateController.ChangeOperation(Consts.RightClick));
@@ -74,18 +74,18 @@ namespace UIAssistant.Plugin.HitaHint
                 _stateController.State.KeyboardLayoutName = layoutLanguage;
             });
 
-            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Up, () => UIAssistantAPI.DefaultHUD.FocusPreviousItem());
-            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Down, () => UIAssistantAPI.DefaultHUD.FocusNextItem());
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Up, () => UIAssistantAPI.ViewAPI.DefaultHUD.FocusPreviousItem());
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Down, () => UIAssistantAPI.ViewAPI.DefaultHUD.FocusNextItem());
             keybinds.Add(UIAssistantAPI.UIAssistantSettings.Execute, () =>
             {
-                var selectedItem = UIAssistantAPI.DefaultHUD.SelectedItem;
+                var selectedItem = UIAssistantAPI.ViewAPI.DefaultHUD.SelectedItem;
                 if (selectedItem != null)
                 {
                     _stateController.Invoke(selectedItem);
                 }
-                else if (UIAssistantAPI.DefaultHUD.Items.Count == 1)
+                else if (UIAssistantAPI.ViewAPI.DefaultHUD.Items.Count == 1)
                 {
-                    _stateController.Invoke(UIAssistantAPI.DefaultHUD.Items.ElementAt(0));
+                    _stateController.Invoke(UIAssistantAPI.ViewAPI.DefaultHUD.Items.ElementAt(0));
                 }
 
             });

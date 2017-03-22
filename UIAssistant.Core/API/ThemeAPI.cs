@@ -9,7 +9,7 @@ namespace UIAssistant.Core.API
     {
         public void SwitchTheme(string name)
         {
-            UIAssistantAPI.Instance.UIDispatcher.Invoke(() =>
+            UIAssistantAPI.Instance.ViewAPI.UIDispatcher.Invoke(() =>
             {
                 ThemeDefaultSwitcher.Switch(name);
             });
@@ -17,7 +17,7 @@ namespace UIAssistant.Core.API
 
         public void NextTheme()
         {
-            UIAssistantAPI.Instance.UIDispatcher.Invoke(() =>
+            UIAssistantAPI.Instance.ViewAPI.UIDispatcher.Invoke(() =>
             {
                 ThemeDefaultSwitcher.Next();
             });

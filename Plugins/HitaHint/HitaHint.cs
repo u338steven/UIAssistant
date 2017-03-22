@@ -81,7 +81,7 @@ namespace UIAssistant.Plugin.HitaHint
             _stateController.Initialize();
             var keyController = UIAssistantAPI.KeyboardAPI.CreateKeyboardController(_keyController, _stateController.State.Session);
             keyController.AddHidingProcess();
-            UIAssistantAPI.UIDispatcher.Invoke(() => keyController.AddUsagePanelProcess(new Usage()));
+            UIAssistantAPI.ViewAPI.UIDispatcher.Invoke(() => keyController.AddUsagePanelProcess(new Usage()));
             keyController.Observe();
         }
 
@@ -91,8 +91,8 @@ namespace UIAssistant.Plugin.HitaHint
             {
                 _stateController.ApplyTheme();
                 _stateController.PrintState();
-                UIAssistantAPI.AddDefaultHUD();
-                UIAssistantAPI.TopMost = true;
+                UIAssistantAPI.ViewAPI.AddDefaultHUD();
+                UIAssistantAPI.ViewAPI.TopMost = true;
                 _stateController.Enumerate();
             }
             catch (Exception ex)

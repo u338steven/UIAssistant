@@ -14,39 +14,14 @@ namespace UIAssistant.Interfaces.API
 {
     public interface IUIAssistantAPI
     {
-        IHUD CurrentHUD { get; }
-        IHUD DefaultContextHUD { get; }
-        IHUD DefaultHUD { get; }
-        bool IsContextAvailable { get; }
-        bool IsContextVisible { get; }
-        bool TopMost { set; }
-        bool Transparent { get; set; }
         string ConfigurationDirectory { get; }
         IFileIO DefaultSettingsFileIO { get; }
         IUserSettings UIAssistantSettings { get; }
-        Dispatcher UIDispatcher { get; }
 
-        void AddContextHUD();
-        void AddDefaultHUD();
-        Control AddIndicator();
-        void AddPanel(UIElement uielement, Visibility visibility = Visibility.Visible);
-        void AddTargetingReticle();
-#if DEBUG
-        void DisplayKeystroke(LowLevelKeyEventArgs e);
-#endif
-        void FlashIndicatorAnimation(Rect size, bool waitable = true, double duration = 300, Action completed = null);
         IEnumerable<string> GenerateHints(string hintKeys, int quantity);
         void Initialize(Control defaultHUDPanel, Control defaultContextPanel);
         string Localize(string id);
-        void MoveTargetingReticle(double x, double y);
         IPluginManager PluginManager { get; }
-        void RemoveContextHUD();
-        void RemoveDefaultHUD();
-        void RemoveIndicator(Control indicator);
-        void RemovePanel(UIElement uielement);
-        void RemoveTargetingReticle();
-        void ScaleIndicatorAnimation(Rect from, Rect to, bool waitable = true, double duration = 300, Action completed = null);
-        void SwitchHUD();
 
         IEventObserver GetObserver(ObserberKinds kind);
         ILocalizer GetLocalizer();
@@ -61,6 +36,7 @@ namespace UIAssistant.Interfaces.API
         INotificationAPI NotificationAPI { get; }
         ISessionAPI SessionAPI { get; }
         IThemeAPI ThemeAPI { get; }
+        IViewAPI ViewAPI { get; }
         IWindowAPI WindowAPI { get; }
     }
 }

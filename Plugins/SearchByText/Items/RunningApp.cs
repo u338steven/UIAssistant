@@ -11,7 +11,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
             : base(fullName, fullName, Rect.Empty, true)
         {
             Window = window;
-            SearchByText.UIAssistantAPI.UIDispatcher.Invoke(() => Image = window.Icon);
+            SearchByText.UIAssistantAPI.ViewAPI.UIDispatcher.Invoke(() => Image = window.Icon);
         }
 
         public override void Execute()

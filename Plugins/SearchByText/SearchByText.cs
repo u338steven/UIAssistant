@@ -63,7 +63,7 @@ namespace UIAssistant.Plugin.SearchByText
             _stateController.Initialize();
             var keyController = UIAssistantAPI.KeyboardAPI.CreateKeyboardController(_keyController, _stateController.Session);
             keyController.AddHidingProcess();
-            UIAssistantAPI.UIDispatcher.Invoke(() => keyController.AddUsagePanelProcess(new Usage()));
+            UIAssistantAPI.ViewAPI.UIDispatcher.Invoke(() => keyController.AddUsagePanelProcess(new Usage()));
             keyController.Observe();
 
             UIAssistantAPI.ThemeAPI.SwitchTheme(UIAssistantAPI.UIAssistantSettings.Theme);
@@ -74,9 +74,9 @@ namespace UIAssistant.Plugin.SearchByText
             try
             {
                 _stateController.Enumerate();
-                UIAssistantAPI.AddDefaultHUD();
-                UIAssistantAPI.AddContextHUD();
-                UIAssistantAPI.TopMost = true;
+                UIAssistantAPI.ViewAPI.AddDefaultHUD();
+                UIAssistantAPI.ViewAPI.AddContextHUD();
+                UIAssistantAPI.ViewAPI.TopMost = true;
             }
             catch (Exception ex)
             {

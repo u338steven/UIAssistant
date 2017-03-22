@@ -227,8 +227,8 @@ namespace UIAssistant.Plugin.SpatialNavigation
             rect = new Rect(rect.Center(), new Size(1, 1));
             Task.Run(() =>
             {
-                SpatialNavigation.UIAssistantAPI.TopMost = true;
-                SpatialNavigation.UIAssistantAPI.ScaleIndicatorAnimation(sourceBounds, rect, false, 200, () => SpatialNavigation.UIAssistantAPI.TopMost = false);
+                SpatialNavigation.UIAssistantAPI.ViewAPI.TopMost = true;
+                SpatialNavigation.UIAssistantAPI.ViewAPI.ScaleIndicatorAnimation(sourceBounds, rect, false, 200, () => SpatialNavigation.UIAssistantAPI.ViewAPI.TopMost = false);
             });
             destination.SetFocus();
         }

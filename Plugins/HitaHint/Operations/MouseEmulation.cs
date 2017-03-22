@@ -11,7 +11,7 @@ namespace UIAssistant.Plugin.HitaHint.Operations
         {
             controller.State.PreviousWindow = null;
             controller.InvokePlugin("me");
-            HitaHint.UIAssistantAPI.DefaultHUD.TextBox.SetText("Mouse Emulation Mode");
+            HitaHint.UIAssistantAPI.ViewAPI.DefaultHUD.TextBox.SetText("Mouse Emulation Mode");
         }
         public void Execute(IHUDItem item)
         {

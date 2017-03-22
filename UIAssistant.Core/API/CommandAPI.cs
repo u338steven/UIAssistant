@@ -47,7 +47,7 @@ namespace UIAssistant.Core.API
             if (UIAssistantAPI.Instance.PluginManager.Exists(command))
             {
                 pausing?.Invoke();
-                UIAssistantAPI.Instance.DefaultHUD.Initialize();
+                UIAssistantAPI.Instance.ViewAPI.DefaultHUD.Initialize();
                 UIAssistantAPI.Instance.PluginManager.Execute(command);
                 UIAssistantAPI.Instance.PluginManager.Resume += () =>
                 {

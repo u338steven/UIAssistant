@@ -98,7 +98,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                     }
                     if (el.TryDoDefaultAction())
                     {
-                        SearchByText.UIAssistantAPI.TopMost = true;
+                        SearchByText.UIAssistantAPI.ViewAPI.TopMost = true;
                         if (!isOffScreen)
                         {
                             GetElements(ribbonBelow, false, null, el, ribbonBelow);

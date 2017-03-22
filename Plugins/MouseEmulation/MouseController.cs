@@ -45,10 +45,10 @@ namespace UIAssistant.Plugin.MouseEmulation
             {
                 if (_usagePanel == null)
                 {
-                    MouseEmulation.UIAssistantAPI.UIDispatcher.Invoke(() =>
+                    MouseEmulation.UIAssistantAPI.ViewAPI.UIDispatcher.Invoke(() =>
                     {
                         _usagePanel = new Usage();
-                        MouseEmulation.UIAssistantAPI.AddPanel(_usagePanel);
+                        MouseEmulation.UIAssistantAPI.ViewAPI.AddPanel(_usagePanel);
                         Finished += RemoveUsagePanel;
                     });
                 }
@@ -58,7 +58,7 @@ namespace UIAssistant.Plugin.MouseEmulation
                     Finished -= RemoveUsagePanel;
                 }
             });
-            MouseEmulation.UIAssistantAPI.AddTargetingReticle();
+            MouseEmulation.UIAssistantAPI.ViewAPI.AddTargetingReticle();
         }
 
         private static void _keyHook_KeyDown(object sender, LowLevelKeyEventArgs e)
@@ -77,7 +77,7 @@ namespace UIAssistant.Plugin.MouseEmulation
 
         private static void RemoveUsagePanel()
         {
-            MouseEmulation.UIAssistantAPI.RemovePanel(_usagePanel);
+            MouseEmulation.UIAssistantAPI.ViewAPI.RemovePanel(_usagePanel);
             _usagePanel = null;
         }
 
@@ -116,7 +116,7 @@ namespace UIAssistant.Plugin.MouseEmulation
             if (location.X != 0 || location.Y != 0)
             {
                 operation.DoMouseEventRelative(location.X, location.Y);
-                MouseEmulation.UIAssistantAPI.MoveTargetingReticle(location.X, location.Y);
+                MouseEmulation.UIAssistantAPI.ViewAPI.MoveTargetingReticle(location.X, location.Y);
             }
             Click(_mouseSettings.Click.Key, operation.LeftDown, operation.LeftUp, ref _isPressedLbutton);
             Click(_mouseSettings.RightClick.Key, operation.RightDown, operation.RightUp, ref _isPressedRbutton);
@@ -166,7 +166,7 @@ namespace UIAssistant.Plugin.MouseEmulation
             Finished = null;
             _userSettings = null;
             _keybinds = null;
-            MouseEmulation.UIAssistantAPI.RemoveTargetingReticle();
+            MouseEmulation.UIAssistantAPI.ViewAPI.RemoveTargetingReticle();
         }
     }
 }

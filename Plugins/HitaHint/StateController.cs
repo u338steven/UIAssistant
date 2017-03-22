@@ -166,7 +166,7 @@ namespace UIAssistant.Plugin.HitaHint
         {
             State = new State(UIAssistantAPI);
             UIAssistantAPI.MouseAPI.ReserveToReturnMouseCursor(State.Session, () => OperationManager.CurrentCommand.IsReturnCursor && !NoReturnCursor);
-            UIAssistantAPI.DefaultHUD.Initialize();
+            UIAssistantAPI.ViewAPI.DefaultHUD.Initialize();
         }
 
         public void ActivateLastActiveWindow()
@@ -181,8 +181,8 @@ namespace UIAssistant.Plugin.HitaHint
             Task.Run(() =>
             {
                 //_cancelToken?.Cancel();
-                UIAssistantAPI.RemoveDefaultHUD();
-                UIAssistantAPI.TopMost = false;
+                UIAssistantAPI.ViewAPI.RemoveDefaultHUD();
+                UIAssistantAPI.ViewAPI.TopMost = false;
                 Cleanup();
                 OperationManager.CurrentCommand.Dispose();
             });
@@ -238,10 +238,10 @@ namespace UIAssistant.Plugin.HitaHint
         public async void Enumerate()
         {
             IsBusy = true;
-            UIAssistantAPI.DefaultHUD.Items.Clear();
+            UIAssistantAPI.ViewAPI.DefaultHUD.Items.Clear();
 
             var cancelToken = new CancellationTokenSource();
-            var t = EnumerateAsync(UIAssistantAPI.DefaultHUD.Items, cancelToken);
+            var t = EnumerateAsync(UIAssistantAPI.ViewAPI.DefaultHUD.Items, cancelToken);
             State.Session.Finished += (_, __) => { if (!t.IsCompleted) { cancelToken.Cancel(); } };
             State.EnumeratedResults = await t;
             IsBusy = false;
@@ -257,8 +257,8 @@ namespace UIAssistant.Plugin.HitaHint
                 return;
             }
             AssignHint(State.EnumeratedResults);
-            UIAssistantAPI.DefaultHUD.Update();
-            UIAssistantAPI.TopMost = true;
+            UIAssistantAPI.ViewAPI.DefaultHUD.Update();
+            UIAssistantAPI.ViewAPI.TopMost = true;
         }
 
         private string _messageFormat = "Hit-a-Hint:Input:";
@@ -269,13 +269,13 @@ namespace UIAssistant.Plugin.HitaHint
             {
                 cultureName = $" Keyboard Layout:[{State.KeyboardLayoutName}]";
             }
-            UIAssistantAPI.DefaultHUD.TextBox.SetText($"{_messageFormat} [ {State.InputText.ToString()} ] {OperationManager.CurrentName} {cultureName}");
+            UIAssistantAPI.ViewAPI.DefaultHUD.TextBox.SetText($"{_messageFormat} [ {State.InputText.ToString()} ] {OperationManager.CurrentName} {cultureName}");
         }
 
         public void Invoke(IHUDItem item)
         {
             var center = new Rect(item.Bounds.Center(), new Size(0, 0));
-            UIAssistantAPI.ScaleIndicatorAnimation(center, item.Bounds, false, 250);
+            UIAssistantAPI.ViewAPI.ScaleIndicatorAnimation(center, item.Bounds, false, 250);
             OperationManager.CurrentCommand.Execute(item);
 
             if (OperationManager.CurrentCommand.IsContinuous)
@@ -337,7 +337,7 @@ namespace UIAssistant.Plugin.HitaHint
                 Invoke(items[0]);
                 return;
             }
-            UIAssistantAPI.DefaultHUD.Items = items;
+            UIAssistantAPI.ViewAPI.DefaultHUD.Items = items;
             //UIAssistantAPI.DefaultHUD.Items = new HUDItemCollection(items);
             PrintState();
         }

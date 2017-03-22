@@ -31,15 +31,15 @@ namespace UIAssistant.Plugin.SearchByText
         public void Initialize()
         {
             Session = UIAssistantAPI.SessionAPI.Create();
-            UIAssistantAPI.DefaultHUD.Initialize();
-            UIAssistantAPI.DefaultHUD.ItemsCountPerPage = Settings.ItemsCountPerPage;
-            UIAssistantAPI.DefaultContextHUD.Initialize();
-            UIAssistantAPI.DefaultContextHUD.ItemsCountPerPage = Settings.ItemsCountPerPage;
+            UIAssistantAPI.ViewAPI.DefaultHUD.Initialize();
+            UIAssistantAPI.ViewAPI.DefaultHUD.ItemsCountPerPage = Settings.ItemsCountPerPage;
+            UIAssistantAPI.ViewAPI.DefaultContextHUD.Initialize();
+            UIAssistantAPI.ViewAPI.DefaultContextHUD.ItemsCountPerPage = Settings.ItemsCountPerPage;
         }
 
         internal void Enumerate()
         {
-            _sourceForFiltering = UIAssistantAPI.DefaultHUD.Items;
+            _sourceForFiltering = UIAssistantAPI.ViewAPI.DefaultHUD.Items;
             _enumerator.Updated += (_, __) => Filter();
             _enumerator.Finished += (_, __) =>
             {
@@ -56,36 +56,36 @@ namespace UIAssistant.Plugin.SearchByText
 
         public void SwitchHUD()
         {
-            if (!UIAssistantAPI.IsContextAvailable)
+            if (!UIAssistantAPI.ViewAPI.IsContextAvailable)
             {
                 return;
             }
 
-            if (!UIAssistantAPI.IsContextVisible)
+            if (!UIAssistantAPI.ViewAPI.IsContextVisible)
             {
-                OnSwitchingToContext(UIAssistantAPI.DefaultHUD.SelectedItem != null);
+                OnSwitchingToContext(UIAssistantAPI.ViewAPI.DefaultHUD.SelectedItem != null);
             }
 
-            UIAssistantAPI.SwitchHUD();
+            UIAssistantAPI.ViewAPI.SwitchHUD();
         }
 
         private void OnSwitchingToContext(bool isItemSelected)
         {
-            UIAssistantAPI.DefaultContextHUD.Items.Clear();
+            UIAssistantAPI.ViewAPI.DefaultContextHUD.Items.Clear();
             if (isItemSelected)
             {
-                var selectedItem = UIAssistantAPI.DefaultHUD.SelectedItem;
-                UIAssistantAPI.DefaultContextHUD.Items.Add(new Copy());
+                var selectedItem = UIAssistantAPI.ViewAPI.DefaultHUD.SelectedItem;
+                UIAssistantAPI.ViewAPI.DefaultContextHUD.Items.Add(new Copy());
                 if (selectedItem is IWindowItem)
                 {
-                    UIAssistantAPI.DefaultContextHUD.Items.Add(new CopyHwnd());
-                    UIAssistantAPI.DefaultContextHUD.Items.Add(new ToggleTopMost());
-                    UIAssistantAPI.DefaultContextHUD.Items.Add(new CloseWindow());
+                    UIAssistantAPI.ViewAPI.DefaultContextHUD.Items.Add(new CopyHwnd());
+                    UIAssistantAPI.ViewAPI.DefaultContextHUD.Items.Add(new ToggleTopMost());
+                    UIAssistantAPI.ViewAPI.DefaultContextHUD.Items.Add(new CloseWindow());
                 }
             }
-            UIAssistantAPI.DefaultContextHUD.Items.Add(new CopyAll());
-            _contextSource = UIAssistantAPI.DefaultContextHUD.Items;
-            UIAssistantAPI.DefaultContextHUD.TextBox.Clear();
+            UIAssistantAPI.ViewAPI.DefaultContextHUD.Items.Add(new CopyAll());
+            _contextSource = UIAssistantAPI.ViewAPI.DefaultContextHUD.Items;
+            UIAssistantAPI.ViewAPI.DefaultContextHUD.TextBox.Clear();
         }
 
         internal void ChangeTarget(EnumerateTarget target)
@@ -102,15 +102,15 @@ namespace UIAssistant.Plugin.SearchByText
         {
             try
             {
-                if (UIAssistantAPI.IsContextVisible)
+                if (UIAssistantAPI.ViewAPI.IsContextVisible)
                 {
-                    UIAssistantAPI.CurrentHUD.Filter(_contextSource, UIAssistantAPI.CurrentHUD.TextBox.Text);
+                    UIAssistantAPI.ViewAPI.CurrentHUD.Filter(_contextSource, UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.Text);
                 }
                 else
                 {
-                    UIAssistantAPI.CurrentHUD.Filter(_sourceForFiltering, UIAssistantAPI.CurrentHUD.TextBox.Text);
+                    UIAssistantAPI.ViewAPI.CurrentHUD.Filter(_sourceForFiltering, UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.Text);
                 }
-                if (AutoFire && UIAssistantAPI.DefaultHUD.Items.Count == 1)
+                if (AutoFire && UIAssistantAPI.ViewAPI.DefaultHUD.Items.Count == 1)
                 {
                     System.Threading.Thread.Sleep(300);
                     Execute();
@@ -124,22 +124,22 @@ namespace UIAssistant.Plugin.SearchByText
 
         internal void Execute()
         {
-            if (!(_enumerator is SearchForText) && !UIAssistantAPI.IsContextVisible)
+            if (!(_enumerator is SearchForText) && !UIAssistantAPI.ViewAPI.IsContextVisible)
             {
-                var selectedItem = UIAssistantAPI.DefaultHUD.SelectedItem as SearchByTextItem;
+                var selectedItem = UIAssistantAPI.ViewAPI.DefaultHUD.SelectedItem as SearchByTextItem;
                 if (selectedItem == null || !selectedItem.IsEnabled)
                 {
                     return;
                 }
             }
             Cancel();
-            UIAssistantAPI.CurrentHUD.Execute();
+            UIAssistantAPI.ViewAPI.CurrentHUD.Execute();
             Quit();
         }
 
         internal void Input(string input)
         {
-            UIAssistantAPI.CurrentHUD.TextBox.Input(input);
+            UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.Input(input);
         }
 
         public void SwitchNextTheme()
@@ -156,9 +156,9 @@ namespace UIAssistant.Plugin.SearchByText
             {
                 Session.Dispose();
                 //Cleanup();
-                UIAssistantAPI.RemoveDefaultHUD();
-                UIAssistantAPI.RemoveContextHUD();
-                UIAssistantAPI.TopMost = false;
+                UIAssistantAPI.ViewAPI.RemoveDefaultHUD();
+                UIAssistantAPI.ViewAPI.RemoveContextHUD();
+                UIAssistantAPI.ViewAPI.TopMost = false;
             });
         }
 
@@ -166,7 +166,7 @@ namespace UIAssistant.Plugin.SearchByText
         internal void Expand()
         {
             Cancel();
-            var selectedItem = UIAssistantAPI.DefaultHUD.SelectedItem as SearchByTextItem;
+            var selectedItem = UIAssistantAPI.ViewAPI.DefaultHUD.SelectedItem as SearchByTextItem;
             if (selectedItem == null || !selectedItem.IsEnabled || !selectedItem.CanExpand)
             {
                 return;
@@ -189,16 +189,16 @@ namespace UIAssistant.Plugin.SearchByText
             }
             var popup = activeWindow.LastActivePopup;
 
-            UIAssistantAPI.DefaultHUD.Initialize();
+            UIAssistantAPI.ViewAPI.DefaultHUD.Initialize();
             _sourceForFiltering.Clear();
 
-            UIAssistantAPI.TopMost = true;
+            UIAssistantAPI.ViewAPI.TopMost = true;
 
             // Win32
             if (popup.WindowHandle == activeWindow.WindowHandle)
             {
                 new SearchContainer().Enumerate(_sourceForFiltering);
-                UIAssistantAPI.DefaultHUD.Items = _sourceForFiltering;
+                UIAssistantAPI.ViewAPI.DefaultHUD.Items = _sourceForFiltering;
                 return;
             }
 
@@ -224,7 +224,7 @@ namespace UIAssistant.Plugin.SearchByText
                     }
                 }
             });
-            UIAssistantAPI.DefaultHUD.Items = _sourceForFiltering;
+            UIAssistantAPI.ViewAPI.DefaultHUD.Items = _sourceForFiltering;
         }
     }
 }

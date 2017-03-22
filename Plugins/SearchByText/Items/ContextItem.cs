@@ -35,7 +35,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
 
         public override void Execute()
         {
-            var item = SearchByText.UIAssistantAPI.DefaultHUD.SelectedItem;
+            var item = SearchByText.UIAssistantAPI.ViewAPI.DefaultHUD.SelectedItem;
             if (item == null)
             {
                 return;
@@ -54,7 +54,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
 
         public override void Execute()
         {
-            var result = SearchByText.UIAssistantAPI.DefaultHUD.Items.Select(x => x.DisplayText).Aggregate((x, y) => $"{x}\r\n{y}");
+            var result = SearchByText.UIAssistantAPI.ViewAPI.DefaultHUD.Items.Select(x => x.DisplayText).Aggregate((x, y) => $"{x}\r\n{y}");
             Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(result));
         }
     }
@@ -69,7 +69,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
 
         public override void Execute()
         {
-            var item = SearchByText.UIAssistantAPI.DefaultHUD.SelectedItem as IWindowItem;
+            var item = SearchByText.UIAssistantAPI.ViewAPI.DefaultHUD.SelectedItem as IWindowItem;
             if (item == null)
             {
                 return;
@@ -88,7 +88,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
 
         public override void Execute()
         {
-            var item = SearchByText.UIAssistantAPI.DefaultHUD.SelectedItem as IWindowItem;
+            var item = SearchByText.UIAssistantAPI.ViewAPI.DefaultHUD.SelectedItem as IWindowItem;
             item?.Window.ToggleTopMost();
         }
     }
@@ -103,7 +103,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
 
         public override void Execute()
         {
-            var item = SearchByText.UIAssistantAPI.DefaultHUD.SelectedItem as IWindowItem;
+            var item = SearchByText.UIAssistantAPI.ViewAPI.DefaultHUD.SelectedItem as IWindowItem;
             item?.Window.Close();
         }
     }

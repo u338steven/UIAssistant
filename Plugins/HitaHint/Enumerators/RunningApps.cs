@@ -23,7 +23,7 @@ namespace UIAssistant.Plugin.HitaHint.Enumerators
                 var rect = window.Bounds.ToClientCoordinate();
                 WidgetInfo item = new WidgetInfo(": " + window.Title, rect);
                 item.Window = window;
-                HitaHint.UIAssistantAPI.UIDispatcher.Invoke(() => AdjustLocation(results, item, desktopBounds));
+                HitaHint.UIAssistantAPI.ViewAPI.UIDispatcher.Invoke(() => AdjustLocation(results, item, desktopBounds));
                 results.Add(item);
                 return true;
             });
