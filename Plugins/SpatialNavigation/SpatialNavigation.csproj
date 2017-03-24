@@ -66,6 +66,7 @@
     <ProjectReference Include="..\..\UIAssistant.Interfaces\UIAssistant.Interfaces.csproj">
       <Project>{4e99e5e8-38af-4100-a148-f844b7da4f16}</Project>
       <Name>UIAssistant.Interfaces</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
