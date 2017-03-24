@@ -20,7 +20,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators
         public void Enumerate(ICollection<IHUDItem> results)
         {
             var menuEnumerator = new ContextMenu();
-            var observer = SearchByText.UIAssistantAPI.GetObserver(Interfaces.Events.ObserberKinds.PopupObserver);
+            var observer = SearchByText.UIAssistantAPI.AutomationAPI.CreateObserver(Interfaces.Events.ObserverKinds.PopupObserver);
             observer.Callback += (element) =>
             {
                 menuEnumerator.ContextRoot = element;

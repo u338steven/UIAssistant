@@ -54,7 +54,7 @@ namespace UIAssistant.Plugin.SearchByText.Items
             {
                 if (Ancestors.Count > 0)
                 {
-                    var observer = SearchByText.UIAssistantAPI.GetObserver(Interfaces.Events.ObserberKinds.PopupObserver);
+                    var observer = SearchByText.UIAssistantAPI.AutomationAPI.CreateObserver(Interfaces.Events.ObserverKinds.PopupObserver);
                     var shouldBeClosed = false;
                     observer.Callback += x =>
                     {

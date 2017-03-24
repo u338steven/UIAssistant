@@ -110,7 +110,7 @@ namespace UIAssistant.Plugin.SearchByText.Enumerators.ForCommand
                             }
                             else
                             {
-                                var observer = SearchByText.UIAssistantAPI.GetObserver(Interfaces.Events.ObserberKinds.PopupObserver);
+                                var observer = SearchByText.UIAssistantAPI.AutomationAPI.CreateObserver(Interfaces.Events.ObserverKinds.PopupObserver);
                                 observer.Callback += x =>
                                 {
                                     // HACK: デッドロックを避けるために、2箇所で Dispose しているけれど、微妙

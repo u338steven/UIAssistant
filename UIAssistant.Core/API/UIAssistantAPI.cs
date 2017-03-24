@@ -6,11 +6,9 @@ using System.Windows.Controls;
 
 using UIAssistant.Core.HitaHint;
 using UIAssistant.Core.Settings;
-using UIAssistant.Infrastructure.Events;
 using UIAssistant.Infrastructure.Settings;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.API;
-using UIAssistant.Interfaces.Events;
 using UIAssistant.Interfaces.Plugin;
 using UIAssistant.Interfaces.Settings;
 
@@ -22,7 +20,22 @@ namespace UIAssistant.Core.API
         public string ConfigurationDirectory { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configurations");
         public IFileIO DefaultSettingsFileIO { get; private set; }
         public IPluginManager PluginManager { get; private set; }
+        public IScreen Screen { get { return new Utility.Screen(); } }
         public IUserSettings UIAssistantSettings { get; private set; }
+
+        #region APIs
+        public IAutomationAPI AutomationAPI { get; } = new AutomationAPI();
+        public ICommandAPI CommandAPI { get; } = new CommandAPI();
+        public IKeyboardAPI KeyboardAPI { get; } = new KeyboardAPI();
+        public ILocalizationAPI LocalizationAPI { get; } = new LocalizationAPI();
+        public ILogAPI LogAPI { get; } = new LogAPI();
+        public IMouseAPI MouseAPI { get; } = new MouseAPI();
+        public INotificationAPI NotificationAPI { get; } = new NotificationAPI();
+        public ISessionAPI SessionAPI { get; } = new SessionAPI();
+        public IThemeAPI ThemeAPI { get; } = new ThemeAPI();
+        public IViewAPI ViewAPI { get; private set; }
+        public IWindowAPI WindowAPI { get; } = new WindowAPI();
+        #endregion
 
         private UIAssistantAPI()
         {
@@ -44,33 +57,5 @@ namespace UIAssistant.Core.API
             }
             return HintGenerator.Generate(hintKeys, quantity);
         }
-
-       public IEventObserver GetObserver(ObserberKinds kind)
-        {
-            switch (kind)
-            {
-                case ObserberKinds.StructureChangedObserver:
-                    return new StructureChangedObserver();
-                case ObserberKinds.FocusObserver:
-                    return new FocusObserver();
-                case ObserberKinds.PopupObserver:
-                    return new PopupObserver();
-                default:
-                    return null;
-            }
-        }
-
-        public IScreen Screen { get { return new Utility.Screen(); } }
-
-        public ICommandAPI CommandAPI { get; } = new CommandAPI();
-        public IKeyboardAPI KeyboardAPI { get; } = new KeyboardAPI();
-        public ILocalizationAPI LocalizationAPI { get; } = new LocalizationAPI();
-        public ILogAPI LogAPI { get; } = new LogAPI();
-        public IMouseAPI MouseAPI { get; } = new MouseAPI();
-        public INotificationAPI NotificationAPI { get; } = new NotificationAPI();
-        public ISessionAPI SessionAPI { get; } = new SessionAPI();
-        public IThemeAPI ThemeAPI { get; } = new ThemeAPI();
-        public IViewAPI ViewAPI { get; private set; }
-        public IWindowAPI WindowAPI { get; } = new WindowAPI();
     }
 }

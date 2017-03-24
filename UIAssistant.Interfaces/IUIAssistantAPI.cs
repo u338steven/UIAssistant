@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
-using UIAssistant.Interfaces.Events;
 using UIAssistant.Interfaces.Plugin;
 using UIAssistant.Interfaces.Settings;
 
@@ -16,8 +15,9 @@ namespace UIAssistant.Interfaces.API
         void Initialize(Control defaultHUDPanel, Control defaultContextPanel);
         IPluginManager PluginManager { get; }
 
-        IEventObserver GetObserver(ObserberKinds kind);
         IScreen Screen { get; }
+
+        IAutomationAPI AutomationAPI { get; }
         ICommandAPI CommandAPI { get; }
         IKeyboardAPI KeyboardAPI { get; }
         ILocalizationAPI LocalizationAPI { get; }

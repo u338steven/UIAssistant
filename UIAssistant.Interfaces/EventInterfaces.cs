@@ -3,7 +3,7 @@ using System.Windows.Automation;
 
 namespace UIAssistant.Interfaces.Events
 {
-    public enum ObserberKinds
+    public enum ObserverKinds
     {
         StructureChangedObserver,
         FocusObserver,

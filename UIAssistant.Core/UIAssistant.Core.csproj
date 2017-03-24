@@ -79,6 +79,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\AutomationAPI.cs" />
     <Compile Include="API\CommandAPI.cs" />
     <Compile Include="API\LocalizationAPI.cs" />
     <Compile Include="API\ViewAPI.cs" />
