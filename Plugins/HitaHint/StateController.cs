@@ -305,7 +305,7 @@ namespace UIAssistant.Plugin.HitaHint
 
         private void AssignHint(ICollection<IHUDItem> items)
         {
-            var hints = UIAssistantAPI.GenerateHints(HitaHint.Settings.HintKeys, items.Count);
+            var hints = UIAssistantAPI.HitaHintAPI.GenerateHints(HitaHint.Settings.HintKeys, items.Count);
             foreach (var x in items.Select((v, i) => new { v, i }))
             {
                 x.v.InternalText = hints.ElementAt(x.i);

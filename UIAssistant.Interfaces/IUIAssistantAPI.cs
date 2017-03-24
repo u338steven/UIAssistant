@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using UIAssistant.Interfaces.Plugin;
 using UIAssistant.Interfaces.Settings;
 
@@ -11,7 +10,6 @@ namespace UIAssistant.Interfaces.API
         IFileIO DefaultSettingsFileIO { get; }
         IUserSettings UIAssistantSettings { get; }
 
-        IEnumerable<string> GenerateHints(string hintKeys, int quantity);
         void Initialize(Control defaultHUDPanel, Control defaultContextPanel);
         IPluginManager PluginManager { get; }
 
@@ -19,6 +17,7 @@ namespace UIAssistant.Interfaces.API
 
         IAutomationAPI AutomationAPI { get; }
         ICommandAPI CommandAPI { get; }
+        IHitaHintAPI HitaHintAPI { get; }
         IKeyboardAPI KeyboardAPI { get; }
         ILocalizationAPI LocalizationAPI { get; }
         ILogAPI LogAPI { get; }

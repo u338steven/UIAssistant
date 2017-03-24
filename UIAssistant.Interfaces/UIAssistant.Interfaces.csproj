@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="API\IAutomationAPI.cs" />
     <Compile Include="API\ICommandAPI.cs" />
+    <Compile Include="API\IHitaHintAPI.cs" />
     <Compile Include="API\IKeyboardAPI.cs" />
     <Compile Include="API\ILocalizationAPI.cs" />
     <Compile Include="API\ILogAPI.cs" />

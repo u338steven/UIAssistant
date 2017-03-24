@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows.Controls;
 
-using UIAssistant.Core.HitaHint;
 using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Settings;
 using UIAssistant.Interfaces;
@@ -26,6 +23,7 @@ namespace UIAssistant.Core.API
         #region APIs
         public IAutomationAPI AutomationAPI { get; } = new AutomationAPI();
         public ICommandAPI CommandAPI { get; } = new CommandAPI();
+        public IHitaHintAPI HitaHintAPI { get; } = new HitaHintAPI();
         public IKeyboardAPI KeyboardAPI { get; } = new KeyboardAPI();
         public ILocalizationAPI LocalizationAPI { get; } = new LocalizationAPI();
         public ILogAPI LogAPI { get; } = new LogAPI();
@@ -47,15 +45,6 @@ namespace UIAssistant.Core.API
         {
             ViewAPI = new ViewAPI(defaultHUDPanel, defaultContextPanel);
             PluginManager = Plugin.PluginManager.Instance;
-        }
-
-        public IEnumerable<string> GenerateHints(string hintKeys, int quantity)
-        {
-            if (hintKeys.Contains('|'))
-            {
-                return AlternateHintGenerator.Generate(hintKeys, quantity);
-            }
-            return HintGenerator.Generate(hintKeys, quantity);
         }
     }
 }
