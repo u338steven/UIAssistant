@@ -100,7 +100,6 @@ namespace UIAssistant.ViewModels
 
         public void Initialize()
         {
-            Notification.Initialize();
             UIAssistantAPI.Instance.Initialize(DefaultHUDPanel, DefaultContextPanel);
 
             IntPtr windowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;

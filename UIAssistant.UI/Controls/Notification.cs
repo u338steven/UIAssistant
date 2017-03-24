@@ -21,12 +21,7 @@ namespace UIAssistant.UI.Controls
 
     public static class Notification
     {
-        private static ToastNotifications _toast;
-
-        public static void Initialize()
-        {
-            _toast = new ToastNotifications();
-        }
+        private static ToastNotifications _toast = Application.Current.Dispatcher.Invoke(() => new ToastNotifications());
 
         public static void NotifyMessage(string title, string message, NotificationIcon icon = NotificationIcon.None, ImageSource image = null)
         {
