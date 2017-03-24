@@ -287,9 +287,14 @@ namespace UIAssistant.Plugin.HitaHint
 
         public void InvokePlugin(string command)
         {
-            UIAssistantAPI.CommandAPI.InvokePluginCommand(command, Quit, State.Session.Pause, () =>
+            UIAssistantAPI.CommandAPI.InvokePluginCommand(command, Quit, () =>
+            {
+                State.Session.Pause();
+                UIAssistantAPI.ViewAPI.RemoveDefaultHUD();
+            }, () =>
             {
                 State.Session.Resume();
+                UIAssistantAPI.ViewAPI.AddDefaultHUD();
                 State.InputText.Clear();
                 Enumerate();
                 PrintState();
@@ -352,7 +357,7 @@ namespace UIAssistant.Plugin.HitaHint
                     HitaHint.Settings.Save();
                 }
             };
-            await Task.Run(() => 
+            await Task.Run(() =>
             {
                 _context.ThemeSwitcher.Next();
                 UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Theme", string.Format(UIAssistantAPI.LocalizationAPI.Localize(TextID.SwitchTheme), _context.ThemeSwitcher.CurrentTheme.Id));
