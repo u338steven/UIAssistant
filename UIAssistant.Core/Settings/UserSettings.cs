@@ -53,7 +53,7 @@ namespace UIAssistant.Core.Settings
         #endregion
 
         private const string FileName = "Settings.yml";
-        public static readonly string FilePath = Path.Combine(@"C:\Applications\Projects\MyProjects\UIAssistant\UIAssistant\bin\Debug\Configurations", FileName);
+        public static readonly string FilePath = Path.Combine(UIAssistantDirectory.Configurations, FileName);
 
         public UserSettings()
         {
