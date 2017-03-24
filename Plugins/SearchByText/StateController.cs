@@ -142,12 +142,21 @@ namespace UIAssistant.Plugin.SearchByText
             UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.Input(input);
         }
 
-        public void SwitchNextTheme()
+        public async void SwitchNextTheme()
         {
-            UIAssistantAPI.ThemeAPI.NextTheme();
-            UIAssistantAPI.UIAssistantSettings.Theme = UIAssistantAPI.ThemeAPI.CurrentTheme.Id;
-            UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Theme", string.Format(UIAssistantAPI.LocalizationAPI.Localize(TextID.SwitchTheme), UIAssistantAPI.UIAssistantSettings.Theme));
-            UIAssistantAPI.UIAssistantSettings.Save();
+            Session.Finished += (_, __) =>
+            {
+                if (UIAssistantAPI.UIAssistantSettings.Theme != UIAssistantAPI.ThemeAPI.CurrentTheme.Id)
+                {
+                    UIAssistantAPI.UIAssistantSettings.Theme = UIAssistantAPI.ThemeAPI.CurrentTheme.Id;
+                    UIAssistantAPI.UIAssistantSettings.Save();
+                }
+            };
+            await Task.Run(() =>
+            {
+                UIAssistantAPI.ThemeAPI.NextTheme();
+                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Theme", string.Format(UIAssistantAPI.LocalizationAPI.Localize(TextID.SwitchTheme), UIAssistantAPI.ThemeAPI.CurrentTheme.Id));
+            });
         }
 
         public void Quit()

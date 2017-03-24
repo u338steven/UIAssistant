@@ -29,11 +29,12 @@ namespace UIAssistant.Interfaces.Input
     {
         Action this[KeySet keys] { get; }
 
-        void Add(KeySet keys, Action action);
-        void Add(Keybind keybind, Action action);
+        void Add(KeySet keys, Action action, bool canActWhenKeyHoldDown = false);
+        void Add(Keybind keybind, Action action, bool canActWhenKeyHoldDown = false);
+        bool CanActWhenKeyHoldDown(KeySet keys);
         void Clear();
         bool Contains(KeySet keys);
-        void Execute(KeySet keys);
+        void Execute(KeySet keys, bool isKeyHoldDown);
     }
 
     public interface IMouseCursor
@@ -90,22 +91,11 @@ namespace UIAssistant.Interfaces.Input
 
     public interface IThemeSwitchable
     {
-        //void SwitchTheme(string theme);
         void SwitchNextTheme();
     }
 
     public interface IKeyboardPlugin : IDisposable
     {
-        //IKeyboardHook Hook { get; }
-        //IStateController StateController { get; }
-        //IKeybindManager Keybinds { get; set; }
-        //UserControl UsagePanel { get; set; }
-        //IUIAssistantAPI UIAssistantAPI { get; }
-
-        //void Initialize();
-        //void Observe();
-        //void Reset();
-
         void Initialize(IKeyboardPluginContext context);
         void Cleanup(IKeyboardPluginContext context);
         void LoadKeybinds(IKeyboardPluginContext context);
@@ -116,7 +106,6 @@ namespace UIAssistant.Interfaces.Input
     public interface IKeyboardPluginContext : IDisposable
     {
         IKeyboardHook Hook { get; }
-        //IStateController StateController { get; }
         IKeybindManager Keybinds { get; }
         UserControl UsagePanel { get; set; }
     }

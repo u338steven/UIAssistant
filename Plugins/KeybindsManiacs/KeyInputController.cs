@@ -122,7 +122,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                                         return;
                                     }
                                     KeyboardAPI.KeyboardOperation.SendKeys(keys);
-                                });
+                                }, true);
                                 keybindStorage.OneShotKeyDown.Add(keyset, () =>
                                 {
                                     var keys = keybind.OutputKeys;
@@ -132,7 +132,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                                         return;
                                     }
                                     KeyboardAPI.KeyboardOperation.KeyDown(keys);
-                                });
+                                }, true);
                                 keybindStorage.OneShotKeyUp.Add(keyset, () =>
                                 {
                                     var keys = keybind.OutputKeys;
@@ -142,7 +142,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                                         return;
                                     }
                                     KeyboardAPI.KeyboardOperation.KeyUp(keys);
-                                });
+                                }, true);
                                 break;
                             }
                             defaultKeybinds.Add(keyset, () =>
@@ -154,10 +154,10 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                                     return;
                                 }
                                 KeyboardAPI.KeyboardOperation.SendKeys(keys);
-                            });
+                            }, true);
                             break;
                         case CommandType.RunEmbeddedCommand:
-                            defaultKeybinds.Add(keyset, ParseCommand(keybind.CommandText, keybind.InputKeys));
+                            defaultKeybinds.Add(keyset, ParseCommand(keybind.CommandText, keybind.InputKeys), true);
                             break;
                         case CommandType.RunUIAssistantCommand:
                             defaultKeybinds.Add(keyset, () =>
@@ -171,7 +171,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                                 {
                                     UIAssistantAPI.NotificationAPI.NotifyWarnMessage("Plugin Error", string.Format(KeybindsManiacs.UIAssistantAPI.LocalizationAPI.Localize(TextID.CommandNotFound), command));
                                 }
-                            });
+                            }, true);
                             break;
                         //case CommandType.RunExtensionCommand:
                         //    break;
@@ -350,7 +350,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                 if (_currentKeybinds.Keybinds.Contains(keysState))
                 {
                     SwitchMode(Mode.Visual, true);
-                    _currentKeybinds.Keybinds[keysState].Invoke();
+                    _currentKeybinds.Keybinds.Execute(keysState, false);
                 }
                 KeyboardAPI.KeyboardOperation.SendKeys(Key.RightCtrl, Key.C);
                 if (_stateController.Mode == Mode.Visual)
@@ -399,7 +399,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                 {
                     if (keybinds.Contains(keysState))
                     {
-                        keybinds[keysState].Invoke();
+                        keybinds.Execute(keysState, false);
                     }
                     SwitchMode(_settings.Mode, true);
                     _command = null;
@@ -477,7 +477,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                     if (_currentKeybinds.OneShotDefined[keysState])
                     {
                         _isOneShotCandidate = true;
-                        _currentKeybinds.OneShotKeyDown[keysState].Invoke();
+                        _currentKeybinds.OneShotKeyDown.Execute(keysState, e.CurrentKey.IsKeyHoldDown);
                         _repeatKey = key;
                         return;
                     }
@@ -492,6 +492,10 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             }
             if (keybinds.Contains(keysState))
             {
+                if (e.CurrentKey.IsKeyHoldDown && keybinds.CanActWhenKeyHoldDown(keysState))
+                {
+                    return;
+                }
                 var operation = keybinds[keysState];
                 ReleaseKeys(keysState);
                 operation?.Invoke();
@@ -502,6 +506,10 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             var keyset = GenerateKeySet(key, keysState);
             if (keybinds.Contains(keyset))
             {
+                if (e.CurrentKey.IsKeyHoldDown && keybinds.CanActWhenKeyHoldDown(keyset))
+                {
+                    return;
+                }
                 var operation = keybinds[keyset];
                 ReleaseKeys(keysState);
                 operation?.Invoke();
@@ -526,10 +534,10 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             var oldKeysState = new KeySet(key);
             if (_currentKeybinds.OneShotKeybinds.Contains(oldKeysState))
             {
-                _currentKeybinds.OneShotKeyUp[oldKeysState].Invoke();
+                _currentKeybinds.OneShotKeyUp.Execute(oldKeysState, e.CurrentKey.IsKeyHoldDown);
                 if (_isOneShotCandidate)
                 {
-                    _currentKeybinds.OneShotKeybinds[oldKeysState].Invoke();
+                    _currentKeybinds.OneShotKeybinds.Execute(oldKeysState, e.CurrentKey.IsKeyHoldDown);
                 }
                 _isOneShotCandidate = false;
                 return;

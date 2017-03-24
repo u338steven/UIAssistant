@@ -44,8 +44,15 @@ namespace UIAssistant.Plugin.HitaHint
                 _stateController.ActivateLastActiveWindow();
                 _stateController.Quit();
             });
-            keybinds.Add(UIAssistantAPI.UIAssistantSettings.SwitchTheme, () => _stateController.SwitchNextTheme());
-            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Back, () => _stateController.Back());
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.SwitchTheme, () =>
+            {
+                if (_stateController.IsBusy)
+                {
+                    return;
+                }
+                _stateController.SwitchNextTheme();
+            });
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Back, () => _stateController.Back(), true);
             keybinds.Add(_settings.Reload, () =>
             {
                 if (_stateController.IsBusy)
@@ -74,8 +81,8 @@ namespace UIAssistant.Plugin.HitaHint
                 _stateController.State.KeyboardLayoutName = layoutLanguage;
             });
 
-            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Up, () => UIAssistantAPI.ViewAPI.DefaultHUD.FocusPreviousItem());
-            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Down, () => UIAssistantAPI.ViewAPI.DefaultHUD.FocusNextItem());
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Up, () => UIAssistantAPI.ViewAPI.DefaultHUD.FocusPreviousItem(), true);
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Down, () => UIAssistantAPI.ViewAPI.DefaultHUD.FocusNextItem(), true);
             keybinds.Add(UIAssistantAPI.UIAssistantSettings.Execute, () =>
             {
                 var selectedItem = UIAssistantAPI.ViewAPI.DefaultHUD.SelectedItem;
@@ -87,7 +94,6 @@ namespace UIAssistant.Plugin.HitaHint
                 {
                     _stateController.Invoke(UIAssistantAPI.ViewAPI.DefaultHUD.Items.ElementAt(0));
                 }
-
             });
         }
 
@@ -101,7 +107,7 @@ namespace UIAssistant.Plugin.HitaHint
                 var input = e.ConvertToCurrentLanguage();
                 if (context.Keybinds.Contains(keysState))
                 {
-                    context.Keybinds[keysState]?.Invoke();
+                    context.Keybinds.Execute(keysState, e.CurrentKey.IsKeyHoldDown);
                     _stateController.PrintState();
                     return;
                 }

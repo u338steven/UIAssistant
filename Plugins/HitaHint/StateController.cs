@@ -338,16 +338,27 @@ namespace UIAssistant.Plugin.HitaHint
                 return;
             }
             UIAssistantAPI.ViewAPI.DefaultHUD.Items = items;
-            //UIAssistantAPI.DefaultHUD.Items = new HUDItemCollection(items);
             PrintState();
         }
 
-        public void SwitchNextTheme()
+        public async void SwitchNextTheme()
         {
-            _context.ThemeSwitcher.Next();
-            HitaHint.Settings.Theme = _context.ThemeSwitcher.CurrentTheme.Id;
-            UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Theme", string.Format(UIAssistantAPI.LocalizationAPI.Localize(TextID.SwitchTheme), HitaHint.Settings.Theme));
-            HitaHint.Settings.Save();
+            IsBusy = true;
+            State.Session.Finished += (_, __) =>
+            {
+                if (HitaHint.Settings.Theme != _context.ThemeSwitcher.CurrentTheme.Id)
+                {
+                    HitaHint.Settings.Theme = _context.ThemeSwitcher.CurrentTheme.Id;
+                    _temporaryTheme = HitaHint.Settings.Theme;
+                    HitaHint.Settings.Save();
+                }
+            };
+            await Task.Run(() => 
+            {
+                _context.ThemeSwitcher.Next();
+                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Theme", string.Format(UIAssistantAPI.LocalizationAPI.Localize(TextID.SwitchTheme), _context.ThemeSwitcher.CurrentTheme.Id));
+            });
+            IsBusy = false;
         }
 
         public void Clear()
