@@ -180,7 +180,6 @@ namespace UIAssistant.Plugin.HitaHint
             // In order to process a next keyup event
             Task.Run(() =>
             {
-                //_cancelToken?.Cancel();
                 UIAssistantAPI.ViewAPI.RemoveDefaultHUD();
                 UIAssistantAPI.ViewAPI.TopMost = false;
                 Cleanup();
