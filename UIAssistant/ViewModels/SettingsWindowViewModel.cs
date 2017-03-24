@@ -484,7 +484,7 @@ namespace UIAssistant.ViewModels
 
             CommandManager.Clear();
             PluginManager.Instance.ResetAllPlugins();
-            SettingsWindowModel.RegisterHotkeys();
+            Hotkey.RegisterHotkeys();
 
             _pluginsPanel.Content = null;
             _pluginsPanel = null;

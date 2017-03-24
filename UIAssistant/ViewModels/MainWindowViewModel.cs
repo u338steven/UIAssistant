@@ -108,7 +108,7 @@ namespace UIAssistant.ViewModels
             DefaultLocalizer.SwitchLanguage(DefaultLocalizer.FindLanguage(UIAssistantAPI.Instance.UIAssistantSettings.Culture));
             PluginManager.Instance.Localize();
 
-            SettingsWindowModel.RegisterHotkeys();
+            Hotkey.RegisterHotkeys();
 
             MainWindowModel.ShowNotifyIcon();
 

@@ -159,8 +159,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\Hotkey.cs" />
     <Compile Include="Models\MainWindowModel.cs" />
     <Compile Include="Models\SettingWindowModel.cs" />
+
     <Compile Include="ViewModels\SettingsWindowViewModel.cs" />
     <Compile Include="Views\HUDPanel.xaml.cs">
       <DependentUpon>HUDPanel.xaml</DependentUpon>
