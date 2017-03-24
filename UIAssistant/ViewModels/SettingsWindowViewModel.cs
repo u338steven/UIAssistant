@@ -383,8 +383,8 @@ namespace UIAssistant.ViewModels
             DefaultLocalizer.SwitchLanguage(Language);
             LocalizeKeybindsText();
             PluginManager.Instance.Localize();
-            MainWindowModel.HideNotifyIcon();
-            MainWindowModel.ShowNotifyIcon();
+            TasktrayIcon.HideNotifyIcon();
+            TasktrayIcon.ShowNotifyIcon();
         }
 
         private void OnRunAtLoginChanged()

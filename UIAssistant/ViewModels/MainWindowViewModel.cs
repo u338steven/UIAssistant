@@ -110,7 +110,7 @@ namespace UIAssistant.ViewModels
 
             Hotkey.RegisterHotkeys();
 
-            MainWindowModel.ShowNotifyIcon();
+            TasktrayIcon.ShowNotifyIcon();
 
             UIAssistantAPI.Instance.ThemeAPI.SwitchTheme("General");
 
@@ -134,7 +134,7 @@ namespace UIAssistant.ViewModels
         {
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
             PluginManager.Instance.Dispose();
-            MainWindowModel.HideNotifyIcon();
+            TasktrayIcon.HideNotifyIcon();
             System.Threading.Thread.Sleep(500);
             base.Dispose(disposing);
         }

@@ -63,7 +63,7 @@ namespace UIAssistant
             try
             {
                 PluginManager.Instance.Dispose();
-                Models.MainWindowModel.HideNotifyIcon();
+                Models.TasktrayIcon.HideNotifyIcon();
             }
             catch
             {
