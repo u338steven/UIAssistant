@@ -21,7 +21,6 @@ using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
 using UIAssistant.Core.Plugin;
 using UIAssistant.Interfaces.Native;
-using UIAssistant.UI.Controls;
 
 namespace UIAssistant.ViewModels
 {
@@ -100,26 +99,26 @@ namespace UIAssistant.ViewModels
 
         public void Initialize()
         {
-            UIAssistantAPI.Instance.Initialize(DefaultHUDPanel, DefaultContextPanel);
+            var api = UIAssistantAPI.Instance;
+            api.Initialize(DefaultHUDPanel, DefaultContextPanel);
 
             IntPtr windowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
             NativeMethods.SetWindowExTransparent(windowHandle);
 
-            DefaultLocalizer.SwitchLanguage(DefaultLocalizer.FindLanguage(UIAssistantAPI.Instance.UIAssistantSettings.Culture));
+            DefaultLocalizer.SwitchLanguage(DefaultLocalizer.FindLanguage(api.UIAssistantSettings.Culture));
             PluginManager.Instance.Localize();
 
             Hotkey.RegisterHotkeys();
-
             TasktrayIcon.ShowNotifyIcon();
-
-            UIAssistantAPI.Instance.ThemeAPI.SwitchTheme("General");
 
             Left = SystemParameters.VirtualScreenLeft;
             Top = SystemParameters.VirtualScreenTop;
             Width = SystemParameters.VirtualScreenWidth;
             Height = SystemParameters.VirtualScreenHeight;
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
-            UIAssistantAPI.Instance.ViewAPI.TopMost = false;
+
+            api.ThemeAPI.SwitchTheme(api.UIAssistantSettings.Theme);
+            api.ViewAPI.TopMost = false;
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
