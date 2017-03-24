@@ -492,7 +492,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             }
             if (keybinds.Contains(keysState))
             {
-                if (e.CurrentKey.IsKeyHoldDown && keybinds.CanActWhenKeyHoldDown(keysState))
+                if (e.CurrentKey.IsKeyHoldDown && !keybinds.CanActWhenKeyHoldDown(keysState))
                 {
                     return;
                 }
@@ -506,7 +506,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             var keyset = GenerateKeySet(key, keysState);
             if (keybinds.Contains(keyset))
             {
-                if (e.CurrentKey.IsKeyHoldDown && keybinds.CanActWhenKeyHoldDown(keyset))
+                if (e.CurrentKey.IsKeyHoldDown && !keybinds.CanActWhenKeyHoldDown(keyset))
                 {
                     return;
                 }
