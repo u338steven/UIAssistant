@@ -9,10 +9,8 @@ using System.Windows.Input;
 using KeybindHelper.LowLevel;
 using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
-using UIAssistant.Core.Settings;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Input;
-using UIAssistant.UI.Controls;
 
 namespace UIAssistant.Core.Input
 {
@@ -35,7 +33,7 @@ namespace UIAssistant.Core.Input
 
             if (Contains(e.PressedKeys))
             {
-                Notification.NotifyMessage("Forced termination", TextID.ForcedTermination.GetLocalizedText(), NotificationIcon.Warning);
+                UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("Forced termination", TextID.ForcedTermination.GetLocalizedText());
                 var t = Task.Run(() =>
                 {
                     System.Threading.Thread.Sleep(3000);

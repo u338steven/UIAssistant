@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 using KeybindHelper;
 using KeybindHelper.LowLevel;
+using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Input;
-using UIAssistant.UI.Controls;
 
 namespace UIAssistant.Core.Input
 {
@@ -22,7 +22,7 @@ namespace UIAssistant.Core.Input
         {
             if (_keybinds.ContainsKey(keys))
             {
-                Notification.NotifyMessage("UIAssistant", string.Format(TextID.KeybindDuplication.GetLocalizedText(), keys.ToString()), NotificationIcon.Warning);
+                UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("UIAssistant", string.Format(TextID.KeybindDuplication.GetLocalizedText(), keys.ToString()));
                 return;
             }
             _keybinds.Add(keys, action);
