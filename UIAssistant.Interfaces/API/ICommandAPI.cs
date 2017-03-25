@@ -10,6 +10,7 @@ namespace UIAssistant.Interfaces.API
         IArgumentRule CreateArgmentRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null);
         ICommandRule CreateCommandRule(string name, Action<ICommand> action, ICollection<IArgumentRule> requiredArgs = null, ICollection<IArgumentRule> optionalArgs = null);
         ICandidatesGenerator GetCommandGenerator();
+        IValidatable<string> GetValidator();
         void InvokePluginCommand(string command, Action quit = null, Action pausing = null, Action resumed = null);
         IEnumerable<ICommand> ParseStatement(string statement);
         void RegisterCommand(ICommandRule rule);

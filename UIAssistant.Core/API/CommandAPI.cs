@@ -27,6 +27,11 @@ namespace UIAssistant.Core.API
             return CommandManager.GetGenerator();
         }
 
+        public IValidatable<string> GetValidator()
+        {
+            return CommandManager.GetValidator(DefaultLocalizer.Instance);
+        }
+
         public ValidationResult Validate(string statement)
         {
             return CommandManager.GetValidator(DefaultLocalizer.Instance).Validate(statement);

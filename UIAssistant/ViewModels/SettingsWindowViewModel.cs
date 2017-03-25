@@ -11,9 +11,6 @@ using Livet.Messaging.IO;
 using Livet.EventListeners;
 using Livet.Messaging.Windows;
 
-using System.Windows;
-using System.Windows.Controls;
-
 using UIAssistant.Models;
 using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
@@ -22,14 +19,9 @@ using UIAssistant.Core.Tools;
 using UIAssistant.Infrastructure.Commands;
 using UIAssistant.Infrastructure.Resource.Language;
 using UIAssistant.Interfaces;
-using UIAssistant.Interfaces.Commands;
 using UIAssistant.Interfaces.Plugin;
 using UIAssistant.Interfaces.Settings;
 using UIAssistant.Utility;
-
-using UIAssistant.UI.Controls;
-
-using KeybindHelper;
 
 namespace UIAssistant.ViewModels
 {
@@ -106,57 +98,6 @@ namespace UIAssistant.ViewModels
         }
         #endregion
 
-        #region Hotkeys変更通知プロパティ
-        private ObservableSynchronizedCollection<Keybind> _Hotkeys = new ObservableSynchronizedCollection<Keybind>();
-
-        public ObservableSynchronizedCollection<Keybind> Hotkeys
-        {
-            get
-            { return _Hotkeys; }
-            set
-            {
-                if (_Hotkeys == value)
-                    return;
-                _Hotkeys = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion
-
-        #region Generator変更通知プロパティ
-        private ICandidatesGenerator _Generator;
-
-        public ICandidatesGenerator Generator
-        {
-            get
-            { return _Generator; }
-            set
-            {
-                if (_Generator == value)
-                    return;
-                _Generator = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion
-
-        #region Validator変更通知プロパティ
-        private IValidatable<string> _Validator;
-
-        public IValidatable<string> Validator
-        {
-            get
-            { return _Validator; }
-            set
-            { 
-                if (_Validator == value)
-                    return;
-                _Validator = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion
-
         #region Version変更通知プロパティ
         private string _Version;
 
@@ -174,21 +115,6 @@ namespace UIAssistant.ViewModels
         }
         #endregion
 
-        #region CanClose変更通知プロパティ
-        private bool _CanClose;
-        public bool CanClose
-        {
-            get { return _CanClose; }
-            set
-            {
-                if (_CanClose == value) { return; }
-
-                _CanClose = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion
-
         public IList<Language> Languages { get { return DefaultLocalizer.AvailableLanguages; } }
 
         private bool _isInitialized;
@@ -199,14 +125,11 @@ namespace UIAssistant.ViewModels
             Language = DefaultLocalizer.FindLanguage(Settings.Culture);
             RunAtLogin = Settings.RunAtLogin;
             UseMigemo = Settings.UseMigemo;
-            Hotkeys = new ObservableSynchronizedCollection<Keybind>(Settings.Commands);
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             var version = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
             Version = $"UIAssistant {version}";
 
-            Generator = CommandManager.GetGenerator();
-            Validator = CommandManager.GetValidator(DefaultLocalizer.Instance);
             LocalizeKeybindsText();
             _isInitialized = true;
         }
@@ -232,29 +155,6 @@ namespace UIAssistant.ViewModels
             Settings.SwitchTheme.Text = TextID.KeybindsSwitchTheme.GetLocalizedText();
             Settings.Usage.Text = TextID.KeybindsUsage.GetLocalizedText();
             Settings.EmergencySwitch.Text = TextID.KeybindsEmergencySwitch.GetLocalizedText();
-        }
-
-        public void AddHotkey(HotkeyWithCommandListBox hotkeys)
-        {
-            Hotkeys.Add(new Keybind());
-            hotkeys.SelectedIndex = Hotkeys.Count - 1;
-            hotkeys.ScrollIntoView(hotkeys.SelectedItem);
-            hotkeys.UpdateLayout();
-            hotkeys.FocusOnKeybindBox(hotkeys.SelectedIndex);
-            Settings.Commands = Hotkeys.ToList();
-        }
-
-        public void RemoveHotkey(HotkeyWithCommandListBox hotkeys)
-        {
-            var selectedIndex = hotkeys.SelectedIndex;
-            if (selectedIndex < 0)
-            {
-                return;
-            }
-            Hotkeys.RemoveAt(selectedIndex);
-            hotkeys.UpdateLayout();
-            hotkeys.SelectedIndex = Hotkeys.Count - 1;
-            Settings.Commands = Hotkeys.ToList();
         }
 
         private void OnLanguageChanged()
@@ -312,36 +212,6 @@ namespace UIAssistant.ViewModels
             }
         }
 
-        public void CloseCanceledCallback()
-        {
-            if (!Settings.Commands.Any(x => string.IsNullOrEmpty(x.Text))
-                && !Settings.Commands.Where(x => !string.IsNullOrEmpty(x.Text)).Any(x => Validator.Validate(x.Text) != null))
-            {
-                CanClose = true;
-                DispatcherHelper.UIDispatcher.BeginInvoke((Action)(() =>
-                {
-                    Messenger.Raise(new WindowActionMessage(WindowAction.Close, "WindowAction"));
-                }));
-                return;
-            }
-
-            var message = new ConfirmationMessage(
-                $"{TextID.HotkeyHasError.GetLocalizedText()} \n{TextID.CloseConfirmation.GetLocalizedText()}",
-                "Confirmation",
-                MessageBoxImage.Warning,
-                MessageBoxButton.OKCancel,
-                "Confirm");
-
-            Messenger.Raise(message);
-            if (message.Response != true) { return; }
-
-            CanClose = true;
-            DispatcherHelper.UIDispatcher.BeginInvoke((Action)(() =>
-            {
-                Messenger.Raise(new WindowActionMessage(WindowAction.Close, "WindowAction"));
-            }));
-        }
-
         protected override void Dispose(bool disposing)
         {
             foreach (var plugin in PluginManager.Instance.Plugins)
@@ -354,7 +224,6 @@ namespace UIAssistant.ViewModels
             PluginManager.Instance.ResetAllPlugins();
             Hotkey.RegisterHotkeys();
 
-            Hotkeys = null;
             base.Dispose(disposing);
         }
     }

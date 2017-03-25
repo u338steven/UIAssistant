@@ -45,11 +45,6 @@
         </Style>
     </Window.Resources>
 
-    <i:Interaction.Behaviors>
-        <l:WindowCloseCancelBehavior CanClose="{Binding CanClose}"
-                                     CloseCanceledCallbackMethodTarget="{Binding}"
-                                     CloseCanceledCallbackMethodName="CloseCanceledCallback"/>
-    </i:Interaction.Behaviors>
     <i:Interaction.Triggers>
 
         <!--Viewに特別な要件が存在しない限りは、トリガーやアクションの自作にこだわらず積極的にコードビハインドを使いましょう -->
@@ -65,14 +60,6 @@
         <i:EventTrigger EventName="Closed">
             <l:DataContextDisposeAction/>
         </i:EventTrigger>
-
-        <l:InteractionMessageTrigger MessageKey="Confirm" Messenger="{Binding Messenger}">
-            <l:ConfirmationDialogInteractionMessageAction/>
-        </l:InteractionMessageTrigger>
-
-        <l:InteractionMessageTrigger MessageKey="WindowAction" Messenger="{Binding Messenger}">
-            <l:WindowInteractionMessageAction/>
-        </l:InteractionMessageTrigger>
 
         <!--WindowのCloseキャンセル処理に対応する場合は、WindowCloseCancelBehaviorの使用を検討してください-->
 
@@ -121,35 +108,7 @@
         </TabItem>
 
         <TabItem Header="{DynamicResource hotkeyHeader}">
-            <Grid Background="#FFE5E5E5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="120"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{DynamicResource howToEditKeybinds}"/>
-                <ui:HotkeyWithCommandListBox ItemsSource="{Binding Hotkeys}" x:Name="hotkeys" Grid.RowSpan="3" Grid.Row="1" CandidatesGenerator="{Binding Generator}" Validator="{Binding Validator}"/>
-                <Button Content="{DynamicResource add}" Grid.Column="1" Grid.Row="1">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="AddHotkey" MethodParameter="{Binding ElementName=hotkeys}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-                <Button Content="{DynamicResource remove}" Grid.Column="1" Grid.Row="2">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="RemoveHotkey" MethodParameter="{Binding ElementName=hotkeys}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-            </Grid>
+            <v:HotkeyTab/>
         </TabItem>
 
         <TabItem Header="{DynamicResource keybindsHeader}">
