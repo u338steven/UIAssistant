@@ -13,8 +13,6 @@ using Livet.Messaging.Windows;
 
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 using UIAssistant.Models;
 using UIAssistant.Core.API;
@@ -37,7 +35,22 @@ namespace UIAssistant.ViewModels
 {
     public class SettingsWindowViewModel : ViewModel
     {
-        public IUserSettings Settings { get; private set; } = UIAssistantAPI.Instance.UIAssistantSettings;
+        #region Settings変更通知プロパティ
+        private IUserSettings _Settings;
+
+        public IUserSettings Settings
+        {
+            get
+            { return _Settings; }
+            set
+            { 
+                if (_Settings == value)
+                    return;
+                _Settings = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
 
         #region Language変更通知プロパティ
         private Language _Language;
@@ -105,75 +118,6 @@ namespace UIAssistant.ViewModels
                 if (_Hotkeys == value)
                     return;
                 _Hotkeys = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion
-
-        #region Plugins変更通知プロパティ
-        private IEnumerable<Lazy<IPlugin, IPluginMetadata>> _Plugins;
-
-        public IEnumerable<Lazy<IPlugin, IPluginMetadata>> Plugins
-        {
-            get
-            { return _Plugins; }
-            set
-            {
-                if (_Plugins == value)
-                    return;
-                _Plugins = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion
-
-        #region CurrentPluginMetadata変更通知プロパティ
-        private IPluginMetadata _CurrentPluginMetadata;
-
-        public IPluginMetadata CurrentPluginMetadata
-        {
-            get
-            { return _CurrentPluginMetadata; }
-            set
-            {
-                if (_CurrentPluginMetadata == value)
-                    return;
-                _CurrentPluginMetadata = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion
-
-        #region PluginIcon変更通知プロパティ
-        private ImageSource _PluginIcon;
-
-        public ImageSource PluginIcon
-        {
-            get
-            { return _PluginIcon; }
-            set
-            {
-                if (_PluginIcon == value)
-                    return;
-                _PluginIcon = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion
-
-        #region PluginEnable変更通知プロパティ
-        private bool _PluginEnable;
-
-        public bool PluginEnable
-        {
-            get
-            { return _PluginEnable; }
-            set
-            { 
-                if (_PluginEnable == value)
-                    return;
-                _PluginEnable = value;
-                OnPluginEnableChanged(value);
                 RaisePropertyChanged();
             }
         }
@@ -247,18 +191,15 @@ namespace UIAssistant.ViewModels
 
         public IList<Language> Languages { get { return DefaultLocalizer.AvailableLanguages; } }
 
-        private UserControl _pluginsPanel;
         private bool _isInitialized;
 
-        public void Initialize(UserControl pluginsPanel)
+        public void Initialize()
         {
+            Settings = UIAssistantAPI.Instance.UIAssistantSettings;
             Language = DefaultLocalizer.FindLanguage(Settings.Culture);
             RunAtLogin = Settings.RunAtLogin;
             UseMigemo = Settings.UseMigemo;
             Hotkeys = new ObservableSynchronizedCollection<Keybind>(Settings.Commands);
-            Plugins = PluginManager.Instance.Plugins;
-            _pluginsPanel = pluginsPanel;
-            LoadPluginView(0);
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             var version = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
@@ -291,63 +232,6 @@ namespace UIAssistant.ViewModels
             Settings.SwitchTheme.Text = TextID.KeybindsSwitchTheme.GetLocalizedText();
             Settings.Usage.Text = TextID.KeybindsUsage.GetLocalizedText();
             Settings.EmergencySwitch.Text = TextID.KeybindsEmergencySwitch.GetLocalizedText();
-        }
-
-        Dictionary<int, object> _cachedPluginPanels = new Dictionary<int, object>();
-        Dictionary<int, ImageSource> _cachedPluginIcons = new Dictionary<int, ImageSource>();
-        public void LoadPluginView(int selectedIndex)
-        {
-            if (Plugins.Count() <= selectedIndex)
-            {
-                return;
-            }
-
-            var plugin = Plugins.ElementAt(selectedIndex);
-            CurrentPluginMetadata = plugin.Metadata;
-
-            PluginEnable = !Settings.DisabledPlugins.Contains(CurrentPluginMetadata.Guid);
-
-            if (_cachedPluginPanels.ContainsKey(selectedIndex))
-            {
-                _pluginsPanel.Content = _cachedPluginPanels[selectedIndex];
-                PluginIcon = _cachedPluginIcons[selectedIndex];
-                return;
-            }
-
-            if (plugin.Value is IConfigurablePlugin)
-            {
-                var panel = (plugin.Value as IConfigurablePlugin).GetConfigrationInterface();
-                _pluginsPanel.Content = panel;
-            }
-            else
-            {
-                _pluginsPanel.Content = null;
-            }
-            _cachedPluginPanels.Add(selectedIndex, _pluginsPanel.Content);
-
-            var uri = new Uri(plugin.Metadata.IconUri, UriKind.RelativeOrAbsolute);
-            if (IsLocalFile(uri))
-            {
-                PluginIcon = new BitmapImage(uri);
-                if (PluginIcon.CanFreeze)
-                {
-                    PluginIcon.Freeze();
-                }
-            }
-            else
-            {
-                PluginIcon = null;
-            }
-            _cachedPluginIcons.Add(selectedIndex, PluginIcon);
-        }
-
-        private bool IsLocalFile(Uri uri)
-        {
-            if (uri.IsAbsoluteUri && !uri.IsLoopback)
-            {
-                return false;
-            }
-            return true;
         }
 
         public void AddHotkey(HotkeyWithCommandListBox hotkeys)
@@ -401,22 +285,6 @@ namespace UIAssistant.ViewModels
             else
             {
                 AutoRunAtLoginScheduler.Unregister();
-            }
-        }
-
-        private void OnPluginEnableChanged(bool value)
-        {
-            if (!_isInitialized)
-            {
-                return;
-            }
-            if (value)
-            {
-                Settings.DisabledPlugins.Remove(CurrentPluginMetadata.Guid);
-            }
-            else
-            {
-                Settings.DisabledPlugins.Add(CurrentPluginMetadata.Guid);
             }
         }
 
@@ -476,19 +344,16 @@ namespace UIAssistant.ViewModels
 
         protected override void Dispose(bool disposing)
         {
-            Settings.Save();
-            foreach (var plugin in Plugins)
+            foreach (var plugin in PluginManager.Instance.Plugins)
             {
                 (plugin.Value as IConfigurablePlugin)?.Save();
             }
+            Settings.Save();
 
             CommandManager.Clear();
             PluginManager.Instance.ResetAllPlugins();
             Hotkey.RegisterHotkeys();
 
-            _pluginsPanel.Content = null;
-            _pluginsPanel = null;
-            PluginIcon = null;
             Hotkeys = null;
             base.Dispose(disposing);
         }

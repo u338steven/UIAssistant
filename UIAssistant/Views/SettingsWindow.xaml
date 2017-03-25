@@ -58,7 +58,7 @@
 
         <!--WindowのContentRenderedイベントのタイミングでViewModelのInitializeメソッドが呼ばれます-->
         <i:EventTrigger EventName="ContentRendered">
-            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="Initialize" MethodParameter="{Binding ElementName=pluginPanel}"/>
+            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="Initialize"/>
         </i:EventTrigger>
 
         <!--Windowが閉じたタイミングでViewModelのDisposeメソッドが呼ばれます-->
@@ -117,54 +117,7 @@
         </TabItem>
 
         <TabItem Header="{DynamicResource pluginHeader}">
-            <StackPanel Background="#FFE5E5E5" Orientation="Horizontal">
-                <ListView x:Name="plugins" Margin="0" ItemsSource="{Binding Plugins}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="LoadPluginView" MethodParameter="{Binding ElementName=plugins, Path=SelectedIndex}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Metadata.Name}" Margin="4" FontSize="16"/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Image Source="{Binding PluginIcon}" Width="64" Height="64" Grid.RowSpan="5" Margin="0,0,10,10"/>
-
-                        <TextBlock Text="Command: " Grid.Column="1"/>
-                        <TextBlock Text="{Binding CurrentPluginMetadata.CommandName}" Grid.Column="2"/>
-
-                        <TextBlock Text="Author: " Grid.Row="1" Grid.Column="1"/>
-                        <TextBlock Text="{Binding CurrentPluginMetadata.Author}" Grid.Row="1" Grid.Column="2"/>
-
-                        <TextBlock Text="SupportURL: " Grid.Row="2" Grid.Column="1"/>
-                        <TextBlock Text="{Binding CurrentPluginMetadata.SupportUri}" Grid.Row="2" Grid.Column="2"/>
-
-                        <TextBlock Text="Version: " Grid.Row="3" Grid.Column="1"/>
-                        <TextBlock Text="{Binding CurrentPluginMetadata.Version}" Grid.Row="3" Grid.Column="2"/>
-
-                        <CheckBox IsChecked="{Binding PluginEnable}" Content="{DynamicResource enable}" Grid.Row="4" Grid.Column="1"/>
-
-                        <UserControl x:Name="pluginPanel" HorizontalAlignment="Stretch" Grid.Row="5" Grid.ColumnSpan="3"/>
-                    </Grid>
-                </ScrollViewer>
-            </StackPanel>
+            <v:PluginTab/>
         </TabItem>
 
         <TabItem Header="{DynamicResource hotkeyHeader}">
@@ -229,7 +182,7 @@
                 </key:LowLevelShortcutkeyListBox>
             </Grid>
         </TabItem>
-        
+
         <TabItem Header="{DynamicResource aboutHeader}">
             <Border Margin="10">
                 <Grid>
