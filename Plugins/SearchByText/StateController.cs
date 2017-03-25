@@ -32,9 +32,7 @@ namespace UIAssistant.Plugin.SearchByText
         {
             Session = UIAssistantAPI.SessionAPI.Create();
             UIAssistantAPI.ViewAPI.DefaultHUD.Initialize();
-            UIAssistantAPI.ViewAPI.DefaultHUD.ItemsCountPerPage = Settings.ItemsCountPerPage;
             UIAssistantAPI.ViewAPI.DefaultContextHUD.Initialize();
-            UIAssistantAPI.ViewAPI.DefaultContextHUD.ItemsCountPerPage = Settings.ItemsCountPerPage;
         }
 
         internal void Enumerate()

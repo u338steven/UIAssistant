@@ -13,11 +13,11 @@ namespace UIAssistant.Interfaces.HUD
 {
     public interface IHUD
     {
-        ITextBox TextBox { get; set; }
+        ITextBox TextBox { get; }
         ICollection<IHUDItem> Items { get; set; }
         IHUDItem SelectedItem { get; }
         int ItemsCountPerPage { get; set; }
-        Func<IEnumerable<IHUDItem>, string, IEnumerable<IHUDItem>> CustomFilter { get; set; }
+        IFilter CustomFilter { get; set; }
         void Initialize();
         void Update();
         void FocusNextItem();
@@ -50,5 +50,10 @@ namespace UIAssistant.Interfaces.HUD
     {
         void Enumerate(ICollection<IHUDItem> container, System.Windows.Automation.Condition condition, params ControlType[] types);
         void Retry(ICollection<IHUDItem> container);
+    }
+
+    public interface IFilter
+    {
+        IEnumerable<IHUDItem> Filter(IEnumerable<IHUDItem> list, string input);
     }
 }

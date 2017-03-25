@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
+using System.Windows;
 
 using Livet;
 
-using System.Windows;
-using System.Text.RegularExpressions;
 using UIAssistant.Core.API;
 using UIAssistant.Core.Enumerators;
-using UIAssistant.Core.Tools;
 using UIAssistant.Interfaces.HUD;
 using UIAssistant.Utility;
 using KeybindHelper.LowLevel;
@@ -108,21 +103,9 @@ namespace UIAssistant.ViewModels
         public HUDViewModel()
         {
             SelectedIndex = -1;
-            ItemsCountPerPage = 8;
             Items = new HUDItemCollection();
             TextBox = new LowLevelTextBoxViewModel();
-            try
-            {
-                if (!Migemo.IsEnable() && UIAssistantAPI.Instance.UIAssistantSettings.UseMigemo)
-                {
-                    Migemo.Initialize(UIAssistantAPI.Instance.UIAssistantSettings.MigemoDllPath, UIAssistantAPI.Instance.UIAssistantSettings.MigemoDictionaryPath);
-                }
-            }
-            catch (Exception ex)
-            {
-                UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("Load Migemo Error", $"{ex.Message}");
-                Infrastructure.Logger.Log.Error(ex);
-            }
+            CustomFilter = new DefaultFilter();
         }
 
         public void Initialize()
@@ -130,9 +113,10 @@ namespace UIAssistant.ViewModels
             SelectedIndex = -1;
             DispatcherHelper.UIDispatcher.Invoke(() => Items = new HUDItemCollection());
             TextBox.Initialize();
-            CustomFilter = null;
+            CustomFilter = new DefaultFilter();
             CoordinateOrigin = new CoordinateOrigin();
             RaisePropertyChanged(nameof(CoordinateOrigin));
+            ItemsCountPerPage = UIAssistantAPI.Instance.UIAssistantSettings.ItemsCountPerPage;
         }
 
         public void Update()
@@ -186,62 +170,11 @@ namespace UIAssistant.ViewModels
             SelectedItem?.Execute();
         }
 
-        public Func<IEnumerable<IHUDItem>, string, IEnumerable<IHUDItem>> CustomFilter { get; set; }
+        public IFilter CustomFilter { get; set; }
         public void Filter(ICollection<IHUDItem> items, string input)
         {
-            HUDItemCollection clonedItems = new HUDItemCollection(items);
-            if (CustomFilter != null)
-            {
-                Items = new HUDItemCollection(CustomFilter.Invoke(clonedItems, input));
-                return;
-            }
-            Items = new HUDItemCollection(DefaultFilter(clonedItems, input.Split(' ')));
-        }
-
-        private Regex _ascii = new Regex("^[\x20-\x7E]+$");
-        private bool UseMigemo(string input)
-        {
-            if (input.Length > 1 && Migemo.IsEnable() && UIAssistantAPI.Instance.UIAssistantSettings.UseMigemo)
-            {
-                return _ascii.IsMatch(input);
-            }
-            return false;
-        }
-
-        private IEnumerable<IHUDItem> DefaultFilter(IEnumerable<IHUDItem> list, params string[] inputs)
-        {
-            Regex regex;
-            if (UseMigemo(inputs[0]))
-            {
-                regex = Migemo.GetRegex(inputs[0]);
-            }
-            else
-            {
-                var input = Regex.Escape(inputs[0]);
-                regex = new Regex(input, RegexOptions.IgnoreCase);
-            }
-            var select = list.Where(hudItem =>
-            {
-                var match = regex.Match(hudItem.DisplayText);
-                if (match.Success)
-                {
-                    if (hudItem == null)
-                    {
-                        return false;
-                    }
-                    hudItem.ColoredStart = match.Index;
-                    hudItem.ColoredLength = match.Length;
-                }
-                return match.Success;
-            });
-            if (inputs.Length > 1)
-            {
-                return DefaultFilter(select, inputs.Skip(1).ToArray());
-            }
-            else
-            {
-                return select;
-            }
+            var clonedItems = new HUDItemCollection(items);
+            Items = new HUDItemCollection(CustomFilter.Filter(clonedItems, input));
         }
     }
 }
