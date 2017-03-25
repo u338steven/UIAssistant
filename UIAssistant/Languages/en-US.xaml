@@ -20,6 +20,7 @@
     <system:String x:Key="pluginCommandDuplication">Duplicate command of {0}</system:String>
     <system:String x:Key="pluginInitializeError">{0} cannot be initialized</system:String>
     <system:String x:Key="loadThemeError">{0} might be broken, cannot be loaded</system:String>
+    <system:String x:Key="pluginError">Error occured in {0} plugin</system:String>
 
     <!--General Validation-->
     <system:String x:Key="requiredError">Required</system:String>

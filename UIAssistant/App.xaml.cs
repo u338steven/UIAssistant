@@ -52,14 +52,6 @@ namespace UIAssistant
 
         private void HandleUnhandledException(Exception ex)
         {
-            string message = "An unhandled error occured\nYou can copy this message by Ctrl+C\n\n";
-            while (ex != null)
-            {
-                message += ex.Message + "\n";
-                message += ex.StackTrace + "\n";
-                ex = ex.InnerException;
-            }
-
             try
             {
                 PluginManager.Instance.Dispose();
@@ -69,21 +61,34 @@ namespace UIAssistant
             {
 
             }
+
+            try
+            {
+                ShowMessage(ex);
+                Log.Fatal(ex);
+            }
+            catch
+            {
+            }
+
+            Environment.Exit(1);
+        }
+
+        private void ShowMessage(Exception ex)
+        {
+            string message = "An unhandled error occured\nYou can copy this message by Ctrl+C\n\n";
+            var e = ex;
+            while (e != null)
+            {
+                message += e.Message + "\n";
+                message += e.StackTrace + "\n";
+                e = e.InnerException;
+            }
             MessageBox.Show(
                 message,
                 "Fatal error",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
-
-            try
-            {
-                Log.Fatal(ex);
-            }
-            catch
-            {
-
-            }
-            Environment.Exit(1);
         }
 
         private void Dispatcher_UnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

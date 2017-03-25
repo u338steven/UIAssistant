@@ -127,9 +127,18 @@ namespace UIAssistant.Core.Plugin
             var actions = UIAssistantAPI.Instance.CommandAPI.ParseStatement(command).Reverse();
             return () =>
             {
-                InitializeBeforePluginCalled();
-                plugins[args[0]].Setup();
-                actions.ForEach(x => x.Invoke());
+                try
+                {
+                    InitializeBeforePluginCalled();
+                    plugins[args[0]].Setup();
+                    actions.ForEach(x => x.Invoke());
+                }
+                catch (Exception ex)
+                {
+                    var pluginName = Plugins.FirstOrDefault(x => x.Value == plugins[args[0]]).Metadata.Name;
+                    UIAssistantAPI.Instance.NotificationAPI.NotifyErrorMessage(pluginName, string.Format(TextID.PluginError.GetLocalizedText(), pluginName));
+                    Log.Error(ex, pluginName);
+                }
             };
         }
 

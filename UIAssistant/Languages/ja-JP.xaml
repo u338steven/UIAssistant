@@ -20,6 +20,7 @@
     <system:String x:Key="pluginCommandDuplication">{0} のコマンドが重複しているため使用できません</system:String>
     <system:String x:Key="pluginInitializeError">{0} プラグインを読みこめませんでした</system:String>
     <system:String x:Key="loadThemeError">{0} テーマファイルが破損しており、反映できませんでした</system:String>
+    <system:String x:Key="pluginError">{0} プラグインでエラーが発生しました。ログファイルに出力された内容をプラグイン作成者にご報告ください。</system:String>
 
     <!--General Validation-->
     <system:String x:Key="requiredError">この項目は必須入力です</system:String>

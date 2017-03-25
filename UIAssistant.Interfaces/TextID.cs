@@ -19,6 +19,7 @@
         public const string ForcedTermination = "forcedTermination";
         public const string SettingsLoadError = "settingsLoadError";
         public const string PluginCommandDuplication = "pluginCommandDuplication";
+        public const string PluginError = "pluginError";
         public const string PluginInitializeError = "pluginInitializeError";
         public const string LoadThemeError = "loadThemeError";
         public const string HotkeyHasError = "hotkeyHasError";
