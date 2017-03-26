@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="UIAssistant.Views.GeneralTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:UIAssistant.ViewModels"
+             xmlns:local="clr-namespace:UIAssistant.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="500">
+    <UserControl.DataContext>
+        <vm:GeneralTabViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="Padding" Value="0, 10, 0, 5"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+    <i:Interaction.Triggers>
+
+        <i:EventTrigger EventName="Loaded">
+            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="Initialize"/>
+        </i:EventTrigger>
+
+        <i:EventTrigger EventName="Unloaded">
+            <l:DataContextDisposeAction/>
+        </i:EventTrigger>
+
+    </i:Interaction.Triggers>
+    <StackPanel Margin="10">
+            <Label Content="{DynamicResource language}" Target="{Binding ElementName=languages}"/>
+            <ComboBox x:Name="languages" MinWidth="120" ItemsSource="{Binding Languages}" SelectedItem="{Binding Language}" AutomationProperties.Name="{DynamicResource language}" Margin="0, 0, 0, 10">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="OnLanguageChanged"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+        <CheckBox IsChecked="{Binding RunAtLogin}" Content="{DynamicResource runUIAssistantAtLogin}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Checked">
+                    <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="OnRunAtLoginChecked"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="Unchecked">
+                    <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="OnRunAtLoginUnchecked"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </CheckBox>
+        <CheckBox IsChecked="{Binding UseMigemo}" Content="{DynamicResource useMigemo}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Checked">
+                    <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="OnUseMigemoChecked"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="Unchecked">
+                    <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="OnUseMigemoUnchecked"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </CheckBox>
+        <Label Target="{Binding ElementName=migemoDllPath}" Content="{DynamicResource migemoDllPath}"/>
+        <TextBox x:Name="migemoDllPath" Text="{Binding Settings.MigemoDllPath}" AutomationProperties.Name="{DynamicResource migemoDllPath}"/>
+        <Label Target="{Binding ElementName=migemoDictionaryPath}" Content="{DynamicResource migemoDictionaryPath}"/>
+        <TextBox x:Name="migemoDictionaryPath" Text="{Binding Settings.MigemoDictionaryPath}" AutomationProperties.Name="{DynamicResource migemoDictionaryPath}"/>
+        <Label Target="{Binding ElementName=itemCountPerPage}" Content="{DynamicResource itemsCountPerPage}"/>
+        <TextBox x:Name="itemCountPerPage" Text="{Binding Settings.ItemsCountPerPage}" AutomationProperties.Name="{DynamicResource itemsCountPerPage}" Width="60" HorizontalAlignment="Left"/>
+    </StackPanel>
+</UserControl>

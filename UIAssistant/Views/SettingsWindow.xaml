@@ -51,56 +51,19 @@
         <!--Viewのコードビハインドは、基本的にView内で完結するロジックとViewModelからのイベントの受信(専用リスナを使用する)に限るとトラブルが少なくなります -->
         <!--Livet1.1からはコードビハインドでViewModelのイベントを受信するためのWeakEventLisnterサポートが追加されています -->
 
-        <!--WindowのContentRenderedイベントのタイミングでViewModelのInitializeメソッドが呼ばれます-->
         <i:EventTrigger EventName="ContentRendered">
             <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="Initialize"/>
         </i:EventTrigger>
 
-        <!--Windowが閉じたタイミングでViewModelのDisposeメソッドが呼ばれます-->
         <i:EventTrigger EventName="Closed">
             <l:DataContextDisposeAction/>
         </i:EventTrigger>
 
-        <!--WindowのCloseキャンセル処理に対応する場合は、WindowCloseCancelBehaviorの使用を検討してください-->
-
     </i:Interaction.Triggers>
 
-    <TabControl x:Name="tabControl" TabStripPlacement="Left" Height="Auto" Width="Auto">
+    <TabControl TabStripPlacement="Left" Height="Auto" Width="Auto">
         <TabItem Header="{DynamicResource generalHeader}" x:Name="generalTab">
-            <StackPanel Margin="10">
-                <StackPanel Orientation="Horizontal" Margin="10">
-                    <Label Content="{DynamicResource language}" Target="{Binding ElementName=languages}"/>
-                    <ComboBox x:Name="languages" MinWidth="120" ItemsSource="{Binding Languages}" SelectedItem="{Binding Language}" AutomationProperties.Name="{DynamicResource language}"/>
-                </StackPanel>
-                <StackPanel Margin="10">
-                    <CheckBox IsChecked="{Binding RunAtLogin}" Content="{DynamicResource runUIAssistantAtLogin}"/>
-                    <CheckBox IsChecked="{Binding UseMigemo}" Content="{DynamicResource useMigemo}"/>
-                </StackPanel>
-                <Grid Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Target="{Binding ElementName=migemoDllPath}" Content="{DynamicResource migemoDllPath}"
-                           Grid.Row="0" Grid.Column="0"/>
-                    <TextBox x:Name="migemoDllPath" Text="{Binding Settings.MigemoDllPath}" AutomationProperties.Name="{DynamicResource migemoDllPath}"
-                             Grid.Row="0" Grid.Column="1"/>
-                    <Label Target="{Binding ElementName=migemoDictionaryPath}" Content="{DynamicResource migemoDictionaryPath}"
-                           Grid.Row="1" Grid.Column="0"/>
-                    <TextBox x:Name="migemoDictionaryPath" Text="{Binding Settings.MigemoDictionaryPath}" AutomationProperties.Name="{DynamicResource migemoDictionaryPath}"
-                             Grid.Row="1" Grid.Column="1"/>
-                    <Label Target="{Binding ElementName=itemCountPerPage}" Content="{DynamicResource itemsCountPerPage}"
-                           Grid.Row="2" Grid.Column="0"/>
-                    <TextBox x:Name="itemCountPerPage" Text="{Binding Settings.ItemsCountPerPage}" AutomationProperties.Name="{DynamicResource itemsCountPerPage}"
-                             Grid.Row="2" Grid.Column="1"/>
-                </Grid>
-            </StackPanel>
+            <v:GeneralTab/>
         </TabItem>
 
         <TabItem Header="{DynamicResource pluginHeader}">
@@ -160,7 +123,7 @@
                     </Grid.RowDefinitions>
                     <Image Source="pack://application:,,,/../Resources/UIAssistant.png" Width="384" Height="384" Grid.Row="1" Grid.Column="1" Margin="0,0,0,16"/>
                     <TextBlock FontWeight="Bold" LineHeight="48" FontSize="24" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Text="{Binding Version}"/>
-                    <TextBlock FontWeight="Bold" LineHeight="48" FontSize="24" HorizontalAlignment="Center" Grid.Row="3" Grid.Column="1">Copyright © 2016 u338.steven</TextBlock>
+                    <TextBlock FontWeight="Bold" LineHeight="48" FontSize="24" HorizontalAlignment="Center" Grid.Row="3" Grid.Column="1">Copyright © 2016-2017 u338.steven</TextBlock>
                     <TextBlock FontWeight="Bold" LineHeight="48" FontSize="24" HorizontalAlignment="Center" Grid.Row="4" Grid.Column="1">This project is licensed under the MIT license</TextBlock>
                 </Grid>
             </Border>

@@ -143,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\GeneralTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\HotkeyTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -172,9 +176,13 @@
     <Compile Include="Models\PluginTabModel.cs" />
     <Compile Include="Models\SettingWindowModel.cs" />
     <Compile Include="Models\TasktrayIcon.cs" />
+    <Compile Include="ViewModels\GeneralTabViewModel.cs" />
     <Compile Include="ViewModels\HotkeyTabViewModel.cs" />
     <Compile Include="ViewModels\PluginTabViewModel.cs" />
     <Compile Include="ViewModels\SettingsWindowViewModel.cs" />
+    <Compile Include="Views\GeneralTab.xaml.cs">
+      <DependentUpon>GeneralTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HotkeyTab.xaml.cs">
       <DependentUpon>HotkeyTab.xaml</DependentUpon>
     </Compile>
