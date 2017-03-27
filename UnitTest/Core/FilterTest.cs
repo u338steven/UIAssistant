@@ -8,8 +8,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using UIAssistant.Core.API;
 using UIAssistant.Core.Enumerators;
-using UIAssistant.Core.Tools;
 using UIAssistant.Interfaces.HUD;
+using UIAssistant.Utility;
 
 namespace UnitTest.Core
 {

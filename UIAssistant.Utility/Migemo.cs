@@ -6,7 +6,7 @@ using System.Linq;
 
 using UIAssistant.Utility.Win32;
 
-namespace UIAssistant.Core.Tools
+namespace UIAssistant.Utility
 {
     public static class Migemo
     {

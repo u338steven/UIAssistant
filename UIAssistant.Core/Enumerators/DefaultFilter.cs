@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 using UIAssistant.Core.API;
-using UIAssistant.Core.Tools;
 using UIAssistant.Interfaces.HUD;
+using UIAssistant.Utility;
 
 namespace UIAssistant.Core.Enumerators
 {

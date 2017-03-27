@@ -9,7 +9,6 @@ using Livet;
 using UIAssistant.Models;
 using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
-using UIAssistant.Core.Tools;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Settings;
 using UIAssistant.Infrastructure.Resource.Language;

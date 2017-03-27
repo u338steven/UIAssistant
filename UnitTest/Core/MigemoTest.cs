@@ -2,7 +2,7 @@
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using UIAssistant.Core.Tools;
+using UIAssistant.Utility;
 
 namespace UnitTest.Core
 {
