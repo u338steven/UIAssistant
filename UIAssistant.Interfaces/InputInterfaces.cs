@@ -9,22 +9,6 @@ using UIAssistant.Interfaces.Native;
 
 namespace UIAssistant.Interfaces.Input
 {
-    public interface IKeyboardHook : IDisposable
-    {
-        bool IgnoreInjected { get; set; }
-        bool IsActive { get; set; }
-
-        event LowLevelKeyEventHandler KeyDown;
-        event LowLevelKeyEventHandler KeyUp;
-        event LowLevelKeyEventHandler PreviewKeyDown;
-
-        string GetKeyboardLayoutLanguage();
-        void Hook();
-        bool IsPressed(Key key);
-        void LoadAnotherKeyboardLayout();
-        void Unhook();
-    }
-
     public interface IKeybindManager
     {
         Action this[KeySet keys] { get; }
@@ -105,7 +89,7 @@ namespace UIAssistant.Interfaces.Input
 
     public interface IKeyboardPluginContext : IDisposable
     {
-        IKeyboardHook Hook { get; }
+        IHookHandlers HookHandlers { get; }
         IKeybindManager Keybinds { get; }
         UserControl UsagePanel { get; set; }
     }

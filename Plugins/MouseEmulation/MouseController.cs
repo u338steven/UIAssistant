@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
-using System.Timers;
+
 using UIAssistant.Interfaces.Input;
 using UIAssistant.Interfaces.Settings;
 using KeybindHelper.LowLevel;
@@ -20,7 +20,6 @@ namespace UIAssistant.Plugin.MouseEmulation
         static bool _isPressedLbutton = false;
         static bool _isPressedRbutton = false;
         static bool _isPressedMbutton = false;
-        static IKeyboardHook _keyHook;
         static IUserSettings _userSettings;
         static MouseEmulationSettings _mouseSettings;
         private static Dictionary<KeySet, Action> _keybinds;
@@ -29,9 +28,11 @@ namespace UIAssistant.Plugin.MouseEmulation
 
         public static void Start()
         {
-            _keyHook = MouseEmulation.UIAssistantAPI.KeyboardAPI.CreateKeyboardHook();
-            _keyHook.Hook();
-            _keyHook.KeyDown += _keyHook_KeyDown;
+            var api = MouseEmulation.UIAssistantAPI;
+            var handlers = api.KeyboardAPI.CreateHookHandlers();
+            handlers.KeyDown += _keyHook_KeyDown;
+            api.KeyboardAPI.Hook(handlers);
+            Finished += () => api.KeyboardAPI.Unhook(handlers);
             _timer = new Timer();
             _timer.Interval = 100d / 6d;
             _timer.Elapsed += Timer_Elapsed;
@@ -63,10 +64,6 @@ namespace UIAssistant.Plugin.MouseEmulation
 
         private static void _keyHook_KeyDown(object sender, LowLevelKeyEventArgs e)
         {
-            if (e.Handled)
-            {
-                return;
-            }
             var keysState = e.PressedKeys;
             if (_keybinds.ContainsKey(keysState))
             {
@@ -85,31 +82,33 @@ namespace UIAssistant.Plugin.MouseEmulation
 
         static void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            var api = MouseEmulation.UIAssistantAPI.KeyboardAPI;
+
             var moveDelta = 4;
             var operation = MouseEmulation.UIAssistantAPI.MouseAPI.MouseOperation;
-            if (_keyHook.IsPressed(_mouseSettings.SlowDown.Key))
+            if (api.IsPressed(_mouseSettings.SlowDown.Key))
             {
                 moveDelta = 1;
             }
-            if (_keyHook.IsPressed(_mouseSettings.SpeedUp.Key))
+            if (api.IsPressed(_mouseSettings.SpeedUp.Key))
             {
                 moveDelta = 8;
             }
 
             var location = new Point(0, 0);
-            if (_keyHook.IsPressed(_mouseSettings.Left.Key))
+            if (api.IsPressed(_mouseSettings.Left.Key))
             {
                 location.X -= moveDelta;
             }
-            if (_keyHook.IsPressed(_mouseSettings.Right.Key))
+            if (api.IsPressed(_mouseSettings.Right.Key))
             {
                 location.X += moveDelta;
             }
-            if (_keyHook.IsPressed(_mouseSettings.Up.Key))
+            if (api.IsPressed(_mouseSettings.Up.Key))
             {
                 location.Y -= moveDelta;
             }
-            if (_keyHook.IsPressed(_mouseSettings.Down.Key))
+            if (api.IsPressed(_mouseSettings.Down.Key))
             {
                 location.Y += moveDelta;
             }
@@ -121,19 +120,19 @@ namespace UIAssistant.Plugin.MouseEmulation
             Click(_mouseSettings.Click.Key, operation.LeftDown, operation.LeftUp, ref _isPressedLbutton);
             Click(_mouseSettings.RightClick.Key, operation.RightDown, operation.RightUp, ref _isPressedRbutton);
             Click(_mouseSettings.MiddleClick.Key, operation.MiddleDown, operation.MiddleUp, ref _isPressedMbutton);
-            if (_keyHook.IsPressed(_mouseSettings.WheelUp.Key))
+            if (api.IsPressed(_mouseSettings.WheelUp.Key))
             {
                 operation.DoWheelEvent(60, WheelOrientation.Vertical);
             }
-            if (_keyHook.IsPressed(_mouseSettings.WheelDown.Key))
+            if (api.IsPressed(_mouseSettings.WheelDown.Key))
             {
                 operation.DoWheelEvent(-60, WheelOrientation.Vertical);
             }
-            if (_keyHook.IsPressed(_mouseSettings.HWheelUp.Key))
+            if (api.IsPressed(_mouseSettings.HWheelUp.Key))
             {
                 operation.DoWheelEvent(-180, WheelOrientation.Horizontal);
             }
-            if (_keyHook.IsPressed(_mouseSettings.HWheelDown.Key))
+            if (api.IsPressed(_mouseSettings.HWheelDown.Key))
             {
                 operation.DoWheelEvent(180, WheelOrientation.Horizontal);
             }
@@ -141,7 +140,8 @@ namespace UIAssistant.Plugin.MouseEmulation
 
         static void Click(Key key, Action down, Action up, ref bool isPressed)
         {
-            var currentIsPress = _keyHook.IsPressed(key);
+            var api = MouseEmulation.UIAssistantAPI.KeyboardAPI;
+            var currentIsPress = api.IsPressed(key);
             if (!isPressed && currentIsPress)
             {
                 isPressed = true;
@@ -158,7 +158,6 @@ namespace UIAssistant.Plugin.MouseEmulation
         {
             if (_timer.Enabled)
             {
-                _keyHook.Dispose();
                 _timer.Stop();
                 _timer.Enabled = false;
             }

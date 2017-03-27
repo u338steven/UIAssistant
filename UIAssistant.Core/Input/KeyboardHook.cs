@@ -10,11 +10,10 @@ using KeybindHelper.LowLevel;
 using UIAssistant.Core.API;
 using UIAssistant.Core.I18n;
 using UIAssistant.Interfaces;
-using UIAssistant.Interfaces.Input;
 
 namespace UIAssistant.Core.Input
 {
-    public class KeyboardHook : LowLevelKeyHook, IKeyboardHook
+    public class KeyboardHook : HookHandlers
     {
         private KeySet _terminate;
         public KeyboardHook()
@@ -25,7 +24,7 @@ namespace UIAssistant.Core.Input
 
         private void _hook_PreviewKeyDown(object sender, LowLevelKeyEventArgs e)
         {
-            if (e.CurrentKey.Key == Key.None || e.CurrentKey.Key == Key.PrintScreen)
+            if (e.CurrentKeyState.Key == Key.None || e.CurrentKeyState.Key == Key.PrintScreen)
             {
                 e.Handled = true;
                 return;

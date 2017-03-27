@@ -1,24 +1,25 @@
 ﻿using System.Windows.Controls;
+using KeybindHelper.LowLevel;
 using UIAssistant.Interfaces.Input;
 
 namespace UIAssistant.Core.Input
 {
     public class KeyInputContext : IKeyboardPluginContext
     {
-        public IKeyboardHook Hook { get; private set; }
+        public IHookHandlers HookHandlers { get; private set; }
         public IKeybindManager Keybinds { get; private set; }
         public UserControl UsagePanel { get; set; }
 
-        public KeyInputContext(IKeyboardHook hook, IKeybindManager keybinds)
+        public KeyInputContext(IHookHandlers handlers, IKeybindManager keybinds)
         {
-            Hook = hook;
+            HookHandlers = handlers;
             Keybinds = keybinds;
         }
 
         public void Dispose()
         {
             Keybinds.Clear();
-            Hook.Dispose();
+            HookHandlers.Dispose();
         }
     }
 }

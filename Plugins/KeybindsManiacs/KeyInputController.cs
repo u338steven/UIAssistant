@@ -84,7 +84,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
 
         public void Initialize(IKeyboardPluginContext context)
         {
-            context.Hook.IgnoreInjected = true;
+            context.HookHandlers.IgnoreInjected = true;
         }
 
         public void LoadKeybinds(IKeyboardPluginContext context)
@@ -455,7 +455,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         public void OnKeyDown(IKeyboardPluginContext context, object sender, LowLevelKeyEventArgs e)
         {
             var keybinds = _currentKeybinds.Keybinds;
-            if (e.CurrentKey.IsInjected)
+            if (e.CurrentKeyState.IsInjected)
             {
                 e.Handled = false;
                 return;
@@ -463,7 +463,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             e.Handled = true;
 
             var keysState = e.PressedKeys;
-            var key = e.CurrentKey.Key;
+            var key = e.CurrentKeyState.Key;
             _currentKeySet = keysState;
             if (_isOneShotCandidate && _repeatKey == key)
             {
@@ -477,7 +477,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
                     if (_currentKeybinds.OneShotDefined[keysState])
                     {
                         _isOneShotCandidate = true;
-                        _currentKeybinds.OneShotKeyDown.Execute(keysState, e.CurrentKey.IsKeyHoldDown);
+                        _currentKeybinds.OneShotKeyDown.Execute(keysState, e.CurrentKeyState.IsKeyHoldDown);
                         _repeatKey = key;
                         return;
                     }
@@ -492,7 +492,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             }
             if (keybinds.Contains(keysState))
             {
-                if (e.CurrentKey.IsKeyHoldDown && !keybinds.CanActWhenKeyHoldDown(keysState))
+                if (e.CurrentKeyState.IsKeyHoldDown && !keybinds.CanActWhenKeyHoldDown(keysState))
                 {
                     return;
                 }
@@ -506,7 +506,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             var keyset = GenerateKeySet(key, keysState);
             if (keybinds.Contains(keyset))
             {
-                if (e.CurrentKey.IsKeyHoldDown && !keybinds.CanActWhenKeyHoldDown(keyset))
+                if (e.CurrentKeyState.IsKeyHoldDown && !keybinds.CanActWhenKeyHoldDown(keyset))
                 {
                     return;
                 }
@@ -523,21 +523,21 @@ namespace UIAssistant.Plugin.KeybindsManiacs
         public void OnKeyUp(IKeyboardPluginContext context, object sender, LowLevelKeyEventArgs e)
         {
             var keybinds = _currentKeybinds.Keybinds;
-            if (e.CurrentKey.IsInjected)
+            if (e.CurrentKeyState.IsInjected)
             {
                 e.Handled = false;
                 return;
             }
             e.Handled = true;
 
-            var key = e.CurrentKey.Key;
+            var key = e.CurrentKeyState.Key;
             var oldKeysState = new KeySet(key);
             if (_currentKeybinds.OneShotKeybinds.Contains(oldKeysState))
             {
-                _currentKeybinds.OneShotKeyUp.Execute(oldKeysState, e.CurrentKey.IsKeyHoldDown);
+                _currentKeybinds.OneShotKeyUp.Execute(oldKeysState, e.CurrentKeyState.IsKeyHoldDown);
                 if (_isOneShotCandidate)
                 {
-                    _currentKeybinds.OneShotKeybinds.Execute(oldKeysState, e.CurrentKey.IsKeyHoldDown);
+                    _currentKeybinds.OneShotKeybinds.Execute(oldKeysState, e.CurrentKeyState.IsKeyHoldDown);
                 }
                 _isOneShotCandidate = false;
                 return;
@@ -562,7 +562,7 @@ namespace UIAssistant.Plugin.KeybindsManiacs
             }
             else
             {
-                KeyboardAPI.KeyboardOperation.Initialize(Key.None);
+                KeyboardAPI.KeyboardOperation.Initialize();
             }
         }
 

@@ -17,18 +17,16 @@ namespace UIAssistant.Core.Input
         public KeyInputController(IKeyboardPlugin plugin, ISession session)
         {
             _plugin = plugin;
-            _context = new KeyInputContext(UIAssistantAPI.Instance.KeyboardAPI.CreateKeyboardHook(), UIAssistantAPI.Instance.KeyboardAPI.CreateKeybindManager());
+            _context = new KeyInputContext(UIAssistantAPI.Instance.KeyboardAPI.CreateHookHandlers(), UIAssistantAPI.Instance.KeyboardAPI.CreateKeybindManager());
 
             _session = session;
-            _session.Pausing += (_, __) => _context.Hook.IsActive = false;
-            _session.Resumed += (_, __) => _context.Hook.IsActive = true;
         }
 
         public void AddHidingProcess()
         {
             _temporarilyHide = new KeySet(UIAssistantAPI.Instance.UIAssistantSettings.TemporarilyHide);
-            _context.Hook.KeyDown += Hide_KeyDown;
-            _context.Hook.KeyUp += Hide_KeyUp;
+            _context.HookHandlers.KeyDown += Hide_KeyDown;
+            _context.HookHandlers.KeyUp += Hide_KeyUp;
         }
 
         private void Hide_KeyDown(object sender, LowLevelKeyEventArgs e)
@@ -75,18 +73,18 @@ namespace UIAssistant.Core.Input
 
         public void Observe()
         {
-            if (_context.Hook.IsActive)
+            if (_context.HookHandlers.IsActive)
             {
                 return;
             }
 
-            _context.Hook.Hook();
-            _context.Hook.KeyDown += CallPluginKeyDown;
-            _context.Hook.KeyUp += CallPluginKeyUp;
+            _context.HookHandlers.KeyDown += CallPluginKeyDown;
+            _context.HookHandlers.KeyUp += CallPluginKeyUp;
+            UIAssistantAPI.Instance.KeyboardAPI.Hook(_context.HookHandlers);
 
             _session.Finished += (_, __) =>
             {
-                _context.Hook.Unhook();
+                UIAssistantAPI.Instance.KeyboardAPI.Unhook(_context.HookHandlers);
                 _context.Dispose();
             };
         }
@@ -94,7 +92,7 @@ namespace UIAssistant.Core.Input
         private void CallPluginKeyDown(object sender, LowLevelKeyEventArgs e)
         {
 #if DEBUG
-            if (!e.CurrentKey.IsInjected)
+            if (!e.CurrentKeyState.IsInjected)
             {
                 UIAssistantAPI.Instance.ViewAPI.DisplayKeystroke(e);
             }

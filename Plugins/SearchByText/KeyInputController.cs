@@ -30,7 +30,7 @@ namespace UIAssistant.Plugin.SearchByText
 
         public void Initialize(IKeyboardPluginContext context)
         {
-            context.Hook.IgnoreInjected = true;
+            context.HookHandlers.IgnoreInjected = true;
             ObserveEvent(UIAssistantAPI.ViewAPI.DefaultHUD.TextBox);
             ObserveEvent(UIAssistantAPI.ViewAPI.DefaultContextHUD.TextBox);
         }
@@ -54,7 +54,7 @@ namespace UIAssistant.Plugin.SearchByText
             var input = e.ConvertToCurrentLanguage();
             if (context.Keybinds.Contains(keysState))
             {
-                context.Keybinds.Execute(keysState, e.CurrentKey.IsKeyHoldDown);
+                context.Keybinds.Execute(keysState, e.CurrentKeyState.IsKeyHoldDown);
                 return;
             }
 
@@ -98,8 +98,8 @@ namespace UIAssistant.Plugin.SearchByText
             keybinds.Add(_settings.SwitchTheme, () => _stateController.SwitchNextTheme());
             keybinds.Add(_settings.SwitchKeyboardLayout, () =>
             {
-                context.Hook.LoadAnotherKeyboardLayout();
-                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(UIAssistantAPI.LocalizationAPI.Localize(TextID.SwitchKeyboardLayout), context.Hook.GetKeyboardLayoutLanguage()));
+                UIAssistantAPI.KeyboardAPI.LoadAnotherKeyboardLayout();
+                UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(UIAssistantAPI.LocalizationAPI.Localize(TextID.SwitchKeyboardLayout), UIAssistantAPI.KeyboardAPI.KeyboardLayoutLanguage));
             });
         }
 

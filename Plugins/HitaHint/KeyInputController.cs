@@ -23,7 +23,7 @@ namespace UIAssistant.Plugin.HitaHint
 
         public void Initialize(IKeyboardPluginContext context)
         {
-            _stateController.State.KeyboardLayoutName = context.Hook.GetKeyboardLayoutLanguage();
+            _stateController.State.KeyboardLayoutName = UIAssistantAPI.KeyboardAPI.KeyboardLayoutLanguage;
         }
 
         public void Dispose()
@@ -75,8 +75,8 @@ namespace UIAssistant.Plugin.HitaHint
             keybinds.Add(_settings.MouseEmulation, () => _stateController.ChangeOperation(Consts.MouseEmulation));
             keybinds.Add(UIAssistantAPI.UIAssistantSettings.SwitchKeyboardLayout, () =>
             {
-                context.Hook.LoadAnotherKeyboardLayout();
-                var layoutLanguage = context.Hook.GetKeyboardLayoutLanguage();
+                UIAssistantAPI.KeyboardAPI.LoadAnotherKeyboardLayout();
+                var layoutLanguage = UIAssistantAPI.KeyboardAPI.KeyboardLayoutLanguage;
                 UIAssistantAPI.NotificationAPI.NotifyInfoMessage("Switch Keyboad Layout", string.Format(UIAssistantAPI.LocalizationAPI.Localize(TextID.SwitchKeyboardLayout), layoutLanguage));
                 _stateController.State.KeyboardLayoutName = layoutLanguage;
             });
@@ -107,7 +107,7 @@ namespace UIAssistant.Plugin.HitaHint
                 var input = e.ConvertToCurrentLanguage();
                 if (context.Keybinds.Contains(keysState))
                 {
-                    context.Keybinds.Execute(keysState, e.CurrentKey.IsKeyHoldDown);
+                    context.Keybinds.Execute(keysState, e.CurrentKeyState.IsKeyHoldDown);
                     _stateController.PrintState();
                     return;
                 }

@@ -37,7 +37,7 @@ namespace UIAssistant.UI.Controls
             {
                 _visualizer?.Dispatcher.Invoke((Action)(() => Notify(input)));
             }
-            else if (!e.CurrentKey.Key.IsModifiersKey())
+            else if (!e.CurrentKeyState.Key.IsModifiersKey())
             {
                 _visualizer?.Dispatcher.Invoke((Action)(() => Notify(e.PressedKeys.ToString(), true)));
             }
