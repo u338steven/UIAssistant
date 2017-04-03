@@ -22,7 +22,7 @@ namespace UIAssistant.Plugin.MouseEmulation
         static bool _isPressedMbutton = false;
         static IUserSettings _userSettings;
         static MouseEmulationSettings _mouseSettings;
-        private static Dictionary<KeySet, Action> _keybinds;
+        private static IKeybindManager _keybinds;
 
         public static bool IsEnable => _timer.Enabled;
 
@@ -30,7 +30,7 @@ namespace UIAssistant.Plugin.MouseEmulation
         {
             var api = MouseEmulation.UIAssistantAPI;
             var handlers = api.KeyboardAPI.CreateHookHandlers();
-            handlers.KeyDown += _keyHook_KeyDown;
+            handlers.KeyDown += Handlers_KeyDown;
             api.KeyboardAPI.Hook(handlers);
             Finished += () => api.KeyboardAPI.Unhook(handlers);
             _timer = new Timer();
@@ -39,10 +39,10 @@ namespace UIAssistant.Plugin.MouseEmulation
             _timer.Start();
             _userSettings = MouseEmulation.UIAssistantAPI.UIAssistantSettings;
             _mouseSettings = MouseEmulation.Settings;
-            _keybinds = new Dictionary<KeySet, Action>();
-            _keybinds.Add(new KeySet(_userSettings.Quit), () => { Stop(); MouseEmulation.UIAssistantAPI.PluginManager.Exit(); });
-            _keybinds.Add(new KeySet(_userSettings.Back), () => { Stop(); MouseEmulation.UIAssistantAPI.PluginManager.Undo(); });
-            _keybinds.Add(new KeySet(_userSettings.Usage), () =>
+            _keybinds = api.KeyboardAPI.CreateKeybindManager();
+            _keybinds.Add(_userSettings.Quit, () => { Stop(); MouseEmulation.UIAssistantAPI.PluginManager.Exit(); });
+            _keybinds.Add(_userSettings.Back, () => { Stop(); MouseEmulation.UIAssistantAPI.PluginManager.Undo(); });
+            _keybinds.Add(_userSettings.Usage, () =>
             {
                 if (_usagePanel == null)
                 {
@@ -62,13 +62,9 @@ namespace UIAssistant.Plugin.MouseEmulation
             MouseEmulation.UIAssistantAPI.ViewAPI.AddTargetingReticle();
         }
 
-        private static void _keyHook_KeyDown(object sender, LowLevelKeyEventArgs e)
+        private static void Handlers_KeyDown(object sender, LowLevelKeyEventArgs e)
         {
-            var keysState = e.PressedKeys;
-            if (_keybinds.ContainsKey(keysState))
-            {
-                _keybinds[keysState].Invoke();
-            }
+            _keybinds.Execute(e.PressedKeys, e.CurrentKeyState.IsKeyHoldDown);
             e.Handled = true;
         }
 
