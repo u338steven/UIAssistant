@@ -64,7 +64,7 @@ namespace UIAssistant.Plugin.MouseEmulation
 
         private static void Handlers_KeyDown(object sender, LowLevelKeyEventArgs e)
         {
-            _keybinds.Execute(e.PressedKeys, e.CurrentKeyState.IsKeyHoldDown);
+            _keybinds.Execute(e.PressedKeys, e.CurrentKeyInfo.IsKeyHoldDown);
             e.Handled = true;
         }
 

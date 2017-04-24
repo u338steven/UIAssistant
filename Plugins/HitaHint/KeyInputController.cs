@@ -52,7 +52,7 @@ namespace UIAssistant.Plugin.HitaHint
                 }
                 _stateController.SwitchNextTheme();
             });
-            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Back, () => _stateController.Back(), true);
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Back, () => _stateController.Back(), KeyState.Down, true);
             keybinds.Add(_settings.Reload, () =>
             {
                 if (_stateController.IsBusy)
@@ -81,8 +81,8 @@ namespace UIAssistant.Plugin.HitaHint
                 _stateController.State.KeyboardLayoutName = layoutLanguage;
             });
 
-            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Up, () => UIAssistantAPI.ViewAPI.DefaultHUD.FocusPreviousItem(), true);
-            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Down, () => UIAssistantAPI.ViewAPI.DefaultHUD.FocusNextItem(), true);
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Up, () => UIAssistantAPI.ViewAPI.DefaultHUD.FocusPreviousItem(), KeyState.Down, true);
+            keybinds.Add(UIAssistantAPI.UIAssistantSettings.Down, () => UIAssistantAPI.ViewAPI.DefaultHUD.FocusNextItem(), KeyState.Down, true);
             keybinds.Add(UIAssistantAPI.UIAssistantSettings.Execute, () =>
             {
                 var selectedItem = UIAssistantAPI.ViewAPI.DefaultHUD.SelectedItem;
@@ -107,7 +107,7 @@ namespace UIAssistant.Plugin.HitaHint
                 var input = e.ConvertToCurrentLanguage();
                 if (context.Keybinds.Contains(keysState))
                 {
-                    context.Keybinds.Execute(keysState, e.CurrentKeyState.IsKeyHoldDown);
+                    context.Keybinds.Execute(keysState, e.CurrentKeyInfo.IsKeyHoldDown);
                     _stateController.PrintState();
                     return;
                 }

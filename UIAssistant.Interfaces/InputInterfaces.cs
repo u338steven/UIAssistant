@@ -11,14 +11,14 @@ namespace UIAssistant.Interfaces.Input
 {
     public interface IKeybindManager
     {
-        Action this[KeySet keys] { get; }
-
-        void Add(KeySet keys, Action action, bool canActWhenKeyHoldDown = false);
-        void Add(Keybind keybind, Action action, bool canActWhenKeyHoldDown = false);
-        bool CanActWhenKeyHoldDown(KeySet keys);
+        void Add(KeySet keys, Action action, KeyState state = KeyState.Down, bool canActWhenKeyRepeat = false);
+        void Add(Keybind keybind, Action action, KeyState state = KeyState.Down, bool canActWhenKeyRepeat = false);
+        void Add(Keybind keybind, Action keyDown, Action keyUp, bool canActWhenKeyRepeat = false);
+        bool CanActWhenKeyRepeat(KeySet keys);
         void Clear();
-        bool Contains(KeySet keys);
-        void Execute(KeySet keys, bool isKeyHoldDown);
+        bool Contains(KeySet keys, KeyState state = KeyState.Down);
+        void Execute(KeySet keys, bool isKeyHoldDown = false, KeyState state = KeyState.Down);
+        Action GetAction(KeySet keys, KeyState state = KeyState.Down);
     }
 
     public interface IMouseCursor

@@ -15,69 +15,88 @@ namespace UIAssistant.Core.Input
 {
     public class KeybindManager : IKeybindManager
     {
-        private Dictionary<KeySet, Action> _keybinds = new Dictionary<KeySet, Action>();
-        private Dictionary<KeySet, bool> _canActWhenKeyHoldDown = new Dictionary<KeySet, bool>();
+        private Dictionary<KeyState, Dictionary<KeySet, Action>> _keybinds = new Dictionary<KeyState, Dictionary<KeySet, Action>>();
+        private Dictionary<KeySet, bool> _canActWhenKeyRepeat = new Dictionary<KeySet, bool>();
 
-        public void Add(KeySet keys, Action action, bool canActWhenKeyHoldDown = false)
+        public KeybindManager()
         {
-            if (_keybinds.ContainsKey(keys))
+            _keybinds.Add(KeyState.Down, new Dictionary<KeySet, Action>());
+            _keybinds.Add(KeyState.Up, new Dictionary<KeySet, Action>());
+        }
+
+        public void Add(KeySet keys, Action action, KeyState state = KeyState.Down, bool canActWhenKeyRepeat = false)
+        {
+            Add(state, keys, action, canActWhenKeyRepeat);
+        }
+
+        public void Add(Keybind keybind, Action action, KeyState state = KeyState.Down, bool canActWhenKeyRepeat = false)
+        {
+            var keys = new KeySet(keybind);
+            Add(state, keys, action, canActWhenKeyRepeat);
+        }
+
+        public void Add(Keybind keybind, Action keyDown, Action keyUp, bool canActWhenKeyRepeat = false)
+        {
+            var keys = new KeySet(keybind);
+            Add(KeyState.Down, keys, keyDown, canActWhenKeyRepeat);
+            Add(KeyState.Up, keys, keyUp, canActWhenKeyRepeat);
+        }
+
+        private void Add(KeyState state, KeySet keys, Action action, bool canActWhenKeyRepeat = false)
+        {
+            if (_keybinds[state].ContainsKey(keys))
             {
                 UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("UIAssistant", string.Format(TextID.KeybindDuplication.GetLocalizedText(), keys.ToString()));
                 return;
             }
-            _keybinds.Add(keys, action);
-            _canActWhenKeyHoldDown.Add(keys, canActWhenKeyHoldDown);
-        }
-
-        public void Add(Keybind keybind, Action action, bool canActWhenKeyHoldDown = false)
-        {
-            var keys = new KeySet(keybind);
-            Add(keys, action, canActWhenKeyHoldDown);
-        }
-
-        public bool CanActWhenKeyHoldDown(KeySet keys)
-        {
-            if (_canActWhenKeyHoldDown.ContainsKey(keys))
+            _keybinds[state].Add(keys, action);
+            if (state == KeyState.Down)
             {
-                return _canActWhenKeyHoldDown[keys];
+                _canActWhenKeyRepeat.Add(keys, canActWhenKeyRepeat);
+            }
+        }
+
+        public bool CanActWhenKeyRepeat(KeySet keys)
+        {
+            if (_canActWhenKeyRepeat.ContainsKey(keys))
+            {
+                return _canActWhenKeyRepeat[keys];
             }
             return false;
         }
 
-        public bool Contains(KeySet keys)
+        public bool Contains(KeySet keys, KeyState state = KeyState.Down)
         {
-            return _keybinds.ContainsKey(keys);
+            return _keybinds[state].ContainsKey(keys);
         }
 
         public void Clear()
         {
-            _keybinds.Clear();
-            _canActWhenKeyHoldDown.Clear();
+            _keybinds[KeyState.Down].Clear();
+            _keybinds[KeyState.Up].Clear();
+            _canActWhenKeyRepeat.Clear();
         }
 
-        public void Execute(KeySet keys, bool isKeyHoldDown)
+        public void Execute(KeySet keys, bool isKeyHoldDown = false, KeyState state = KeyState.Down)
         {
-            if (isKeyHoldDown && !CanActWhenKeyHoldDown(keys))
+            if (isKeyHoldDown && !CanActWhenKeyRepeat(keys))
             {
                 return;
             }
 
-            if (_keybinds.ContainsKey(keys))
+            if (_keybinds[state].ContainsKey(keys))
             {
-                _keybinds[keys].Invoke();
+                _keybinds[state][keys].Invoke();
             }
         }
 
-        public Action this[KeySet keys]
+        public Action GetAction(KeySet keys, KeyState state = KeyState.Down)
         {
-            get
+            if (_keybinds[state].ContainsKey(keys))
             {
-                if (_keybinds.ContainsKey(keys))
-                {
-                    return _keybinds[keys];
-                }
-                return null;
+                return _keybinds[state][keys];
             }
+            return null;
         }
     }
 }

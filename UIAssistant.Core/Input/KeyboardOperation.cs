@@ -149,12 +149,33 @@ namespace UIAssistant.Core.Input
                 return;
             }
             var inputs = new List<INPUT>();
-            foreach (var key in keys)
+            lock (_forRestore)
             {
-                var keyup = GenerateKeyUp(key);
-                inputs.Add(keyup);
+                foreach (var key in _forRestore)
+                {
+                    inputs.Add(GenerateKeyUp(key));
+                }
+
+                foreach (var key in keys)
+                {
+                    var keyup = GenerateKeyUp(key);
+                    inputs.Add(keyup);
+                }
+
+                foreach (var key in _forRestore)
+                {
+                    inputs.Add(GenerateKeyDown(key));
+                }
+
+                if (_cancelAlt)
+                {
+                    inputs.Add(GenerateKeyDown(_cancelKey));
+                    inputs.Add(GenerateKeyUp(_cancelKey));
+                }
+
+                NativeMethods.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
+                _forRestore.Clear();
             }
-            NativeMethods.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
         public void KeyDown(params Key[] keys)
@@ -164,12 +185,33 @@ namespace UIAssistant.Core.Input
                 return;
             }
             var inputs = new List<INPUT>();
-            foreach (var key in keys)
+            lock (_forRestore)
             {
-                var keydown = GenerateKeyDown(key);
-                inputs.Add(keydown);
+                foreach (var key in _forRestore)
+                {
+                    inputs.Add(GenerateKeyUp(key));
+                }
+
+                foreach (var key in keys)
+                {
+                    var keydown = GenerateKeyDown(key);
+                    inputs.Add(keydown);
+                }
+
+                foreach (var key in _forRestore)
+                {
+                    inputs.Add(GenerateKeyDown(key));
+                }
+
+                if (_cancelAlt)
+                {
+                    inputs.Add(GenerateKeyDown(_cancelKey));
+                    inputs.Add(GenerateKeyUp(_cancelKey));
+                }
+
+                NativeMethods.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
+                _forRestore.Clear();
             }
-            NativeMethods.SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(inputs[0]));
         }
 
         private INPUT GenerateKeyUp(Key key)

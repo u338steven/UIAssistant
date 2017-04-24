@@ -54,7 +54,7 @@ namespace UIAssistant.Plugin.SearchByText
             var input = e.ConvertToCurrentLanguage();
             if (context.Keybinds.Contains(keysState))
             {
-                context.Keybinds.Execute(keysState, e.CurrentKeyState.IsKeyHoldDown);
+                context.Keybinds.Execute(keysState, e.CurrentKeyInfo.IsKeyHoldDown);
                 return;
             }
 
@@ -74,16 +74,16 @@ namespace UIAssistant.Plugin.SearchByText
             var keybinds = context.Keybinds;
             keybinds.Clear();
             keybinds.Add(_settings.Quit, () => { _stateController.Cancel(); _stateController.Quit(); });
-            keybinds.Add(_settings.Back, () => UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.Backspace(), true);
-            keybinds.Add(_settings.Delete, () => UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.Delete(), true);
+            keybinds.Add(_settings.Back, () => UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.Backspace(), KeyState.Down, true);
+            keybinds.Add(_settings.Delete, () => UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.Delete(), KeyState.Down, true);
             keybinds.Add(_settings.Clear, () => UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.SetText(""));
 
-            keybinds.Add(_settings.Left, () => UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.MoveCaretToLeft(1), true);
-            keybinds.Add(_settings.Right, () => UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.MoveCaretToRight(1), true);
-            keybinds.Add(_settings.Up, () => UIAssistantAPI.ViewAPI.CurrentHUD.FocusPreviousItem(), true);
-            keybinds.Add(_settings.Down, () => UIAssistantAPI.ViewAPI.CurrentHUD.FocusNextItem(), true);
-            keybinds.Add(_settings.PageUp, () => UIAssistantAPI.ViewAPI.CurrentHUD.PageUp(), true);
-            keybinds.Add(_settings.PageDown, () => UIAssistantAPI.ViewAPI.CurrentHUD.PageDown(), true);
+            keybinds.Add(_settings.Left, () => UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.MoveCaretToLeft(1), KeyState.Down, true);
+            keybinds.Add(_settings.Right, () => UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.MoveCaretToRight(1), KeyState.Down, true);
+            keybinds.Add(_settings.Up, () => UIAssistantAPI.ViewAPI.CurrentHUD.FocusPreviousItem(), KeyState.Down, true);
+            keybinds.Add(_settings.Down, () => UIAssistantAPI.ViewAPI.CurrentHUD.FocusNextItem(), KeyState.Down, true);
+            keybinds.Add(_settings.PageUp, () => UIAssistantAPI.ViewAPI.CurrentHUD.PageUp(), KeyState.Down, true);
+            keybinds.Add(_settings.PageDown, () => UIAssistantAPI.ViewAPI.CurrentHUD.PageDown(), KeyState.Down, true);
             keybinds.Add(_settings.Home, () => UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.MoveCaretToHead());
             keybinds.Add(_settings.End, () => UIAssistantAPI.ViewAPI.CurrentHUD.TextBox.MoveCaretToTail());
             keybinds.Add(_settings.Execute, () => _stateController.Execute());

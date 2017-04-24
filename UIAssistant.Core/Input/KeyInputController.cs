@@ -92,7 +92,7 @@ namespace UIAssistant.Core.Input
         private void CallPluginKeyDown(object sender, LowLevelKeyEventArgs e)
         {
 #if DEBUG
-            if (!e.CurrentKeyState.IsInjected)
+            if (!e.CurrentKeyInfo.IsInjected)
             {
                 UIAssistantAPI.Instance.ViewAPI.DisplayKeystroke(e);
             }

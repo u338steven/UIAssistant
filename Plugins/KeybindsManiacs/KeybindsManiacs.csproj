@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EmacsLikeCommand.cs" />
+    <Compile Include="KeybindStorage.cs" />
     <Compile Include="KeyTranslator.cs" />
     <Compile Include="EmbeddedCommand.cs" />
     <Compile Include="CommandType.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Consts.cs" />
     <Compile Include="KeybindsManiacs.cs" />
     <Compile Include="KeybindsManiacsSettings.cs" />
+    <Compile Include="Mode.cs" />
     <Compile Include="ModeStorage.cs" />
     <Compile Include="KeyInputController.cs" />
     <Compile Include="ObservableDictionary.cs" />

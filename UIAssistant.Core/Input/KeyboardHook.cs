@@ -24,7 +24,7 @@ namespace UIAssistant.Core.Input
 
         private void _hook_PreviewKeyDown(object sender, LowLevelKeyEventArgs e)
         {
-            if (e.CurrentKeyState.Key == Key.None || e.CurrentKeyState.Key == Key.PrintScreen)
+            if (e.CurrentKeyInfo.Key == Key.None || e.CurrentKeyInfo.Key == Key.PrintScreen)
             {
                 e.Handled = true;
                 return;
