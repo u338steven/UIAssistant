@@ -15,6 +15,8 @@ using UIAssistant.Infrastructure.Logger;
 using UIAssistant.Interfaces;
 using UIAssistant.Interfaces.Plugin;
 
+using ZoneIdentifierManager;
+
 namespace UIAssistant.Core.Plugin
 {
     public class PluginManager : IDisposable, IPluginManager
@@ -34,9 +36,9 @@ namespace UIAssistant.Core.Plugin
         [ImportMany(RequiredCreationPolicy = CreationPolicy.Shared)]
         private IEnumerable<IDisposable> DisposablePlugins { get; set; }
 
-        private PluginManager() { Initialize(); }
+        private PluginManager() { }
 
-        private void Initialize()
+        public void Initialize()
         {
             var catalog = new AggregateCatalog(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
             var pluginPaths = Directory.EnumerateFiles(directoryPath, "*.dll", SearchOption.AllDirectories);
@@ -45,13 +47,36 @@ namespace UIAssistant.Core.Plugin
             {
                 try
                 {
+                    if (ZoneIdentifier.IsBlocked(pluginPath))
+                    {
+                        if (UIAssistantAPI.Instance.ViewAPI.GetConfirmation("The plugin is blocked",
+                            string.Format(TextID.PluginBlocked.GetLocalizedText(), Path.GetFileName(pluginPath), pluginPath)))
+                        {
+                            ZoneIdentifier.Unblock(pluginPath);
+                        }
+                    }
+                }
+                catch
+                {
+
+                }
+
+                try
+                {
                     var asmCatalog = new AssemblyCatalog(pluginPath);
                     if (asmCatalog.Parts.ToList().Count > 0)
                     {
                         catalog.Catalogs.Add(asmCatalog);
                     }
                 }
-                catch(ReflectionTypeLoadException ex)
+                catch (FileLoadException ex)
+                {
+                    var message = string.Format(TextID.PluginInitializeError.GetLocalizedText(), pluginPath);
+                    UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("Warning", message);
+                    Log.Error(ex);
+                    Log.Warn(message);
+                }
+                catch (ReflectionTypeLoadException ex)
                 {
                     var message = string.Format(TextID.PluginInitializeError.GetLocalizedText(), pluginPath);
                     UIAssistantAPI.Instance.NotificationAPI.NotifyWarnMessage("Warning", message);

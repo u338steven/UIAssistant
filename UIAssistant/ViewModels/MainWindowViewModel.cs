@@ -14,20 +14,18 @@ using Livet.Messaging.Windows;
 
 using System.Windows;
 using System.Windows.Interop;
-
-using UIAssistant.Models;
-using UIAssistant.Views;
 using UIAssistant.Core.API;
-using UIAssistant.Core.I18n;
 using UIAssistant.Core.Plugin;
 using UIAssistant.Interfaces.Native;
+using UIAssistant.Models;
+using UIAssistant.Views;
 
 namespace UIAssistant.ViewModels
 {
     public class MainWindowViewModel : ViewModel
     {
-        public HUDPanel DefaultHUDPanel => new HUDPanel();
-        public HUDPanel DefaultContextPanel => new HUDPanel();
+        private HUDPanel DefaultHUDPanel => new HUDPanel();
+        private HUDPanel DefaultContextPanel => new HUDPanel();
 
         #region Left変更通知プロパティ
         private double _Left;
@@ -99,17 +97,8 @@ namespace UIAssistant.ViewModels
 
         public void Initialize()
         {
-            var api = UIAssistantAPI.Instance;
-            api.Initialize(DefaultHUDPanel, DefaultContextPanel);
-
             IntPtr windowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
             NativeMethods.SetWindowExTransparent(windowHandle);
-
-            DefaultLocalizer.SwitchLanguage(DefaultLocalizer.FindLanguage(api.UIAssistantSettings.Culture));
-            PluginManager.Instance.Localize();
-
-            Hotkey.RegisterHotkeys();
-            TasktrayIcon.ShowNotifyIcon();
 
             Left = SystemParameters.VirtualScreenLeft;
             Top = SystemParameters.VirtualScreenTop;
@@ -117,8 +106,13 @@ namespace UIAssistant.ViewModels
             Height = SystemParameters.VirtualScreenHeight;
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
 
+            var api = UIAssistantAPI.Instance;
+            api.Initialize(DefaultHUDPanel, DefaultContextPanel);
             api.ThemeAPI.SwitchTheme(api.UIAssistantSettings.Theme);
             api.ViewAPI.TopMost = false;
+
+            Hotkey.RegisterHotkeys();
+            TasktrayIcon.ShowNotifyIcon();
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)

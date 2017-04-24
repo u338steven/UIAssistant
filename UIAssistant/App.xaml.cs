@@ -8,6 +8,7 @@ using System.Windows;
 using Livet;
 using UIAssistant.Core.Plugin;
 using UIAssistant.Infrastructure.Logger;
+using UIAssistant.Models;
 
 using Microsoft.Shell;
 using System.Reflection;
@@ -55,7 +56,7 @@ namespace UIAssistant
             try
             {
                 PluginManager.Instance.Dispose();
-                Models.TasktrayIcon.HideNotifyIcon();
+                TasktrayIcon.HideNotifyIcon();
             }
             catch
             {

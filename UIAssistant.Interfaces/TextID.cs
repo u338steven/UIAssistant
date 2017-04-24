@@ -21,6 +21,7 @@
         public const string PluginCommandDuplication = "pluginCommandDuplication";
         public const string PluginError = "pluginError";
         public const string PluginInitializeError = "pluginInitializeError";
+        public const string PluginBlocked = "pluginBlocked";
         public const string LoadThemeError = "loadThemeError";
         public const string HotkeyHasError = "hotkeyHasError";
         public const string CloseConfirmation = "closeConfirmation";

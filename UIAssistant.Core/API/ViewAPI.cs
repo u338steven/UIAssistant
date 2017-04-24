@@ -292,6 +292,15 @@ namespace UIAssistant.Core.API
             }, () => { RemoveIndicator(indicator); completed?.Invoke(); }, waitable);
         }
 
+        public bool GetConfirmation(string Caption, string Message)
+        {
+            return MessageBox.Show(Message,
+                                   Caption,
+                                   MessageBoxButton.YesNo,
+                                   MessageBoxImage.Question,
+                                   MessageBoxResult.Yes) == MessageBoxResult.Yes;
+        }
+
 #if DEBUG
         public void DisplayKeystroke(LowLevelKeyEventArgs e)
         {

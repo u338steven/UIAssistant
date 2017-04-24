@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Controls;
 
+using UIAssistant.Core.I18n;
 using UIAssistant.Core.Settings;
 using UIAssistant.Infrastructure.Settings;
 using UIAssistant.Interfaces;
@@ -43,8 +44,15 @@ namespace UIAssistant.Core.API
 
         public void Initialize(Control defaultHUDPanel, Control defaultContextPanel)
         {
+            if (ViewAPI != null)
+            {
+                return;
+            }
             ViewAPI = new ViewAPI(defaultHUDPanel, defaultContextPanel);
+            DefaultLocalizer.SwitchLanguage(DefaultLocalizer.FindLanguage(UIAssistantSettings.Culture));
             PluginManager = Plugin.PluginManager.Instance;
+            Plugin.PluginManager.Instance.Initialize();
+            PluginManager.Localize();
         }
     }
 }

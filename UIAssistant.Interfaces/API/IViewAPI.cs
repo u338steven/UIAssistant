@@ -24,6 +24,7 @@ namespace UIAssistant.Interfaces.API
         void AddPanel(UIElement uielement, Visibility visibility = Visibility.Visible);
         void AddTargetingReticle();
         void FlashIndicatorAnimation(Rect size, bool waitable = true, double duration = 300, Action completed = null);
+        bool GetConfirmation(string Caption, string Message);
         void MoveTargetingReticle(double x, double y);
         void RemoveContextHUD();
         void RemoveDefaultHUD();
