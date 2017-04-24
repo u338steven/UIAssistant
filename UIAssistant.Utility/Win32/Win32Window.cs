@@ -242,19 +242,63 @@ namespace UIAssistant.Utility.Win32
                 {
                     return _Icon;
                 }
-                int processId;
-                NativeMethods.GetWindowThreadProcessId(WindowHandle, out processId);
-                System.Diagnostics.Process process = System.Diagnostics.Process.GetProcessById(processId);
-                try
+                if (FilePath != null)
                 {
-                    _Icon = Win32Icon.GetIcon(process.MainModule.FileName);
-                }
-                catch (System.ComponentModel.Win32Exception ex)
-                {
-                    System.Diagnostics.Debug.Print(ex.Message);
-                    return null;
+                    _Icon = Win32Icon.GetIcon(FilePath);
                 }
                 return _Icon;
+            }
+        }
+
+        private System.Diagnostics.Process _Process;
+        private System.Diagnostics.Process Process
+        {
+            get
+            {
+                if (_Process != null)
+                {
+                    return _Process;
+                }
+                int processId;
+                NativeMethods.GetWindowThreadProcessId(WindowHandle, out processId);
+                try
+                {
+                    _Process = System.Diagnostics.Process.GetProcessById(processId);
+                }
+                catch
+                {
+
+                }
+                return _Process;
+            }
+        }
+
+        public string ProcessName
+        {
+            get
+            {
+                return Process?.ProcessName;
+            }
+        }
+
+        private string _FilePath;
+        public string FilePath
+        {
+            get
+            {
+                if (_FilePath != null)
+                {
+                    return _FilePath;
+                }
+                try
+                {
+                    _FilePath = Process?.MainModule.FileName;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.Print(ex.Message);
+                }
+                return _FilePath;
             }
         }
 
